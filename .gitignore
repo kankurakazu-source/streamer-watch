@@ -1,0 +1,17 @@
+# APIキーを含む環境ファイル（絶対にコミットしないこと）
+.env
+
+# Claude Code のローカル設定（リポジトリに不要）
+.claude/
+
+# 生成物・ローカルデータ
+# data/ は原則無視するが、履歴DBだけは前日比のためGit管理する（GitHub Actionsで書き戻す）
+data/*
+!data/history.sqlite3
+output/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/

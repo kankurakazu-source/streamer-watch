@@ -1,0 +1,53 @@
+name: game-watch
+
+# 定期実行（cronはUTC。JST=UTC+9）
+#   JST 08:00 = UTC 23:00 / JST 13:00 = UTC 04:00 / JST 20:00 = UTC 11:00
+on:
+  # 定期実行は一旦停止中（ユーザー指示）。再開するには下の schedule のコメントを外す。
+  # schedule:
+  #   - cron: "0 23 * * *"
+  #   - cron: "0 4 * * *"
+  #   - cron: "0 11 * * *"
+  workflow_dispatch: {}   # 手動実行のみ
+
+permissions:
+  contents: write         # 履歴DBをリポジトリへ書き戻すため
+
+concurrency:
+  group: game-watch       # 実行の重なりを防ぐ
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Japanese fonts (Noto CJK)
+        run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run game watch
+        env:
+          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+          TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+        run: python game_watch.py
+
+      - name: Persist history DB (for 前日比 across runs)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f data/history.sqlite3
+          git commit -m "chore: update history db [skip ci]" || echo "no changes to commit"
+          git push || echo "nothing to push"

@@ -1,0 +1,206 @@
+"""
+emailer.py
+----------
+1回の実行結果（下書き＋カード画像）を、スマホで確認できるようメールで送る。
+文面はインラインのカード画像(CID埋め込み・Gmailでも表示される)付きで、
+各投稿に「Xで開く」リンク（タップで文面プリフィルのX投稿画面が開く）を添える。
+
+Gmailの「アプリパスワード」を使ってSMTP送信する。投稿自体は行わない。
+"""
+
+import html
+import os
+import smtplib
+import urllib.parse
+from datetime import datetime
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.utils import make_msgid
+
+
+def _post_html(index: int, draft: dict, cid: str | None) -> str:
+    dtype = html.escape(draft.get("type", ""))
+    topic = html.escape(draft.get("topic", ""))
+    post = draft.get("draft_post", "")
+    post_html = html.escape(post).replace("\n", "<br>")
+    color = "#ff5a3c" if draft.get("type") == "速報" else "#3cc7ff"
+    intent = "https://x.com/intent/tweet?text=" + urllib.parse.quote(post)
+
+    img_block = ""
+    if cid:
+        img_block = (
+            f"<img src='cid:{cid}' width='100%' "
+            f"style='max-width:520px;border-radius:10px;display:block;margin:0 0 12px;'>"
+        )
+
+    cw = draft.get("char_weight")
+    cw_html = ""
+    if cw is not None:
+        cw_color = "#3cc7ff" if cw <= 280 else "#ff5a3c"
+        cw_html = f"<span style='color:{cw_color};font-size:13px;'>&nbsp;{cw}/280</span>"
+
+    return f"""
+    <div style="background:#16202b;border:1px solid #24313d;border-radius:12px;padding:16px;margin:0 0 16px;">
+      <div style="margin:0 0 10px;">
+        <span style="background:{color};color:#0f1720;font-weight:bold;padding:3px 12px;border-radius:8px;">{dtype}</span>
+        <span style="color:#c7d2dc;font-size:14px;">&nbsp;#{index} {topic}</span>{cw_html}
+      </div>
+      {img_block}
+      <div style="color:#f5f7fa;font-size:15px;line-height:1.7;white-space:normal;">{post_html}</div>
+      <div style="margin-top:12px;">
+        <a href="{html.escape(intent)}"
+           style="background:#1d9bf0;color:#fff;text-decoration:none;padding:9px 18px;border-radius:8px;font-size:14px;">
+           Xで開く（文面プリフィル）</a>
+      </div>
+    </div>
+    """
+
+
+def build_message(result: dict, from_addr: str, to_addr: str) -> MIMEMultipart:
+    """レビュー内容の HTML メール（インライン画像付き）を組み立てる。"""
+    drafts = [d for d in result.get("drafts", []) if isinstance(d, dict) and d.get("draft_post")]
+    now = datetime.now().strftime("%Y/%m/%d %H:%M")
+
+    root = MIMEMultipart("related")
+    root["Subject"] = f"🎮ゲームウォッチ 下書き{len(drafts)}件 ({now})"
+    root["From"] = from_addr
+    root["To"] = to_addr
+
+    alt = MIMEMultipart("alternative")
+    root.attach(alt)
+
+    posts_html = []
+    plain_lines = [f"ゲームウォッチ 下書き {len(drafts)}件 ({now})", ""]
+    for i, d in enumerate(drafts, 1):
+        cid = None
+        if d.get("image_path") and os.path.exists(d["image_path"]):
+            cid = make_msgid()[1:-1]  # <...> を除去
+            with open(d["image_path"], "rb") as f:
+                img = MIMEImage(f.read(), _subtype="png")
+            img.add_header("Content-ID", f"<{cid}>")
+            img.add_header("Content-Disposition", "inline")
+            root.attach(img)
+        posts_html.append(_post_html(i, d, cid))
+        plain_lines.append(f"#{i} [{d.get('type','')}] {d.get('topic','')}")
+        plain_lines.append(d.get("draft_post", ""))
+        plain_lines.append("")
+
+    if not drafts:
+        posts_html.append("<p style='color:#9aa7b4;'>今回は下書きがありませんでした。</p>")
+
+    body = f"""<!DOCTYPE html><html><body style="background:#0f1720;margin:0;padding:16px;
+      font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;">
+      <div style="color:#f5f7fa;font-size:18px;font-weight:bold;margin:0 0 4px;">🎮 ゲームウォッチ 下書きレビュー</div>
+      <div style="color:#9aa7b4;font-size:12px;margin:0 0 16px;">{now} ／ 確認後、良いものだけ手動でポストしてください（自動投稿はしません）</div>
+      {''.join(posts_html)}
+    </body></html>"""
+
+    alt.attach(MIMEText("\n".join(plain_lines), "plain", "utf-8"))
+    alt.attach(MIMEText(body, "html", "utf-8"))
+    return root
+
+
+def build_article_message(article: dict, x_post: str, public_url: str, local_path: str,
+                          hero_url: str, from_addr: str, to_addr: str) -> MIMEMultipart:
+    """
+    記事1本の通知メール。Xポスト文面（コピー用＋「Xで開く」）と記事リンクをセットで表示。
+    hero画像はSteam CDNのURLをそのまま<img>参照する（メールクライアントが表示）。
+    """
+    now = datetime.now().strftime("%Y/%m/%d %H:%M")
+    title = html.escape(article.get("title", ""))
+    category = html.escape(article.get("category", ""))
+    lead = html.escape(article.get("lead", ""))
+    post_html = html.escape(x_post).replace("\n", "<br>")
+    intent = "https://x.com/intent/tweet?text=" + urllib.parse.quote(x_post)
+
+    root = MIMEMultipart("alternative")
+    root["Subject"] = f"📝ゲームウォッチ 新着記事: {article.get('title','')[:40]} ({now})"
+    root["From"] = from_addr
+    root["To"] = to_addr
+
+    hero_block = (f"<img src='{html.escape(hero_url)}' width='100%' "
+                  f"style='max-width:560px;border-radius:12px;display:block;margin:0 0 14px;'>"
+                  if hero_url else "")
+
+    # 記事リンク: 公開URLがあればそれ、無ければローカルファイル(file://)を案内
+    if public_url:
+        link_href = html.escape(public_url)
+        link_label = "記事を開く（公開URL）"
+        link_note = ""
+    else:
+        file_url = "file:///" + local_path.replace("\\", "/")
+        link_href = html.escape(file_url)
+        link_label = "記事を開く（ローカル確認用）"
+        link_note = ("<div style='color:#9aa7b4;font-size:12px;margin-top:6px;'>"
+                     "※まだ公開URLが未設定です。Xポストにリンクを載せるには、"
+                     "サイトを公開して config.SITE_BASE_URL を設定してください。</div>")
+
+    body = f"""<!DOCTYPE html><html><body style="background:#0f1720;margin:0;padding:16px;
+      font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;">
+      <div style="color:#f5f7fa;font-size:18px;font-weight:bold;margin:0 0 4px;">📝 新着記事ができました</div>
+      <div style="color:#9aa7b4;font-size:12px;margin:0 0 16px;">{now} ／ 内容を確認し、良ければXにポストしてください（自動投稿はしません）</div>
+
+      <div style="background:#16202b;border:1px solid #24313d;border-radius:12px;padding:16px;margin:0 0 16px;">
+        <span style="background:#3cc7ff;color:#0f1720;font-weight:bold;padding:3px 12px;border-radius:8px;">{category}</span>
+        <div style="color:#f5f7fa;font-size:17px;font-weight:bold;margin:10px 0;">{title}</div>
+        {hero_block}
+        <div style="color:#c7d2dc;font-size:14px;line-height:1.7;">{lead}</div>
+        <div style="margin-top:14px;">
+          <a href="{link_href}" style="background:#1a9e5a;color:#fff;text-decoration:none;
+             padding:9px 18px;border-radius:8px;font-size:14px;">{link_label}</a>
+        </div>
+        {link_note}
+      </div>
+
+      <div style="background:#16202b;border:1px solid #24313d;border-radius:12px;padding:16px;">
+        <div style="color:#9aa7b4;font-size:12px;margin:0 0 8px;">Xポスト文面（この記事の要約＋リンク）</div>
+        <div style="color:#f5f7fa;font-size:15px;line-height:1.7;">{post_html}</div>
+        <div style="margin-top:12px;">
+          <a href="{html.escape(intent)}" style="background:#1d9bf0;color:#fff;text-decoration:none;
+             padding:9px 18px;border-radius:8px;font-size:14px;">Xで開く（文面プリフィル）</a>
+        </div>
+      </div>
+    </body></html>"""
+
+    plain = (f"新着記事 ({now})\n{article.get('title','')}\n\n"
+             f"{article.get('lead','')}\n\n記事: {public_url or local_path}\n\n"
+             f"--- Xポスト文面 ---\n{x_post}\n")
+    root.attach(MIMEText(plain, "plain", "utf-8"))
+    root.attach(MIMEText(body, "html", "utf-8"))
+    return root
+
+
+def send_article_email(article: dict, x_post: str, public_url: str, local_path: str,
+                       hero_url: str, host: str, port: int,
+                       user: str, password: str, from_addr: str, to_addr: str) -> None:
+    """記事通知メールをSMTP(STARTTLS)で送信する。失敗時は例外送出。"""
+    msg = build_article_message(article, x_post, public_url, local_path, hero_url, from_addr, to_addr)
+    with smtplib.SMTP(host, port, timeout=30) as s:
+        s.starttls()
+        s.login(user, password)
+        s.send_message(msg)
+
+
+def send_review_email(result: dict, host: str, port: int,
+                     user: str, password: str, from_addr: str, to_addr: str) -> None:
+    """SMTP(STARTTLS)でレビューメールを送信する。失敗時は例外送出。"""
+    msg = build_message(result, from_addr, to_addr)
+    with smtplib.SMTP(host, port, timeout=30) as s:
+        s.starttls()
+        s.login(user, password)
+        s.send_message(msg)
+
+
+if __name__ == "__main__":
+    # 送信せず .eml を書き出して中身を確認するテスト
+    import json
+    import sys
+
+    src = sys.argv[1] if len(sys.argv) > 1 else "output/game_draft_20260705_1730.json"
+    result = json.load(open(src, encoding="utf-8"))
+    msg = build_message(result, "from@example.com", "to@example.com")
+    out = "output/review_email_preview.eml"
+    with open(out, "wb") as f:
+        f.write(msg.as_bytes())
+    print("wrote:", out, "| parts:", len(msg.get_payload()))

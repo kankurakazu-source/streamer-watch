@@ -1,0 +1,5 @@
+# GitHub Actions(Linux)でシェルスクリプトが \r で壊れないよう、改行はLFに固定
+*.yml text eol=lf
+*.yaml text eol=lf
+*.sh text eol=lf
+*.py text eol=lf
