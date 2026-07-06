@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ゲームウォッチ｜データで見るゲームトレンド</title>
+<title>ガジェゲ｜データで見るゲームトレンド</title>
 <meta name="description" content="Steam・Twitch・YouTubeの数字から、話題のゲーム・セール・ガジェットを毎日ピックアップ。データで見るゲームテックメディア。">
 <meta name="theme-color" content="#0a0e16">
 <link rel="canonical" href="https://game-watch.pages.dev/">
 <!-- OGP / Twitter Card（X等でリンクを貼った時のカード表示。CTRに直結） -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="ゲームウォッチ">
-<meta property="og:title" content="ゲームウォッチ｜データで見るゲームトレンド">
+<meta property="og:site_name" content="ガジェゲ（Gadget×Game）">
+<meta property="og:title" content="ガジェゲ｜データで見るゲームトレンド">
 <meta property="og:description" content="Steam・Twitch・YouTubeの数字から、話題のゲーム・セール・ガジェットを毎日ピックアップ。">
 <meta property="og:url" content="https://game-watch.pages.dev/">
 <meta property="og:image" content="https://game-watch.pages.dev/ogp.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="ゲームウォッチ｜データで見るゲームトレンド">
+<meta name="twitter:title" content="ガジェゲ｜データで見るゲームトレンド">
 <meta name="twitter:description" content="Steam・Twitch・YouTubeの数字から、話題のゲーム・セール・ガジェットを毎日ピックアップ。">
 <meta name="twitter:image" content="https://game-watch.pages.dev/ogp.png">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -49,8 +49,12 @@
     border-bottom:1px solid var(--line-soft);}
   .head{display:flex;align-items:center;justify-content:space-between;height:62px;}
   .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:.01em;}
-  .logo .dot{width:13px;height:13px;border-radius:4px;background:var(--grad);
-    box-shadow:0 0 14px rgba(57,216,255,.7);}
+  .logo{text-decoration:none;}
+  .logo-mark{width:30px;height:30px;border-radius:8px;display:block;flex:0 0 auto;
+    box-shadow:0 0 16px rgba(57,216,255,.30);}
+  .logo-name{display:inline-flex;flex-direction:column;line-height:1.04;}
+  .logo-sub{font-size:9.5px;font-weight:700;letter-spacing:.13em;color:var(--accent);
+    font-style:normal;text-transform:uppercase;margin-top:1px;}
   nav{display:flex;gap:6px;}
   nav a{position:relative;padding:8px 12px;font-size:13.5px;color:var(--muted);border-radius:9px;
     transition:color .15s,background .15s;}
@@ -168,7 +172,7 @@
 </head>
 <body>
 <header><div class="wrap head">
-  <div class="logo"><span class="dot"></span>ゲームウォッチ</div>
+  <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="30" height="30"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
   <nav>
     <a href="#trending">いま読まれている</a>
     <a href="#devices">デバイス</a>
@@ -284,7 +288,7 @@
 
   <footer>
     <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。</div>
-    (c) 2026 ゲームウォッチ ／ データで見るゲームテックメディア
+    (c) 2026 ガジェゲ ／ データで見るゲームテックメディア
   </footer>
 </main>
 

@@ -138,7 +138,7 @@ def _draw_body(d, draft, y_start, accent, bullets_max,
 
 def _footer(d, credit: str | None):
     ff = _font(FONT_MED, 26)
-    base = f"ゲームウォッチ  |  {datetime.now().strftime('%Y.%m.%d')}"
+    base = f"ガジェゲ  |  {datetime.now().strftime('%Y.%m.%d')}"
     if credit:
         base += f"  |  {credit}"
     d.text((MARGIN, H - MARGIN - 6), base, font=ff, fill=MUTED)

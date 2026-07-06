@@ -90,7 +90,7 @@ def build_review_sheet(result: dict, out_path: str) -> str:
     doc = f"""<!DOCTYPE html>
 <html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ゲームウォッチ レビュー {generated}</title>
+<title>ガジェゲ レビュー {generated}</title>
 <style>
   body {{ background:#0f1720; color:#f5f7fa; font-family:"Yu Gothic","Meiryo",sans-serif; margin:0; padding:24px; }}
   h1 {{ font-size:20px; margin:0 0 4px; }}
@@ -116,7 +116,7 @@ def build_review_sheet(result: dict, out_path: str) -> str:
   .note {{ color:#9aa7b4; font-size:12px; margin-top:8px; }}
   .empty {{ color:#9aa7b4; }}
 </style></head><body>
-  <h1>🎮 ゲームウォッチ 下書きレビュー</h1>
+  <h1>🎮 ガジェゲ 下書きレビュー</h1>
   <div class="sub">生成: {html.escape(str(generated))} ／ 確認後、良いものだけ手動でポストしてください（自動投稿はしません）</div>
   {cards}
   <div id="toast"></div>

@@ -63,7 +63,7 @@ def build_message(result: dict, from_addr: str, to_addr: str) -> MIMEMultipart:
     now = datetime.now().strftime("%Y/%m/%d %H:%M")
 
     root = MIMEMultipart("related")
-    root["Subject"] = f"🎮ゲームウォッチ 下書き{len(drafts)}件 ({now})"
+    root["Subject"] = f"🎮ガジェゲ 下書き{len(drafts)}件 ({now})"
     root["From"] = from_addr
     root["To"] = to_addr
 
@@ -71,7 +71,7 @@ def build_message(result: dict, from_addr: str, to_addr: str) -> MIMEMultipart:
     root.attach(alt)
 
     posts_html = []
-    plain_lines = [f"ゲームウォッチ 下書き {len(drafts)}件 ({now})", ""]
+    plain_lines = [f"ガジェゲ 下書き {len(drafts)}件 ({now})", ""]
     for i, d in enumerate(drafts, 1):
         cid = None
         if d.get("image_path") and os.path.exists(d["image_path"]):
@@ -91,7 +91,7 @@ def build_message(result: dict, from_addr: str, to_addr: str) -> MIMEMultipart:
 
     body = f"""<!DOCTYPE html><html><body style="background:#0f1720;margin:0;padding:16px;
       font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;">
-      <div style="color:#f5f7fa;font-size:18px;font-weight:bold;margin:0 0 4px;">🎮 ゲームウォッチ 下書きレビュー</div>
+      <div style="color:#f5f7fa;font-size:18px;font-weight:bold;margin:0 0 4px;">🎮 ガジェゲ 下書きレビュー</div>
       <div style="color:#9aa7b4;font-size:12px;margin:0 0 16px;">{now} ／ 確認後、良いものだけ手動でポストしてください（自動投稿はしません）</div>
       {''.join(posts_html)}
     </body></html>"""
@@ -138,7 +138,7 @@ def build_article_message(article: dict, thread: dict, public_url: str, local_pa
 
     # MIME構造: mixed(related(alternative + inline画像) + 添付画像)
     root = MIMEMultipart("mixed")
-    root["Subject"] = f"{badge}ゲームウォッチ: {article.get('title','')[:40]} ({now})"
+    root["Subject"] = f"{badge}ガジェゲ: {article.get('title','')[:40]} ({now})"
     root["From"] = from_addr
     root["To"] = to_addr
     related = MIMEMultipart("related")

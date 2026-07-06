@@ -51,7 +51,10 @@ _CSS = """
     backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--line-soft);}
   .head{display:flex;align-items:center;justify-content:space-between;height:60px;}
   .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;}
-  .logo .dot{width:13px;height:13px;border-radius:4px;background:var(--grad);box-shadow:0 0 14px rgba(57,216,255,.7);}
+  .logo{text-decoration:none;}
+  .logo-mark{width:28px;height:28px;border-radius:8px;display:block;flex:0 0 auto;box-shadow:0 0 16px rgba(57,216,255,.30);}
+  .logo-name{display:inline-flex;flex-direction:column;line-height:1.04;}
+  .logo-sub{font-size:9px;font-weight:700;letter-spacing:.13em;color:var(--accent);font-style:normal;text-transform:uppercase;margin-top:1px;}
   nav{display:flex;gap:16px;font-size:14px;color:var(--muted);}
   nav a:hover{color:var(--text);}
   .article{max-width:720px;margin:0 auto;padding:30px 0 10px;}
@@ -105,12 +108,12 @@ _PAGE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title} ｜ゲームウォッチ</title>
+<title>{title} ｜ガジェゲ</title>
 <meta name="description" content="{og_desc}">
 {canonical_tag}
 <!-- OGP / Twitter Card（Xでリンクを貼った時のカード表示。CTRに直結） -->
 <meta property="og:type" content="article">
-<meta property="og:site_name" content="ゲームウォッチ">
+<meta property="og:site_name" content="ガジェゲ（Gadget×Game）">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{og_desc}">
 {og_url_tag}
@@ -127,7 +130,7 @@ _PAGE = """<!DOCTYPE html>
 </head>
 <body>
 <header><div class="wrap head">
-  <div class="logo"><span class="dot"></span>ゲームウォッチ</div>
+  <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="28" height="28"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
   <nav><a href="../index.html">トップ</a></nav>
 </div></header>
 
@@ -136,7 +139,7 @@ _PAGE = """<!DOCTYPE html>
     <div class="crumb"><a href="../index.html">ホーム</a> › {category}</div>
     <span class="cat">{category}</span>
     <h1>{title}</h1>
-    <div class="meta">{date} ・ ゲームウォッチ編集部</div>
+    <div class="meta">{date} ・ ガジェゲ編集部</div>
     {hero}
     <p class="lead">{lead}</p>
     {tldr}
@@ -145,7 +148,7 @@ _PAGE = """<!DOCTYPE html>
   </article>
   <footer>
     <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。</div>
-    (c) {year} ゲームウォッチ ／ データで見るゲームトレンド
+    (c) {year} ガジェゲ（Gadget×Game） ／ データで見るゲームトレンド
   </footer>
 </main>
 </body>
