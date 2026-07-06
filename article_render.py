@@ -55,8 +55,14 @@ _CSS = """
   .logo-mark{width:28px;height:28px;border-radius:8px;display:block;flex:0 0 auto;box-shadow:0 0 16px rgba(57,216,255,.30);}
   .logo-name{display:inline-flex;flex-direction:column;line-height:1.04;}
   .logo-sub{font-size:9px;font-weight:700;letter-spacing:.13em;color:var(--accent);font-style:normal;text-transform:uppercase;margin-top:1px;}
-  nav{display:flex;gap:16px;font-size:14px;color:var(--muted);}
+  nav{display:flex;align-items:center;gap:16px;font-size:14px;color:var(--muted);}
   nav a:hover{color:var(--text);}
+  .x-link{display:inline-flex;align-items:center;gap:5px;color:var(--muted);transition:color .15s;}
+  .x-link:hover{color:var(--accent);}
+  .x-link svg{width:16px;height:16px;}
+  footer .social{margin:0 0 12px;}
+  footer .social .x-link{font-weight:700;color:var(--text);}
+  footer .social .x-link:hover{color:var(--accent);}
   .article{max-width:720px;margin:0 auto;padding:30px 0 10px;}
   .crumb{font-size:12px;color:var(--dim);margin-bottom:14px;}
   .crumb a:hover{color:var(--accent);}
@@ -131,7 +137,7 @@ _PAGE = """<!DOCTYPE html>
 <body>
 <header><div class="wrap head">
   <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="28" height="28"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
-  <nav><a href="../index.html">トップ</a></nav>
+  <nav><a href="../index.html">トップ</a>{x_nav}</nav>
 </div></header>
 
 <main class="wrap">
@@ -148,6 +154,7 @@ _PAGE = """<!DOCTYPE html>
   </article>
   <footer>
     <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。</div>
+    <div class="social">{x_footer}</div>
     (c) {year} ガジェゲ（Gadget×Game） ／ データで見るゲームトレンド
   </footer>
 </main>
@@ -158,6 +165,24 @@ _PAGE = """<!DOCTYPE html>
 
 def _esc(s: str) -> str:
     return html.escape(str(s or ""))
+
+
+# X（旧Twitter）ロゴ
+_X_SVG = ("<svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'>"
+          "<path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817"
+          "L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg>")
+
+
+def x_link_html(show_handle: bool = True) -> str:
+    """公式XアカウントへのリンクHTML。config.X_HANDLE 未設定なら空文字。"""
+    url = config.x_url()
+    if not url:
+        return ""
+    handle = config.x_handle()
+    label = f" @{handle}" if show_handle else ""
+    aria = f"公式X @{handle}"
+    return (f"<a class=\"x-link\" href=\"{_esc(url)}\" target=\"_blank\" rel=\"noopener\" "
+            f"aria-label=\"{_esc(aria)}\">{_X_SVG}{_esc(label)}</a>")
 
 
 def slugify(dt: datetime, seq: int = 1) -> str:
@@ -293,6 +318,8 @@ def render_article(article: dict) -> str:
         og_image=_esc(og_image),
         canonical_tag=canonical_tag,
         og_url_tag=og_url_tag,
+        x_nav=x_link_html(show_handle=False),
+        x_footer=x_link_html(show_handle=True),
     )
 
 
@@ -376,6 +403,9 @@ def inject_homepage(index_html: str, articles: list[dict]) -> str:
     html = _replace_region(index_html, "TRENDING", trending_html)
     html = _replace_region(html, "DEVICES", devices_html)
     html = _replace_region(html, "ARTICLES", articles_html)
+    # 公式Xリンク（config.X_HANDLE 変更時に次回publishで自動反映）
+    html = _replace_region(html, "XNAV", x_link_html(show_handle=False))
+    html = _replace_region(html, "XLINK", x_link_html(show_handle=True))
     return html
 
 

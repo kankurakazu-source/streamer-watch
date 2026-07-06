@@ -190,6 +190,21 @@ SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "") or "https://game-watch.pages
 # 記事のカテゴリ候補（AIはこの中から選ぶ）
 ARTICLE_CATEGORIES = ["セール分析", "注目株", "新作", "eスポーツ", "デバイス", "データ分析", "考察"]
 
+# サイト公式Xアカウント。@有無どちらでも可。変更時はここ（＋env X_HANDLE）を直すだけ。
+# 生成記事は自動で反映、トップページは次回のpublish()時に反映される。空にするとリンク非表示。
+X_HANDLE = os.environ.get("X_HANDLE", "") or "@game_infoman"
+
+
+def x_handle() -> str:
+    """先頭の @ を除いたハンドル名（例: game_infoman）。未設定なら空。"""
+    return (X_HANDLE or "").lstrip("@").strip()
+
+
+def x_url() -> str:
+    """公式XプロフィールのURL。未設定なら空文字。"""
+    h = x_handle()
+    return f"https://x.com/{h}" if h else ""
+
 # アフィリエイト設定（取得後に各購入リンクへ付与する。未設定なら通常の検索リンク）
 # これらは公開リンクに埋め込まれる非秘匿情報。env が無ければ下の既定値（直書き）を使う。
 # 直書きしておくとローカルでもGitHub Actionsでも設定なしで機能する。

@@ -55,10 +55,16 @@
   .logo-name{display:inline-flex;flex-direction:column;line-height:1.04;}
   .logo-sub{font-size:9.5px;font-weight:700;letter-spacing:.13em;color:var(--accent);
     font-style:normal;text-transform:uppercase;margin-top:1px;}
-  nav{display:flex;gap:6px;}
+  nav{display:flex;align-items:center;gap:6px;}
   nav a{position:relative;padding:8px 12px;font-size:13.5px;color:var(--muted);border-radius:9px;
     transition:color .15s,background .15s;}
   nav a:hover{color:var(--text);background:rgba(255,255,255,.05);}
+  .x-link{display:inline-flex;align-items:center;gap:5px;color:var(--muted);transition:color .15s,background .15s;}
+  .x-link:hover{color:var(--accent);}
+  .x-link svg{width:16px;height:16px;display:block;}
+  footer .social{margin:0 0 12px;}
+  footer .social .x-link{font-weight:700;color:var(--text);}
+  footer .social .x-link:hover{color:var(--accent);}
 
   /* ===== ヒーロー ===== */
   .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line-soft);
@@ -177,6 +183,9 @@
     <a href="#trending">いま読まれている</a>
     <a href="#devices">デバイス</a>
     <a href="#articles">記事</a>
+    <!--XNAV:START-->
+    <a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a>
+    <!--XNAV:END-->
   </nav>
 </div></header>
 
@@ -288,6 +297,11 @@
 
   <footer>
     <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。</div>
+    <div class="social">
+    <!--XLINK:START-->
+    <a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg> @game_infoman</a>
+    <!--XLINK:END-->
+    </div>
     (c) 2026 ガジェゲ ／ データで見るゲームテックメディア
   </footer>
 </main>

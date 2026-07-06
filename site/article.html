@@ -26,7 +26,13 @@
   .head{display:flex;align-items:center;justify-content:space-between;height:60px;}
   .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:19px;}
   .logo .dot{width:12px;height:12px;border-radius:3px;background:var(--cyan);}
-  nav{display:flex;gap:20px;font-size:14px;color:var(--muted);}
+  nav{display:flex;align-items:center;gap:20px;font-size:14px;color:var(--muted);}
+  .x-link{display:inline-flex;align-items:center;gap:5px;color:var(--muted);transition:color .15s;}
+  .x-link:hover{color:var(--cyan);}
+  .x-link svg{width:16px;height:16px;display:block;}
+  footer .social{margin:0 0 12px;}
+  footer .social .x-link{font-weight:700;color:var(--text);}
+  footer .social .x-link:hover{color:var(--cyan);}
   .article{max-width:720px;margin:0 auto;padding:26px 0 10px;}
   .crumb{font-size:12px;color:var(--muted);margin-bottom:12px;}
   .cat{display:inline-block;font-size:12px;font-weight:700;padding:3px 11px;border-radius:6px;background:rgba(239,84,35,.13);color:var(--orange);}
@@ -71,7 +77,7 @@
 <body>
 <header><div class="wrap head">
   <div class="logo"><span class="dot"></span>ガジェゲ</div>
-  <nav><a href="index.html">トップ</a><a href="#">セール</a><a href="#">注目株</a><a href="#">デバイス</a></nav>
+  <nav><a href="index.html">トップ</a><a href="#">セール</a><a href="#">注目株</a><a href="#">デバイス</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
 </div></header>
 
 <main class="wrap">
@@ -161,6 +167,7 @@
 
   <footer>
     <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ています。価格・割引はSteam等の公開情報を基にした参考値です。</div>
+    <div class="social"><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg> @game_infoman</a></div>
     (c) 2026 ガジェゲ ／ データで見るゲームトレンド
   </footer>
 </main>
