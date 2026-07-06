@@ -15,3 +15,7 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Cloudflare / wrangler のローカル成果物（デプロイ時に生成される。リポジトリに不要）
+.wrangler/
+.cf_project_name

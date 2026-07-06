@@ -176,10 +176,10 @@ HISTORY_DB = f"{DATA_DIR}/history.sqlite3"
 # ============================================
 SITE_DIR = "site"                      # 静的サイトのルート
 ARTICLES_SUBDIR = "articles"           # 記事HTMLの置き場所（site配下）
-# 記事のX投稿に付ける公開URLのベース。GitHub Pages等で公開後に設定する。
-# 例: https://username.github.io/game-watch/  ／ 末尾スラッシュ有無どちらでも可。
-# GitHub Pagesで公開中。環境変数 SITE_BASE_URL があればそれを優先する。
-SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "") or "https://kankurakazu-source.github.io/streamer-watch"
+# 記事のX投稿に付ける公開URLのベース。末尾スラッシュ有無どちらでも可。
+# Cloudflare Pages で公開中（汎用URL・個人名なし）。
+# 環境変数 SITE_BASE_URL があればそれを優先する（独自ドメイン移行時に上書き可能）。
+SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "") or "https://game-watch.pages.dev"
 
 # 記事のカテゴリ候補（AIはこの中から選ぶ）
 ARTICLE_CATEGORIES = ["セール分析", "注目株", "新作", "eスポーツ", "データ分析", "考察"]
