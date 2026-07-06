@@ -143,13 +143,38 @@ def steam_image_url(appid: int | None) -> str:
 
 
 def affiliate_links(name: str) -> dict:
-    """ゲーム名から各ストアの検索URLを作る（設定があればアフィリタグを付与）。"""
+    """
+    商品名から各ストアの検索URLを作る。アフィリID(config)があれば成果計測付きにする。
+    - Amazon : 検索URLにアソシエイトタグ(&tag=)を付与。
+    - 楽天   : 検索URLを楽天アフィリのリダイレクト(hb.afl.rakuten.co.jp)でラップ。
+    - DMM    : 検索URLをDMMアフィリのリダイレクト(al.dmm.co.jp)でラップ。
+    IDが無いストアは通常の検索URL（成果は付かないがユーザーの導線としては機能）。
+    """
     q = urllib.parse.quote(name or "")
+
+    # Amazon
     amazon = f"https://www.amazon.co.jp/s?k={q}"
     if config.AMAZON_ASSOC_TAG:
         amazon += f"&tag={urllib.parse.quote(config.AMAZON_ASSOC_TAG)}"
-    rakuten = f"https://search.rakuten.co.jp/search/mall/{q}/"
-    dmm = f"https://www.dmm.co.jp/search/=/searchstr={q}/"
+
+    # 楽天
+    rakuten_target = f"https://search.rakuten.co.jp/search/mall/{q}/"
+    if config.RAKUTEN_AFFILIATE_ID:
+        enc = urllib.parse.quote(rakuten_target, safe="")
+        rakuten = (f"https://hb.afl.rakuten.co.jp/hgc/{config.RAKUTEN_AFFILIATE_ID}/"
+                   f"?pc={enc}&m={enc}")
+    else:
+        rakuten = rakuten_target
+
+    # DMM
+    dmm_target = f"https://www.dmm.co.jp/search/=/searchstr={q}/"
+    if config.DMM_AFFILIATE_ID:
+        enc = urllib.parse.quote(dmm_target, safe="")
+        dmm = (f"https://al.dmm.co.jp/?lurl={enc}"
+               f"&af_id={urllib.parse.quote(config.DMM_AFFILIATE_ID)}&ch=link_tool&ch_id=text")
+    else:
+        dmm = dmm_target
+
     return {"amazon": amazon, "rakuten": rakuten, "dmm": dmm}
 
 

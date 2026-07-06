@@ -191,5 +191,8 @@ SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "") or "https://game-watch.pages
 ARTICLE_CATEGORIES = ["セール分析", "注目株", "新作", "eスポーツ", "デバイス", "データ分析", "考察"]
 
 # アフィリエイト設定（取得後に各購入リンクへ付与する。未設定なら通常の検索リンク）
-AMAZON_ASSOC_TAG = os.environ.get("AMAZON_ASSOC_TAG", "")        # Amazonアソシエイトのタグ(例: yourtag-22)
-RAKUTEN_AFFILIATE_ID = os.environ.get("RAKUTEN_AFFILIATE_ID", "")  # 楽天アフィリエイトID
+# これらは公開リンクに埋め込まれる非秘匿情報。env が無ければ下の既定値（直書き）を使う。
+# 直書きしておくとローカルでもGitHub Actionsでも設定なしで機能する。
+AMAZON_ASSOC_TAG = os.environ.get("AMAZON_ASSOC_TAG", "") or ""        # Amazonアソシエイトのタグ(例: yourtag-22)
+RAKUTEN_AFFILIATE_ID = os.environ.get("RAKUTEN_AFFILIATE_ID", "") or ""  # 楽天アフィリエイトID(hb.afl用の長いID)
+DMM_AFFILIATE_ID = os.environ.get("DMM_AFFILIATE_ID", "") or ""        # DMMアフィリエイトID(af_id。例: yourname-990)
