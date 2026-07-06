@@ -221,6 +221,9 @@ def publish(article: dict, hero_url: str) -> dict:
     articles_dir = os.path.join(config.SITE_DIR, config.ARTICLES_SUBDIR)
     os.makedirs(articles_dir, exist_ok=True)
 
+    # OGP用の正規URL（公開URLベースがあれば）。render_article がog:url/canonicalに使う。
+    article["canonical_url"] = build_public_url(slug)
+
     # 記事HTML
     html_str = article_render.render_article(article)
     article_path = os.path.join(articles_dir, f"{slug}.html")

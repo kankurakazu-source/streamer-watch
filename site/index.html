@@ -4,6 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ゲームウォッチ｜データで見るゲームトレンド</title>
+<meta name="description" content="Steam・Twitch・YouTubeの数字から、話題のゲーム・セール・ガジェットを毎日ピックアップ。データで見るゲームトレンドメディア。">
+<link rel="canonical" href="https://game-watch.pages.dev/">
+<!-- OGP / Twitter Card（X等でリンクを貼った時のカード表示。CTRに直結） -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ゲームウォッチ">
+<meta property="og:title" content="ゲームウォッチ｜データで見るゲームトレンド">
+<meta property="og:description" content="Steam・Twitch・YouTubeの数字から、話題のゲーム・セール・ガジェットを毎日ピックアップ。">
+<meta property="og:url" content="https://game-watch.pages.dev/">
+<meta property="og:image" content="https://game-watch.pages.dev/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ゲームウォッチ｜データで見るゲームトレンド">
+<meta name="twitter:description" content="Steam・Twitch・YouTubeの数字から、話題のゲーム・セール・ガジェットを毎日ピックアップ。">
+<meta name="twitter:image" content="https://game-watch.pages.dev/ogp.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231793c9'/%3E%3C/svg%3E">
 <style>
   :root{
     --bg:#f4f6f9; --card:#ffffff; --card2:#e9edf2; --line:#e2e7ee;
@@ -14,67 +28,39 @@
   }
   *{box-sizing:border-box;}
   body{margin:0;background:var(--bg);color:var(--text);
-    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",sans-serif;line-height:1.6;}
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",sans-serif;line-height:1.6;
+    -webkit-text-size-adjust:100%;}
   a{color:inherit;text-decoration:none;}
   .wrap{max-width:1000px;margin:0 auto;padding:0 20px;}
   header{position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(6px);
     border-bottom:1px solid var(--line);z-index:10;}
-  .head{display:flex;align-items:center;justify-content:space-between;height:60px;}
+  .head{display:flex;align-items:center;justify-content:space-between;height:58px;}
   .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:19px;}
   .logo .dot{width:12px;height:12px;border-radius:3px;background:var(--cyan);}
-  nav{display:flex;gap:20px;font-size:14px;color:var(--muted);}
+  nav{display:flex;gap:18px;font-size:14px;color:var(--muted);}
+  nav a{padding:4px 2px;}
   nav a:hover{color:var(--text);}
-  h2.sec{font-size:20px;margin:34px 0 14px;display:flex;align-items:center;gap:9px;}
+
+  /* ヒーロー（何のサイトかを一目で伝える） */
+  .hero{background:linear-gradient(135deg,#0f1720 0%,#17232f 60%,#12303f 100%);color:#fff;}
+  .hero .wrap{padding:40px 20px 44px;}
+  .hero h1{font-size:34px;line-height:1.3;margin:0 0 12px;font-weight:800;letter-spacing:.01em;}
+  .hero h1 .c{color:#3cc7ff;}
+  .hero p{margin:0;color:#b7c4d2;font-size:15px;max-width:640px;}
+
+  h2.sec{font-size:20px;margin:32px 0 14px;display:flex;align-items:center;gap:9px;}
   h2.sec .bar{width:5px;height:20px;border-radius:3px;background:var(--cyan);}
   .sub{font-size:13px;color:var(--muted);margin:-8px 0 14px;}
-  .weekly{margin-top:22px;padding:18px 20px;border-radius:14px;
-    background:#e9f4fc;border:1px solid #d3e7f5;box-shadow:var(--sh);
-    display:flex;align-items:center;justify-content:space-between;gap:16px;}
-  .weekly .tag{font-size:12px;color:var(--cyan);font-weight:700;letter-spacing:.04em;}
-  .weekly .ttl{font-size:17px;margin-top:3px;}
-  .weekly .go{font-size:22px;color:var(--cyan);}
-  .grid{display:grid;gap:14px;}
-  .g3{grid-template-columns:repeat(auto-fit,minmax(210px,1fr));}
-  .g2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));}
-  .mcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px;box-shadow:var(--sh);}
-  .mcard .top{display:flex;align-items:center;justify-content:space-between;}
-  .mcard .name{font-weight:600;font-size:16px;}
-  .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;}
-  .pill.g{background:rgba(26,158,90,.13);color:var(--green);}
-  .pill.p{background:rgba(120,87,214,.13);color:var(--purple);}
-  .pill.c{background:rgba(23,147,201,.13);color:var(--cyan);}
-  .pct{font-size:28px;font-weight:800;margin-top:10px;}
-  .pct.g{color:var(--green);} .pct.p{color:var(--purple);} .pct.c{color:var(--cyan);}
-  .pct span{font-size:12px;color:var(--muted);font-weight:400;margin-left:6px;}
-  .note{font-size:12px;color:var(--dim);margin-top:3px;}
-  .scard{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--sh);}
-  .scard .thumb{position:relative;height:120px;background:var(--card2) center/cover;}
-  .scard .off{position:absolute;top:10px;left:10px;background:var(--orange);color:#fff;
-    font-weight:800;font-size:13px;padding:3px 10px;border-radius:8px;}
-  .scard .body{padding:14px;}
-  .scard .name{font-weight:600;font-size:16px;}
-  .scard .meta{font-size:12px;color:var(--muted);margin:5px 0 12px;}
-  .scard .meta b{color:var(--green);font-weight:700;}
-  .buys{display:flex;gap:7px;}
-  .buy{flex:1;text-align:center;font-size:12px;font-weight:700;padding:8px 4px;border-radius:8px;color:#fff;}
-  .buy.amazon{background:var(--amazon);color:#231a08;}
-  .buy.rakuten{background:var(--rakuten);}
-  .buy.dmm{background:var(--dmm);}
-  .row{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--line);}
-  .date{font-size:12px;font-weight:700;background:var(--card2);padding:4px 9px;border-radius:8px;min-width:54px;text-align:center;}
-  .row .t{flex:1;font-size:15px;}
-  .row .plat{font-size:12px;color:var(--dim);}
-  .row .chev{color:var(--dim);}
-  .dcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;gap:13px;align-items:center;box-shadow:var(--sh);}
-  .dcard .ic{width:56px;height:56px;flex:0 0 auto;border-radius:10px;background:var(--card2);
-    display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--muted);}
-  .dcard .name{font-weight:600;font-size:15px;}
-  .dcard .meta{font-size:12px;color:var(--muted);margin:2px 0 9px;}
-  .cats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px;}
-  .chip{font-size:13px;padding:6px 14px;border-radius:20px;background:var(--card);border:1px solid var(--line);color:var(--muted);cursor:pointer;}
+
+  .cats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;}
+  .chip{font-size:13px;padding:7px 15px;border-radius:20px;background:var(--card);border:1px solid var(--line);
+    color:var(--muted);cursor:pointer;user-select:none;transition:background .12s,color .12s;}
+  .chip:hover{color:var(--text);}
   .chip.on{background:var(--cyan);color:#fff;border-color:var(--cyan);font-weight:700;}
-  .layout{display:grid;grid-template-columns:1fr 300px;gap:24px;}
-  .acard{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px;box-shadow:var(--sh);}
+
+  .acard{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:12px;margin-bottom:12px;box-shadow:var(--sh);transition:box-shadow .15s,transform .15s;}
+  .acard:hover{box-shadow:0 6px 18px rgba(20,30,50,.12);transform:translateY(-1px);}
   .acard .th{width:150px;height:92px;flex:0 0 auto;border-radius:8px;background:var(--card2) center/cover;}
   .acard .cat{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:6px;background:rgba(23,147,201,.13);color:var(--cyan);}
   .acard .cat.o{background:rgba(239,84,35,.13);color:var(--orange);}
@@ -83,101 +69,92 @@
   .acard .ttl{font-size:15px;font-weight:600;margin:7px 0 5px;line-height:1.45;}
   .acard .ex{font-size:12px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
   .acard .d{font-size:11px;color:var(--dim);margin-top:7px;}
-  .side .box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:var(--sh);}
-  .side h3{font-size:15px;margin:0 0 10px;}
-  .rk{display:flex;align-items:center;gap:11px;padding:9px 0;border-top:1px solid var(--line);}
-  .rk.first{border-top:none;}
-  .rk .n{font-size:20px;font-weight:800;color:var(--cyan);width:22px;text-align:center;}
-  .rk .rt{width:56px;height:36px;flex:0 0 auto;border-radius:6px;background:var(--card2) center/cover;}
-  .rk .rl{flex:1;font-size:13px;line-height:1.4;}
-  .rk .v{font-size:11px;color:var(--dim);margin-top:2px;}
+  .empty{color:var(--muted);font-size:14px;padding:26px 4px;text-align:center;}
+
   footer{margin-top:44px;border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);font-size:12px;}
   footer .disc{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:14px;color:var(--muted);box-shadow:var(--sh);}
-  @media(max-width:760px){.layout{grid-template-columns:1fr;}}
+
+  @media(max-width:640px){
+    .head{height:54px;}
+    .logo{font-size:17px;}
+    nav{gap:14px;font-size:13px;}
+    .hero .wrap{padding:30px 20px 34px;}
+    .hero h1{font-size:26px;}
+    .acard .th{width:104px;height:70px;}
+    .acard .ttl{font-size:14px;}
+  }
 </style>
 </head>
 <body>
 <header><div class="wrap head">
   <div class="logo"><span class="dot"></span>ゲームウォッチ</div>
-  <nav><a href="#">注目株</a><a href="#">セール</a><a href="#">新作カレンダー</a><a href="#">デバイス</a><a href="#">週次</a></nav>
+  <nav><a href="#articles">記事一覧</a></nav>
 </div></header>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>データで見る、<span class="c">次に来るゲーム。</span></h1>
+    <p>Steam・Twitch・YouTube の数字から、話題のゲーム／セール／ガジェットを毎日ピックアップ。「なぜ今これが来ているか」を横断で読み解きます。</p>
+  </div>
+</section>
+
 <main class="wrap">
-  <div class="weekly">
-    <div><div class="tag">今週のまとめ</div><div class="ttl">7/1〜7/6 同接が伸びたゲームTOP10とセール総まとめ</div></div>
-    <div class="go">→</div>
+  <!--
+    ここには以前「注目株」「セール」「新作カレンダー」「デバイス」「人気記事TOP5」の
+    セクションがサンプル値で置かれていましたが、実データのパイプラインが未接続で
+    捏造値（架空のタイトル名・views数）だったため撤去しました。
+    実データを供給できるようになった段階で、記事一覧と同じ仕組みで再導入します。
+  -->
+  <h2 class="sec" id="articles"><span class="bar"></span>記事</h2>
+  <div class="cats" id="cats">
+    <span class="chip on" data-cat="">すべて</span>
+    <span class="chip" data-cat="セール分析">セール分析</span>
+    <span class="chip" data-cat="注目株">注目株</span>
+    <span class="chip" data-cat="新作">新作</span>
+    <span class="chip" data-cat="eスポーツ">eスポーツ</span>
+    <span class="chip" data-cat="データ分析">データ分析</span>
+    <span class="chip" data-cat="考察">考察</span>
   </div>
-  <h2 class="sec"><span class="bar" style="background:var(--green)"></span>これから来る注目株</h2>
-  <div class="sub">規模は小さくても「勢い」のあるタイトルをスコアで抽出（絶対数だけで見落とさない）</div>
-  <div class="grid g3">
-    <div class="mcard"><div class="top"><span class="name">Sample Survivors</span><span class="pill g">急伸</span></div>
-      <div class="pct g">+180%<span>前日比</span></div><div class="note">同接 2,400 ／ 配信者が触り始め</div></div>
-    <div class="mcard"><div class="top"><span class="name">Neon Drift</span><span class="pill p">WL急上昇</span></div>
-      <div class="pct p">+95%<span>週次</span></div><div class="note">ウィッシュリスト順位が上昇中</div></div>
-    <div class="mcard"><div class="top"><span class="name">Pixel Raiders</span><span class="pill c">横断</span></div>
-      <div class="pct c">+72%<span>前日比</span></div><div class="note">Twitch・YouTubeで同時浮上</div></div>
+  <div id="articleList">
+    <!--ARTICLES:START-->
+    <a class="acard" data-cat="データ分析" href="articles/20260706-0915-1.html">
+      <div class="th" style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/2767030/header.jpg')"></div>
+      <div><span class="cat">データ分析</span>
+        <div class="ttl">『Marvel Rivals』が前日比+28%で急増、Steamサマーセールの陰で盛り上がる同接ランキングを読む</div>
+        <div class="ex">Steamサマーセールの目玉として『サイバーパンク2077』や『Palworld』が注目を集める一方、同時接続者数の伸び率で見ると『Marvel Rivals』『Rainbow Six Siege』『Baldur&#x27;s Gate 3』が軒並み</div>
+        <div class="d">2026/07/06</div></div>
+    </a>
+    <!--ARTICLES:END-->
   </div>
-  <h2 class="sec"><span class="bar" style="background:var(--orange)"></span>今セール中の買い時</h2>
-  <div class="grid g2">
-    <div class="scard">
-      <div class="thumb" style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1091500/header.jpg')"><span class="off">-70%</span></div>
-      <div class="body"><div class="name">サイバーパンク2077</div>
-        <div class="meta">同接 前日比 <b>+32%</b> ／ 過去最安クラス</div>
-        <div class="buys"><a class="buy amazon">Amazon</a><a class="buy rakuten">楽天</a><a class="buy dmm">DMM</a></div></div>
-    </div>
-    <div class="scard">
-      <div class="thumb" style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/814380/header.jpg')"><span class="off">-50%</span></div>
-      <div class="body"><div class="name">SEKIRO</div>
-        <div class="meta">セール中 ／ 同接が再上昇</div>
-        <div class="buys"><a class="buy amazon">Amazon</a><a class="buy rakuten">楽天</a><a class="buy dmm">DMM</a></div></div>
-    </div>
-  </div>
-  <h2 class="sec"><span class="bar" style="background:var(--cyan)"></span>新作カレンダー</h2>
-  <div>
-    <div class="row"><span class="date">7/11</span><span class="t">Chrono Break</span><span class="plat">PC / PS5</span><span class="chev">→</span></div>
-    <div class="row"><span class="date">7/18</span><span class="t">Skyforge Reborn</span><span class="plat">Switch2</span><span class="chev">→</span></div>
-    <div class="row"><span class="date">7/25</span><span class="t">Deep Sea Colony</span><span class="plat">PC</span><span class="chev">→</span></div>
-  </div>
-  <h2 class="sec"><span class="bar" style="background:var(--purple)"></span>注目のゲーミングデバイス</h2>
-  <div class="grid g2">
-    <div class="dcard"><div class="ic">M</div><div style="flex:1">
-      <div class="name">超軽量ワイヤレスマウス</div><div class="meta">新発売 ／ FPS向け</div>
-      <div class="buys"><a class="buy amazon">Amazon</a><a class="buy rakuten">楽天</a></div></div></div>
-    <div class="dcard"><div class="ic">D</div><div style="flex:1">
-      <div class="name">240Hz ゲーミングモニター</div><div class="meta">セール中 -20%</div>
-      <div class="buys"><a class="buy amazon">Amazon</a><a class="buy rakuten">楽天</a></div></div></div>
-  </div>
-  <h2 class="sec"><span class="bar"></span>記事</h2>
-  <div class="cats">
-    <span class="chip on">すべて</span><span class="chip">セール分析</span><span class="chip">注目株</span>
-    <span class="chip">新作</span><span class="chip">eスポーツ</span><span class="chip">デバイス</span><span class="chip">考察</span>
-  </div>
-  <div class="layout">
-    <div class="main">
-      <!--ARTICLES:START-->
-      <a class="acard" href="articles/20260706-0915-1.html">
-        <div class="th" style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/2767030/header.jpg')"></div>
-        <div><span class="cat">データ分析</span>
-          <div class="ttl">『Marvel Rivals』が前日比+28%で急増、Steamサマーセールの陰で盛り上がる同接ランキングを読む</div>
-          <div class="ex">Steamサマーセールの目玉として『サイバーパンク2077』や『Palworld』が注目を集める一方、同時接続者数の伸び率で見ると『Marvel Rivals』『Rainbow Six Siege』『Baldur&#x27;s Gate 3』が軒並み</div>
-          <div class="d">2026/07/06</div></div>
-      </a>
-      <!--ARTICLES:END-->
-    </div>
-    <div class="side">
-      <div class="box">
-        <h3>人気記事 TOP5</h3>
-        <div class="rk first"><span class="n">1</span><div class="rt" style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1091500/header.jpg')"></div><div><div class="rl">サマーセールで本当に買いの5本</div><div class="v">12,400 views</div></div></div>
-        <div class="rk"><span class="n">2</span><div class="rt" style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/814380/header.jpg')"></div><div><div class="rl">前日比+180%の新興タイトル3選</div><div class="v">9,800 views</div></div></div>
-        <div class="rk"><span class="n">3</span><div class="rt" style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1245620/header.jpg')"></div><div><div class="rl">世界同時ヒットの実態を数字で</div><div class="v">7,300 views</div></div></div>
-        <div class="rk"><span class="n">4</span><div class="rt" style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg')"></div><div><div class="rl">大会シーズンで視聴急伸</div><div class="v">6,100 views</div></div></div>
-        <div class="rk"><span class="n">5</span><div class="rt" style="background:var(--card2)"></div><div><div class="rl">FPS向け軽量マウス比較</div><div class="v">5,500 views</div></div></div>
-      </div>
-    </div>
-  </div>
+  <div class="empty" id="emptyMsg" hidden>このカテゴリの記事はまだありません。</div>
+
   <footer>
-    <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ています。価格・割引はSteam等の公開情報を基にした参考値です。</div>
+    <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。</div>
     (c) 2026 ゲームウォッチ ／ データで見るゲームトレンド
   </footer>
 </main>
+
+<script>
+  // カテゴリチップで記事一覧を絞り込む（静的サイト内で完結）
+  (function(){
+    var chips = document.querySelectorAll('#cats .chip');
+    var cards = document.querySelectorAll('#articleList .acard');
+    var empty = document.getElementById('emptyMsg');
+    chips.forEach(function(chip){
+      chip.addEventListener('click', function(){
+        chips.forEach(function(c){ c.classList.remove('on'); });
+        chip.classList.add('on');
+        var cat = chip.getAttribute('data-cat') || '';
+        var shown = 0;
+        cards.forEach(function(card){
+          var match = !cat || card.getAttribute('data-cat') === cat;
+          card.style.display = match ? '' : 'none';
+          if(match) shown++;
+        });
+        if(empty) empty.hidden = shown !== 0;
+      });
+    });
+  })();
+</script>
 </body>
 </html>

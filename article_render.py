@@ -84,6 +84,20 @@ _PAGE = """<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title} ｜ゲームウォッチ</title>
+<meta name="description" content="{og_desc}">
+{canonical_tag}
+<!-- OGP / Twitter Card（Xでリンクを貼った時のカード表示。CTRに直結） -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="ゲームウォッチ">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{og_desc}">
+{og_url_tag}
+<meta property="og:image" content="{og_image}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title}">
+<meta name="twitter:description" content="{og_desc}">
+<meta name="twitter:image" content="{og_image}">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231793c9'/%3E%3C/svg%3E">
 <style>{css}</style>
 </head>
 <body>
@@ -202,6 +216,14 @@ def render_article(article: dict) -> str:
         parts.append("<h2 class='g'>まとめ</h2>")
         parts.append(_paragraphs(conclusion))
 
+    # OGP用メタ: 説明文はlead(無ければtldr)を160字程度に、画像はhero(無ければサイト共通OG画像)
+    base_url = (config.SITE_BASE_URL or "").rstrip("/")
+    og_desc = _esc((article.get("lead") or article.get("tldr") or "").strip()[:160])
+    og_image = hero_url or (f"{base_url}/ogp.png" if base_url else "")
+    canonical = (article.get("canonical_url") or "").strip()
+    canonical_tag = f'<link rel="canonical" href="{_esc(canonical)}">' if canonical else ""
+    og_url_tag = f'<meta property="og:url" content="{_esc(canonical)}">' if canonical else ""
+
     return _PAGE.format(
         title=_esc(article.get("title", "")),
         css=_CSS,
@@ -212,6 +234,10 @@ def render_article(article: dict) -> str:
         tldr=tldr,
         body="\n".join(parts),
         year=now.year,
+        og_desc=og_desc,
+        og_image=_esc(og_image),
+        canonical_tag=canonical_tag,
+        og_url_tag=og_url_tag,
     )
 
 
@@ -233,7 +259,7 @@ def _article_card(a: dict) -> str:
     except Exception:
         d = ""
     href = f"{config.ARTICLES_SUBDIR}/{a['slug']}.html"
-    return f"""      <a class="acard" href="{_esc(href)}">
+    return f"""      <a class="acard" data-cat="{_esc(a.get('category',''))}" href="{_esc(href)}">
         {th}
         <div><span class="{cls}">{_esc(a.get('category',''))}</span>
           <div class="ttl">{_esc(a.get('title',''))}</div>
