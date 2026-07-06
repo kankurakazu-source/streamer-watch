@@ -194,5 +194,5 @@ ARTICLE_CATEGORIES = ["セール分析", "注目株", "新作", "eスポーツ",
 # これらは公開リンクに埋め込まれる非秘匿情報。env が無ければ下の既定値（直書き）を使う。
 # 直書きしておくとローカルでもGitHub Actionsでも設定なしで機能する。
 AMAZON_ASSOC_TAG = os.environ.get("AMAZON_ASSOC_TAG", "") or ""        # Amazonアソシエイトのタグ(例: yourtag-22)
-RAKUTEN_AFFILIATE_ID = os.environ.get("RAKUTEN_AFFILIATE_ID", "") or ""  # 楽天アフィリエイトID(hb.afl用の長いID)
+RAKUTEN_AFFILIATE_ID = os.environ.get("RAKUTEN_AFFILIATE_ID", "") or "558dd68a.a8710327.558dd68b.2fef3e9e"  # 楽天アフィリエイトID(hb.afl用)
 DMM_AFFILIATE_ID = os.environ.get("DMM_AFFILIATE_ID", "") or ""        # DMMアフィリエイトID(af_id。例: yourname-990)
