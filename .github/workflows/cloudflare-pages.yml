@@ -1,0 +1,37 @@
+name: Deploy site to Cloudflare Pages
+
+# site/ 配下の変更を main に push すると、Cloudflare Pages(game-watch) に自動デプロイする。
+# 手動実行(workflow_dispatch)も可。
+#
+# 必要なリポジトリ Secret:
+#   CLOUDFLARE_API_TOKEN … Cloudflareで発行するAPIトークン（権限: Account > Cloudflare Pages > Edit）
+# account_id は秘匿情報ではないため下にそのまま記載している。
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/cloudflare-pages.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+# デプロイの重なりを防ぐ（最新の1件だけ反映）
+concurrency:
+  group: cf-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy site/ to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: "507787290bfeed3b7b9b2ffc14d9440e"
+          # 本番URL(game-watch.pages.dev)へ反映するため production ブランチ=main を指定
+          command: pages deploy site --project-name=game-watch --branch=main
