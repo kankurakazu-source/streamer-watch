@@ -206,8 +206,10 @@ def render_article(article: dict) -> str:
         if heading:
             parts.append(f"<h2 class='g'>{_esc(heading)}</h2>")
         buy = sec.get("buy") or {}
-        if buy.get("image_url"):
-            parts.append(f"<div class='gimg' style=\"background-image:url('{_esc(buy['image_url'])}')\"></div>")
+        # セクションのバナー画像は使い回しを避けた sec['image_url'] を優先（無ければbuyの画像）
+        sec_img = sec.get("image_url") or buy.get("image_url", "")
+        if sec_img:
+            parts.append(f"<div class='gimg' style=\"background-image:url('{_esc(sec_img)}')\"></div>")
         parts.append(_paragraphs(sec.get("body", "")))
         if buy.get("name"):
             parts.append(_buybox(buy))

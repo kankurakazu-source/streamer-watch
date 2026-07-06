@@ -185,27 +185,52 @@ def _resolve_game(name: str, name_to_appid: dict, appid_discount: dict) -> dict:
 
 
 def _enrich(article: dict, collected: dict) -> tuple[str, list[str]]:
-    """記事にSteam画像/割引を付与。戻り値: (hero画像URL, 割引付きゲーム名の一覧ログ)。"""
+    """
+    記事にSteam画像/割引を付与。hero と各セクションのバナー画像には、同じ画像の使い回しを
+    避けるため「まだ使っていない別の画像（スクリーンショット等）」を順に割り当てる。
+    戻り値: (hero画像URL, 割引付きゲーム名の一覧ログ)。
+    """
     name_to_appid, appid_discount = _build_steam_maps(collected)
     log = []
+
+    pools: dict[int, list[str]] = {}   # appid -> 画像URL群（キャッシュ）
+    used: set[str] = set()             # 記事内で既に使った画像
+
+    def pick_image(appid, fallback: str) -> str:
+        """このappidの画像から、記事内でまだ使っていないものを1枚選ぶ。"""
+        if not appid:
+            return fallback
+        if appid not in pools:
+            try:
+                pools[appid] = steam_collector.fetch_image_urls(appid)
+            except Exception:
+                pools[appid] = []
+        for u in pools[appid]:
+            if u not in used:
+                used.add(u)
+                return u
+        # 全部使い切った/取得不可なら、先頭 or ヘッダーへフォールバック
+        return (pools[appid][0] if pools[appid] else fallback)
 
     # hero画像（主役ゲーム）
     hero_url = ""
     main = (article.get("main_game") or "").strip()
     if main:
         g = _resolve_game(main, name_to_appid, appid_discount)
-        hero_url = g.get("image_url", "")
         article["main_appid"] = g.get("appid")  # 親ポスト添付画像の生成に使う
+        hero_url = pick_image(g.get("appid"), g.get("image_url", ""))
     article["hero_image_url"] = hero_url
 
-    # 各セクションの購入ボックス
+    # 各セクション：購入ボックス＋（使い回さない）バナー画像
     for sec in article.get("sections", []):
         gname = (sec.get("game_name") or "").strip()
         if not gname:
             sec["buy"] = {}
+            sec["image_url"] = ""
             continue
         g = _resolve_game(gname, name_to_appid, appid_discount)
         sec["buy"] = g
+        sec["image_url"] = pick_image(g.get("appid"), g.get("image_url", ""))
         if g.get("discount_percent"):
             log.append(f"{gname} -{g['discount_percent']}%")
     return hero_url, log
@@ -297,7 +322,19 @@ def build_post_image(article: dict, slug: str) -> str | None:
 
     try:
         if appid:
-            img_bytes = steam_collector.fetch_game_image_bytes(appid)
+            # 記事ごとに絵柄が変わるよう、スクショ群から1枚を選んで使う（無ければ従来のヘッダー系）
+            img_bytes = None
+            urls = steam_collector.fetch_image_urls(appid)
+            if urls:
+                idx = abs(hash(slug)) % len(urls)
+                try:
+                    r = requests.get(urls[idx], timeout=10)
+                    if r.status_code == 200 and len(r.content) > 3000:
+                        img_bytes = r.content
+                except requests.exceptions.RequestException:
+                    img_bytes = None
+            if not img_bytes:
+                img_bytes = steam_collector.fetch_game_image_bytes(appid)
             if img_bytes:
                 draft = {"type": ctype, "headline": article.get("title", "")}
                 return image_card.render_art_card(img_bytes, draft, out_path, "画像: Steam")

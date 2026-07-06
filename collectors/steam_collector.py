@@ -13,7 +13,48 @@ import requests
 STEAM_PLAYERS_URL = "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/"
 STEAM_FEATURED_URL = "https://store.steampowered.com/api/featuredcategories/"
 STEAM_SEARCH_URL = "https://store.steampowered.com/api/storesearch/"
+STEAM_APPDETAILS_URL = "https://store.steampowered.com/api/appdetails/"
 STEAM_CDN = "https://cdn.cloudflare.steamstatic.com/steam/apps"
+
+
+def fetch_image_urls(appid: int, cc: str = "jp", lang: str = "japanese", limit: int = 12) -> list[str]:
+    """
+    1タイトルについて、記事内で使い回さないための「異なる画像URL」を複数返す。
+    appdetails のスクリーンショット(path_full=高解像度)とヘッダー画像を使う。
+    これらは存在が保証されるURLのみ（壊れ画像を避ける）。取得不可なら空リスト。
+    """
+    if not appid:
+        return []
+    try:
+        resp = requests.get(
+            STEAM_APPDETAILS_URL,
+            params={"appids": appid, "l": lang, "cc": cc},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        entry = resp.json().get(str(appid), {})
+        if not entry.get("success"):
+            return []
+        data = entry.get("data", {})
+    except (requests.exceptions.RequestException, ValueError, AttributeError):
+        return []
+
+    urls: list[str] = []
+    for shot in data.get("screenshots", []) or []:
+        u = shot.get("path_full")
+        if u:
+            urls.append(u)
+    header = data.get("header_image")
+    if header:
+        urls.append(header)
+
+    # 重複除去（順序維持）
+    seen, out = set(), []
+    for u in urls:
+        if u and u not in seen:
+            seen.add(u)
+            out.append(u)
+    return out[:limit]
 
 
 def search_game(term: str, cc: str = "jp", lang: str = "japanese") -> dict | None:
