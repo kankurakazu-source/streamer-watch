@@ -33,8 +33,9 @@ EVENT_KEYWORDS: dict[str, list[str]] = {
     ],
     "デバイス": [
         "マウス", "キーボード", "モニター", "ディスプレイ", "ヘッドセット", "ゲーミングチェア",
-        "コントローラー", "gpu", "グラボ", "グラフィックボード", "rtx", "radeon", "geforce",
-        "cpu", "ryzen", "ssd", "予約", "予約開始", "発売日", "ベンチマーク", "新型",
+        "コントローラー", "ゲーミング", "ワイヤレス", "ドック", "gpu", "グラボ", "グラフィックボード",
+        "rtx", "radeon", "geforce", "cpu", "ryzen", "ssd", "予約", "予約開始", "発売日",
+        "ベンチマーク", "新型", "自作pc",
         "lamzu", "logicool", "razer", "zowie", "pulsar", "vaxee", "finalmouse",
         "mouse", "keyboard", "monitor", "headset", "benchmark", "preorder",
     ],
