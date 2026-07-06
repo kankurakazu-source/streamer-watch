@@ -58,11 +58,27 @@ CREATE TABLE IF NOT EXISTS articles (
     topic_key TEXT,                  -- 重複検知用の正規化キー（主役ゲーム名など）
     excerpt TEXT,                    -- 一覧カード用の抜粋
     image_url TEXT,                  -- サムネイル画像URL（Steam公式アート等。無ければ空）
+    is_breaking INTEGER DEFAULT 0,   -- 速報記事フラグ（トップの並び替え用）
+    event_type TEXT,                 -- 乗ったイベント種別（新作・アプデ/デバイス/eスポーツ/通常）
     created_at TEXT NOT NULL         -- ISO8601
 );
 
 CREATE INDEX IF NOT EXISTS idx_articles_created ON articles (created_at);
 """
+
+# 既存DB（旧スキーマ）に後から列を足すためのマイグレーション定義
+_ARTICLE_MIGRATIONS = [
+    ("is_breaking", "INTEGER DEFAULT 0"),
+    ("event_type", "TEXT"),
+]
+
+
+def _migrate_articles(conn):
+    """articles テーブルに不足している列があれば追加する（既存DBの安全なアップグレード）。"""
+    existing = {row[1] for row in conn.execute("PRAGMA table_info(articles)")}
+    for col, ddl in _ARTICLE_MIGRATIONS:
+        if col not in existing:
+            conn.execute(f"ALTER TABLE articles ADD COLUMN {col} {ddl}")
 
 
 @contextmanager
@@ -83,6 +99,7 @@ def init_db(db_path: str):
         conn.executescript(SCHEMA)
         conn.executescript(SCHEMA_GAMES)
         conn.executescript(SCHEMA_ARTICLES)
+        _migrate_articles(conn)
         conn.commit()
 
 
@@ -202,20 +219,24 @@ def get_prev_day_metric(db_path: str, source: str, game_key: str, metric: str,
 # 記事方針用: articles の保存・一覧取得・重複検知
 # ============================================
 def save_article(db_path: str, slug: str, title: str, category: str,
-                topic_key: str, excerpt: str, image_url: str) -> None:
+                topic_key: str, excerpt: str, image_url: str,
+                is_breaking: bool = False, event_type: str = "") -> None:
     """公開した記事を1件記録する（同一slugは上書き）。"""
     now = datetime.now(timezone.utc).isoformat()
     with get_connection(db_path) as conn:
         conn.execute(
             """
-            INSERT INTO articles (slug, title, category, topic_key, excerpt, image_url, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO articles
+                (slug, title, category, topic_key, excerpt, image_url, is_breaking, event_type, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(slug) DO UPDATE SET
                 title=excluded.title, category=excluded.category,
                 topic_key=excluded.topic_key, excerpt=excluded.excerpt,
-                image_url=excluded.image_url
+                image_url=excluded.image_url, is_breaking=excluded.is_breaking,
+                event_type=excluded.event_type
             """,
-            (slug, title, category, topic_key, excerpt, image_url, now),
+            (slug, title, category, topic_key, excerpt, image_url,
+             1 if is_breaking else 0, event_type or "", now),
         )
         conn.commit()
 
@@ -225,12 +246,14 @@ def list_articles(db_path: str, limit: int = 12) -> list[dict]:
     with get_connection(db_path) as conn:
         cur = conn.execute(
             """
-            SELECT slug, title, category, topic_key, excerpt, image_url, created_at
+            SELECT slug, title, category, topic_key, excerpt, image_url,
+                   is_breaking, event_type, created_at
             FROM articles ORDER BY created_at DESC LIMIT ?
             """,
             (limit,),
         )
-        cols = ["slug", "title", "category", "topic_key", "excerpt", "image_url", "created_at"]
+        cols = ["slug", "title", "category", "topic_key", "excerpt", "image_url",
+                "is_breaking", "event_type", "created_at"]
         return [dict(zip(cols, row)) for row in cur.fetchall()]
 
 

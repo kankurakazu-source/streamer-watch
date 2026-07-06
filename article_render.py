@@ -33,50 +33,71 @@ _CAT_CLASS = {
 # 記事テンプレート（CSSは site/article.html と同系統。プレースホルダを置換して使う）
 _CSS = """
   :root{
-    --bg:#f4f6f9; --card:#ffffff; --card2:#e9edf2; --line:#e2e7ee;
-    --text:#1a2331; --muted:#5d6b7c; --dim:#9aa6b4;
-    --orange:#ef5423; --cyan:#1793c9; --green:#1a9e5a; --purple:#7857d6;
-    --amazon:#ff9900; --rakuten:#bf0000; --dmm:#ec4d0f;
-    --sh:0 1px 3px rgba(20,30,50,.07);
+    --bg:#0a0e16; --bg2:#0c1220; --card:#121a29; --card-hi:#172135; --line:#243046; --line-soft:#1a2334;
+    --text:#eef2f8; --muted:#a7b7ca; --dim:#647689;
+    --accent:#39d8ff; --accent-2:#8a6bff; --sale:#ff6a3d; --green:#2fd27e; --violet:#a78bfa;
+    --amazon:#ff9900; --rakuten:#c5121a; --dmm:#f04e23;
+    --shadow:0 10px 30px rgba(0,0,0,.45);
+    --grad:linear-gradient(135deg,var(--accent),var(--accent-2));
   }
   *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
   body{margin:0;background:var(--bg);color:var(--text);
-    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",sans-serif;line-height:1.75;}
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Noto Sans JP","Segoe UI",system-ui,-apple-system,"Meiryo",sans-serif;
+    line-height:1.9;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:"palt";}
   a{color:inherit;text-decoration:none;}
   .wrap{max-width:1000px;margin:0 auto;padding:0 20px;}
-  header{position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(6px);
-    border-bottom:1px solid var(--line);z-index:10;}
+  header{position:sticky;top:0;z-index:20;background:rgba(10,14,22,.72);
+    backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--line-soft);}
   .head{display:flex;align-items:center;justify-content:space-between;height:60px;}
-  .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:19px;}
-  .logo .dot{width:12px;height:12px;border-radius:3px;background:var(--cyan);}
-  nav{display:flex;gap:20px;font-size:14px;color:var(--muted);}
-  .article{max-width:720px;margin:0 auto;padding:26px 0 10px;}
-  .crumb{font-size:12px;color:var(--muted);margin-bottom:12px;}
-  .cat{display:inline-block;font-size:12px;font-weight:700;padding:3px 11px;border-radius:6px;background:rgba(239,84,35,.13);color:var(--orange);}
-  h1{font-size:27px;line-height:1.4;margin:12px 0 10px;}
-  .meta{font-size:13px;color:var(--dim);margin-bottom:18px;}
-  .hero{width:100%;height:300px;border-radius:14px;background:var(--card2) center/cover;box-shadow:var(--sh);}
-  .lead{font-size:16px;margin:22px 0;}
-  .tldr{background:#edf7f1;border:1px solid #cfe9d9;border-radius:12px;padding:14px 18px;margin:22px 0;}
-  .tldr .lbl{font-size:12px;font-weight:700;color:var(--green);}
-  .tldr .body{font-size:15px;margin-top:4px;}
-  h2.g{font-size:21px;margin:34px 0 6px;padding-top:8px;border-top:1px solid var(--line);}
-  .gimg{width:100%;height:200px;border-radius:12px;background:var(--card2) center/cover;margin:12px 0;box-shadow:var(--sh);}
-  p{margin:12px 0;}
-  .buybox{margin:16px 0;border:1px solid #f3d8cc;background:#fff7f2;border-radius:14px;padding:16px;box-shadow:var(--sh);}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;}
+  .logo .dot{width:13px;height:13px;border-radius:4px;background:var(--grad);box-shadow:0 0 14px rgba(57,216,255,.7);}
+  nav{display:flex;gap:16px;font-size:14px;color:var(--muted);}
+  nav a:hover{color:var(--text);}
+  .article{max-width:720px;margin:0 auto;padding:30px 0 10px;}
+  .crumb{font-size:12px;color:var(--dim);margin-bottom:14px;}
+  .crumb a:hover{color:var(--accent);}
+  .cat{display:inline-block;font-size:12px;font-weight:800;padding:4px 12px;border-radius:100px;letter-spacing:.02em;
+    background:rgba(255,106,61,.15);color:var(--sale);border:1px solid rgba(255,106,61,.3);}
+  h1{font-size:30px;line-height:1.45;margin:14px 0 12px;font-weight:800;letter-spacing:.005em;}
+  .meta{font-size:13px;color:var(--dim);margin-bottom:20px;}
+  .hero{width:100%;height:320px;border-radius:16px;background:var(--bg2) center/cover;
+    box-shadow:var(--shadow);border:1px solid var(--line-soft);}
+  .lead{font-size:17px;margin:24px 0;color:#dfe7f1;line-height:1.95;}
+  .tldr{background:linear-gradient(135deg,rgba(57,216,255,.08),rgba(138,107,255,.08));
+    border:1px solid rgba(57,216,255,.28);border-radius:14px;padding:16px 20px;margin:24px 0;}
+  .tldr .lbl{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);}
+  .tldr .body{font-size:15.5px;margin-top:6px;color:var(--text);}
+  h2.g{font-size:22px;margin:38px 0 8px;padding-top:20px;border-top:1px solid var(--line-soft);
+    font-weight:800;letter-spacing:.01em;}
+  .gimg{width:100%;height:210px;border-radius:14px;background:var(--bg2) center/cover;margin:14px 0;
+    box-shadow:var(--shadow);border:1px solid var(--line-soft);}
+  p{margin:14px 0;color:#d7e0ec;}
+  .buybox{margin:20px 0;border:1px solid rgba(255,106,61,.28);border-radius:16px;padding:18px;
+    background:linear-gradient(135deg,rgba(255,106,61,.08),rgba(255,45,110,.05));box-shadow:var(--shadow);}
   .buybox .bt{display:flex;gap:14px;align-items:center;}
-  .buybox .th{width:130px;height:60px;border-radius:8px;background:var(--card2) center/cover;flex:0 0 auto;}
-  .buybox .name{font-weight:700;font-size:15px;}
-  .buybox .off{margin-top:4px;font-size:12px;font-weight:800;color:#fff;background:var(--orange);padding:2px 8px;border-radius:6px;display:inline-block;}
-  .buybox .buys{display:flex;gap:9px;margin-top:14px;}
-  .buy{flex:1;text-align:center;font-size:14px;font-weight:700;padding:11px 4px;border-radius:9px;color:#fff;}
+  .buybox .th{width:130px;height:62px;border-radius:10px;background:var(--bg2) center/cover;flex:0 0 auto;
+    border:1px solid var(--line-soft);}
+  .buybox .name{font-weight:800;font-size:15.5px;}
+  .buybox .off{margin-top:5px;font-size:12px;font-weight:800;color:#fff;
+    background:linear-gradient(135deg,#ff6a3d,#ff2d6e);padding:3px 10px;border-radius:100px;display:inline-block;}
+  .buybox .buys{display:flex;gap:10px;margin-top:16px;}
+  .buy{flex:1;text-align:center;font-size:14px;font-weight:800;padding:12px 4px;border-radius:11px;color:#fff;
+    transition:transform .12s,filter .15s,box-shadow .15s;}
+  .buy:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 8px 20px rgba(0,0,0,.4);}
+  .buy:active{transform:translateY(0);}
   .buy.amazon{background:var(--amazon);color:#231a08;}
   .buy.rakuten{background:var(--rakuten);}
   .buy.dmm{background:var(--dmm);}
-  .pnote{font-size:11px;color:var(--dim);margin-top:8px;}
-  .back{display:inline-block;margin:26px 0 0;font-size:14px;color:var(--cyan);}
-  footer{margin-top:40px;border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);font-size:12px;}
-  footer .disc{max-width:720px;margin:0 auto 14px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--muted);box-shadow:var(--sh);}
+  .pnote{font-size:11px;color:var(--dim);margin-top:10px;line-height:1.7;}
+  .back{display:inline-flex;align-items:center;gap:6px;margin:30px 0 0;font-size:14px;font-weight:700;color:var(--accent);}
+  .back:hover{gap:10px;transition:gap .15s;}
+  footer{margin-top:46px;border-top:1px solid var(--line-soft);padding:26px 0 44px;color:var(--dim);font-size:12px;
+    background:linear-gradient(180deg,transparent,rgba(138,107,255,.04));}
+  footer .disc{max-width:720px;margin:0 auto 14px;background:var(--card);border:1px solid var(--line-soft);
+    border-radius:12px;padding:14px 16px;color:var(--muted);line-height:1.75;}
+  @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}}
 """
 
 _PAGE = """<!DOCTYPE html>
@@ -275,34 +296,87 @@ def render_article(article: dict) -> str:
 _ARTICLES_RE = re.compile(r"(<!--ARTICLES:START-->).*?(<!--ARTICLES:END-->)", re.DOTALL)
 
 
-def _article_card(a: dict) -> str:
-    """1記事分の一覧カード(acard)HTML。a: storage.list_articles の1要素。"""
+def _article_card(a: dict, rank: int | None = None) -> str:
+    """
+    1記事分の一覧カード(acard)HTML。a: storage.list_articles の1要素。
+    rank を渡すと「いま読まれている」用の順位バッジを付ける。
+    画像が無い記事（デバイス記事など）は .noimg でプレースホルダ表示にする。
+    """
     catcls = _CAT_CLASS.get(a.get("category", ""), "")
     cls = f"cat {catcls}".strip()
     img = a.get("image_url", "")
-    th = (f"<div class=\"th\" style=\"background-image:url('{_esc(img)}')\"></div>"
-          if img else "<div class=\"th\"></div>")
+    if img:
+        th = f"<div class=\"th\" style=\"background-image:url('{_esc(img)}')\"></div>"
+    else:
+        th = "<div class=\"th noimg\"></div>"
     try:
         d = datetime.fromisoformat(a["created_at"]).strftime("%Y/%m/%d")
     except Exception:
         d = ""
     href = f"{config.ARTICLES_SUBDIR}/{a['slug']}.html"
-    return f"""      <a class="acard" data-cat="{_esc(a.get('category',''))}" href="{_esc(href)}">
-        {th}
-        <div><span class="{cls}">{_esc(a.get('category',''))}</span>
+    rank_badge = f"<span class=\"rank\">{rank}</span>" if rank else ""
+    breaking = ("<span class=\"pill-break\">速報</span>"
+                if a.get("is_breaking") else "")
+    extra_cls = " ranked" if rank else ""
+    return f"""      <a class="acard{extra_cls}" data-cat="{_esc(a.get('category',''))}" href="{_esc(href)}">
+        {rank_badge}{th}
+        <div class="acbody"><div class="acmeta"><span class="{cls}">{_esc(a.get('category',''))}</span>{breaking}</div>
           <div class="ttl">{_esc(a.get('title',''))}</div>
           <div class="ex">{_esc(a.get('excerpt',''))}</div>
           <div class="d">{d}</div></div>
       </a>"""
 
 
+def _empty_note(msg: str) -> str:
+    return f'      <div class="empty">{_esc(msg)}</div>'
+
+
+def _replace_region(html: str, name: str, inner: str) -> str:
+    """<!--NAME:START--> と <!--NAME:END--> の間を inner で置換する（無ければ無変更）。"""
+    rx = re.compile(rf"(<!--{name}:START-->).*?(<!--{name}:END-->)", re.DOTALL)
+    if not rx.search(html):
+        return html
+    replacement = f"<!--{name}:START-->\n{inner}\n      <!--{name}:END-->"
+    return rx.sub(lambda m: replacement, html)
+
+
+def _sort_trending(articles: list[dict]) -> list[dict]:
+    """「いま読まれている」用の並び：速報を優先し、次に新しい順（実閲覧数は未計測のため代用）。"""
+    return sorted(
+        articles,
+        key=lambda a: (1 if a.get("is_breaking") else 0, a.get("created_at") or ""),
+        reverse=True,
+    )
+
+
+def inject_homepage(index_html: str, articles: list[dict]) -> str:
+    """
+    トップページの3領域を再生成する:
+      TRENDING … いま読まれている記事（速報優先＋新着）上位5
+      DEVICES  … 注目のデバイス情報（カテゴリ/種別=デバイス）上位6
+      ARTICLES … 全記事（カテゴリで絞り込み可能な一覧）
+    """
+    trending = _sort_trending(articles)[:5]
+    devices = [a for a in articles
+               if a.get("category") == "デバイス" or a.get("event_type") == "デバイス"][:6]
+
+    trending_html = ("\n".join(_article_card(a, rank=i) for i, a in enumerate(trending, 1))
+                     if trending else _empty_note("記事がまだありません。"))
+    devices_html = ("\n".join(_article_card(a) for a in devices) if devices
+                    else _empty_note("デバイス記事は近日公開。ゲーミングデバイスの新作・予約・ベンチマーク情報を追って掲載します。"))
+    articles_html = ("\n".join(_article_card(a) for a in articles) if articles
+                     else _empty_note("記事がまだありません。"))
+
+    html = _replace_region(index_html, "TRENDING", trending_html)
+    html = _replace_region(html, "DEVICES", devices_html)
+    html = _replace_region(html, "ARTICLES", articles_html)
+    return html
+
+
 def inject_articles(index_html: str, articles: list[dict]) -> str:
-    """index.htmlのARTICLESマーカー間を、記事一覧カードで置き換えた文字列を返す。"""
+    """後方互換: ARTICLES領域のみ差し替え（現在は inject_homepage を使う）。"""
     cards = "\n".join(_article_card(a) for a in articles) if articles else ""
-    replacement = f"<!--ARTICLES:START-->\n{cards}\n      <!--ARTICLES:END-->"
-    if not _ARTICLES_RE.search(index_html):
-        return index_html  # マーカーが無ければ何もしない
-    return _ARTICLES_RE.sub(lambda m: replacement, index_html)
+    return _replace_region(index_html, "ARTICLES", cards)
 
 
 # ============================================

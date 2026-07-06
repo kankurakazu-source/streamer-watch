@@ -292,6 +292,8 @@ def publish(article: dict, hero_url: str) -> dict:
     storage.save_article(
         config.HISTORY_DB, slug, article.get("title", ""), article.get("category", ""),
         article.get("topic_key", ""), excerpt, hero_url,
+        is_breaking=bool(article.get("is_breaking")),
+        event_type=article.get("event_type", ""),
     )
 
     # トップページの記事一覧を最新12件で再生成
@@ -300,7 +302,7 @@ def publish(article: dict, hero_url: str) -> dict:
         with open(index_path, "r", encoding="utf-8") as f:
             index_html = f.read()
         arts = storage.list_articles(config.HISTORY_DB, limit=12)
-        new_index = article_render.inject_articles(index_html, arts)
+        new_index = article_render.inject_homepage(index_html, arts)
         if new_index != index_html:
             with open(index_path, "w", encoding="utf-8") as f:
                 f.write(new_index)

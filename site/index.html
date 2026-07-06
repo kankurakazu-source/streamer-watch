@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ゲームウォッチ｜データで見るゲームトレンド</title>
-<meta name="description" content="Steam・Twitch・YouTubeの数字から、話題のゲーム・セール・ガジェットを毎日ピックアップ。データで見るゲームトレンドメディア。">
+<meta name="description" content="Steam・Twitch・YouTubeの数字から、話題のゲーム・セール・ガジェットを毎日ピックアップ。データで見るゲームテックメディア。">
+<meta name="theme-color" content="#0a0e16">
 <link rel="canonical" href="https://game-watch.pages.dev/">
 <!-- OGP / Twitter Card（X等でリンクを貼った時のカード表示。CTRに直結） -->
 <meta property="og:type" content="website">
@@ -17,142 +18,270 @@
 <meta name="twitter:title" content="ゲームウォッチ｜データで見るゲームトレンド">
 <meta name="twitter:description" content="Steam・Twitch・YouTubeの数字から、話題のゲーム・セール・ガジェットを毎日ピックアップ。">
 <meta name="twitter:image" content="https://game-watch.pages.dev/ogp.png">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231793c9'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2339d8ff'/%3E%3C/svg%3E">
 <style>
   :root{
-    --bg:#f4f6f9; --card:#ffffff; --card2:#e9edf2; --line:#e2e7ee;
-    --text:#1a2331; --muted:#5d6b7c; --dim:#9aa6b4;
-    --orange:#ef5423; --cyan:#1793c9; --green:#1a9e5a; --purple:#7857d6;
-    --amazon:#ff9900; --rakuten:#bf0000; --dmm:#ec4d0f;
-    --sh:0 1px 3px rgba(20,30,50,.07);
+    --bg:#0a0e16; --bg2:#0c1220; --card:#121a29; --card-hi:#172135; --line:#243046; --line-soft:#1a2334;
+    --text:#eef2f8; --muted:#9db0c6; --dim:#647689;
+    --accent:#39d8ff; --accent-2:#8a6bff; --accent-3:#ff5a8a;
+    --sale:#ff6a3d; --green:#2fd27e; --violet:#a78bfa; --cyan:#39d8ff;
+    --amazon:#ff9900; --rakuten:#c5121a; --dmm:#f04e23;
+    --shadow:0 10px 30px rgba(0,0,0,.45);
+    --glow:0 8px 34px rgba(57,216,255,.16);
+    --grad:linear-gradient(135deg,var(--accent),var(--accent-2));
   }
   *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
   body{margin:0;background:var(--bg);color:var(--text);
-    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",sans-serif;line-height:1.6;
-    -webkit-text-size-adjust:100%;}
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Noto Sans JP","Segoe UI",system-ui,-apple-system,"Meiryo",sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    font-feature-settings:"palt";-webkit-text-size-adjust:100%;}
   a{color:inherit;text-decoration:none;}
-  .wrap{max-width:1000px;margin:0 auto;padding:0 20px;}
-  header{position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(6px);
-    border-bottom:1px solid var(--line);z-index:10;}
-  .head{display:flex;align-items:center;justify-content:space-between;height:58px;}
-  .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:19px;}
-  .logo .dot{width:12px;height:12px;border-radius:3px;background:var(--cyan);}
-  nav{display:flex;gap:18px;font-size:14px;color:var(--muted);}
-  nav a{padding:4px 2px;}
-  nav a:hover{color:var(--text);}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px;}
 
-  /* ヒーロー（何のサイトかを一目で伝える） */
-  .hero{background:linear-gradient(135deg,#0f1720 0%,#17232f 60%,#12303f 100%);color:#fff;}
-  .hero .wrap{padding:40px 20px 44px;}
-  .hero h1{font-size:34px;line-height:1.3;margin:0 0 12px;font-weight:800;letter-spacing:.01em;}
-  .hero h1 .c{color:#3cc7ff;}
-  .hero p{margin:0;color:#b7c4d2;font-size:15px;max-width:640px;}
+  /* ===== ヘッダー ===== */
+  header{position:sticky;top:0;z-index:20;
+    background:rgba(10,14,22,.72);backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid var(--line-soft);}
+  .head{display:flex;align-items:center;justify-content:space-between;height:62px;}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:.01em;}
+  .logo .dot{width:13px;height:13px;border-radius:4px;background:var(--grad);
+    box-shadow:0 0 14px rgba(57,216,255,.7);}
+  nav{display:flex;gap:6px;}
+  nav a{position:relative;padding:8px 12px;font-size:13.5px;color:var(--muted);border-radius:9px;
+    transition:color .15s,background .15s;}
+  nav a:hover{color:var(--text);background:rgba(255,255,255,.05);}
 
-  h2.sec{font-size:20px;margin:32px 0 14px;display:flex;align-items:center;gap:9px;}
-  h2.sec .bar{width:5px;height:20px;border-radius:3px;background:var(--cyan);}
-  .sub{font-size:13px;color:var(--muted);margin:-8px 0 14px;}
+  /* ===== ヒーロー ===== */
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line-soft);
+    background:
+      radial-gradient(900px 380px at 12% -20%,rgba(57,216,255,.20),transparent 60%),
+      radial-gradient(760px 360px at 92% 0%,rgba(138,107,255,.18),transparent 55%),
+      linear-gradient(180deg,#0b1120,#0a0e16);}
+  .hero .wrap{padding:56px 22px 60px;}
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;
+    letter-spacing:.16em;color:var(--accent);text-transform:uppercase;margin-bottom:16px;}
+  .kicker::before{content:"";width:26px;height:2px;background:var(--grad);border-radius:2px;}
+  .hero h1{font-size:44px;line-height:1.22;margin:0 0 16px;font-weight:800;letter-spacing:.005em;
+    max-width:780px;}
+  .hero h1 .c{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero p{margin:0 0 26px;color:var(--muted);font-size:16px;max-width:620px;line-height:1.8;}
+  .stats{display:flex;flex-wrap:wrap;gap:10px;}
+  .stat{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);
+    background:rgba(255,255,255,.04);border:1px solid var(--line);padding:7px 13px;border-radius:100px;}
+  .stat b{color:var(--text);font-weight:700;}
+  .stat i{width:7px;height:7px;border-radius:50%;background:var(--accent);font-style:normal;
+    box-shadow:0 0 10px var(--accent);}
 
-  .cats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;}
-  .chip{font-size:13px;padding:7px 15px;border-radius:20px;background:var(--card);border:1px solid var(--line);
-    color:var(--muted);cursor:pointer;user-select:none;transition:background .12s,color .12s;}
-  .chip:hover{color:var(--text);}
-  .chip.on{background:var(--cyan);color:#fff;border-color:var(--cyan);font-weight:700;}
+  /* ===== セクション見出し ===== */
+  section.block{padding:38px 0 6px;}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 0 20px;}
+  .sec-head .k{font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
+  .sec-head h2{font-size:23px;margin:6px 0 0;font-weight:800;letter-spacing:.01em;
+    display:flex;align-items:center;gap:11px;}
+  .sec-head h2 .ic{width:6px;height:22px;border-radius:3px;background:var(--grad);display:inline-block;}
+  .sec-head .note{font-size:12.5px;color:var(--dim);}
 
-  .acard{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;
-    padding:12px;margin-bottom:12px;box-shadow:var(--sh);transition:box-shadow .15s,transform .15s;}
-  .acard:hover{box-shadow:0 6px 18px rgba(20,30,50,.12);transform:translateY(-1px);}
-  .acard .th{width:150px;height:92px;flex:0 0 auto;border-radius:8px;background:var(--card2) center/cover;}
-  .acard .cat{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:6px;background:rgba(23,147,201,.13);color:var(--cyan);}
-  .acard .cat.o{background:rgba(239,84,35,.13);color:var(--orange);}
-  .acard .cat.g{background:rgba(26,158,90,.13);color:var(--green);}
-  .acard .cat.p{background:rgba(120,87,214,.13);color:var(--purple);}
-  .acard .ttl{font-size:15px;font-weight:600;margin:7px 0 5px;line-height:1.45;}
-  .acard .ex{font-size:12px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-  .acard .d{font-size:11px;color:var(--dim);margin-top:7px;}
-  .empty{color:var(--muted);font-size:14px;padding:26px 4px;text-align:center;}
+  /* ===== カードグリッド ===== */
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));}
+  .acard{position:relative;display:flex;gap:15px;background:var(--card);
+    border:1px solid var(--line-soft);border-radius:16px;padding:14px;overflow:hidden;
+    transition:transform .22s cubic-bezier(.2,.7,.2,1),border-color .22s,box-shadow .22s,background .22s;}
+  .acard::after{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.04);}
+  .acard:hover{transform:translateY(-4px);background:var(--card-hi);
+    border-color:rgba(57,216,255,.5);box-shadow:var(--shadow),var(--glow);}
+  .acard .th{width:132px;height:90px;flex:0 0 auto;border-radius:11px;
+    background:var(--bg2) center/cover no-repeat;transition:filter .22s;}
+  .acard:hover .th{filter:brightness(1.08) saturate(1.05);}
+  .acard .th.noimg{background:
+      radial-gradient(120px 80px at 70% 20%,rgba(138,107,255,.35),transparent 60%),
+      linear-gradient(135deg,#182236,#10182a);
+    position:relative;}
+  .acard .th.noimg::after{content:"GADGET";position:absolute;inset:0;display:flex;
+    align-items:center;justify-content:center;color:var(--dim);font-size:10px;font-weight:800;letter-spacing:.22em;}
+  .acbody{min-width:0;display:flex;flex-direction:column;}
+  .acmeta{display:flex;align-items:center;gap:7px;margin-bottom:7px;flex-wrap:wrap;}
+  .cat{display:inline-block;font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:100px;letter-spacing:.02em;
+    background:rgba(57,216,255,.14);color:var(--cyan);border:1px solid rgba(57,216,255,.25);}
+  .cat.o{background:rgba(255,106,61,.15);color:var(--sale);border-color:rgba(255,106,61,.3);}
+  .cat.g{background:rgba(47,210,126,.15);color:var(--green);border-color:rgba(47,210,126,.3);}
+  .cat.p{background:rgba(167,139,250,.16);color:var(--violet);border-color:rgba(167,139,250,.3);}
+  .pill-break{font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 9px;border-radius:100px;
+    color:#fff;background:linear-gradient(135deg,#ff6a3d,#ff2d6e);box-shadow:0 0 14px rgba(255,45,110,.45);}
+  .acard .ttl{font-size:15px;font-weight:700;margin:0 0 6px;line-height:1.5;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard:hover .ttl{color:#fff;}
+  .acard .ex{font-size:12px;color:var(--muted);line-height:1.65;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard .d{font-size:11px;color:var(--dim);margin-top:auto;padding-top:8px;}
 
-  footer{margin-top:44px;border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);font-size:12px;}
-  footer .disc{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:14px;color:var(--muted);box-shadow:var(--sh);}
+  /* いま読まれている：順位バッジ */
+  .acard.ranked .th{width:120px;}
+  .rank{position:absolute;top:8px;left:8px;z-index:2;min-width:26px;height:26px;padding:0 6px;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;
+    color:#07101c;background:var(--grad);border-radius:8px;box-shadow:0 4px 14px rgba(57,216,255,.4);}
 
-  @media(max-width:640px){
-    .head{height:54px;}
-    .logo{font-size:17px;}
-    nav{gap:14px;font-size:13px;}
-    .hero .wrap{padding:30px 20px 34px;}
-    .hero h1{font-size:26px;}
-    .acard .th{width:104px;height:70px;}
-    .acard .ttl{font-size:14px;}
+  .empty{grid-column:1/-1;color:var(--muted);font-size:13.5px;padding:26px 18px;text-align:center;
+    background:var(--card);border:1px dashed var(--line);border-radius:14px;}
+
+  /* ===== カテゴリチップ ===== */
+  .cats{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 20px;}
+  .chip{font-size:13px;padding:8px 16px;border-radius:100px;background:var(--card);
+    border:1px solid var(--line);color:var(--muted);cursor:pointer;user-select:none;
+    transition:color .15s,background .15s,border-color .15s,transform .1s;}
+  .chip:hover{color:var(--text);border-color:var(--accent);}
+  .chip:active{transform:scale(.96);}
+  .chip.on{background:var(--grad);color:#07101c;border-color:transparent;font-weight:800;
+    box-shadow:0 6px 18px rgba(57,216,255,.28);}
+
+  /* ===== フッター ===== */
+  footer{margin-top:52px;border-top:1px solid var(--line-soft);padding:30px 0 46px;
+    color:var(--dim);font-size:12px;background:linear-gradient(180deg,transparent,rgba(138,107,255,.04));}
+  footer .disc{background:var(--card);border:1px solid var(--line-soft);border-radius:12px;
+    padding:14px 16px;margin-bottom:16px;color:var(--muted);line-height:1.75;}
+
+  /* ===== スクロール表示アニメ ===== */
+  .reveal{opacity:0;transform:translateY(16px);}
+  .reveal.in{opacity:1;transform:none;transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1);}
+
+  @media(max-width:680px){
+    .head{height:56px;}
+    .hero .wrap{padding:40px 22px 44px;}
+    .hero h1{font-size:31px;}
+    .hero p{font-size:15px;}
+    nav a{padding:8px 8px;font-size:12.5px;}
+    .grid{grid-template-columns:1fr;gap:13px;}
+    .acard .th{width:112px;height:78px;}
+    .sec-head h2{font-size:20px;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{scroll-behavior:auto!important;}
+    .reveal{opacity:1;transform:none;}
+    .acard:hover{transform:none;}
   }
 </style>
 </head>
 <body>
 <header><div class="wrap head">
   <div class="logo"><span class="dot"></span>ゲームウォッチ</div>
-  <nav><a href="#articles">記事一覧</a></nav>
+  <nav>
+    <a href="#trending">いま読まれている</a>
+    <a href="#devices">デバイス</a>
+    <a href="#articles">記事</a>
+  </nav>
 </div></header>
 
 <section class="hero">
   <div class="wrap">
+    <div class="kicker">Data-driven Game × Gadget Media</div>
     <h1>データで見る、<span class="c">次に来るゲーム。</span></h1>
-    <p>Steam・Twitch・YouTube の数字から、話題のゲーム／セール／ガジェットを毎日ピックアップ。「なぜ今これが来ているか」を横断で読み解きます。</p>
+    <p>Steam・Twitch・YouTube の数字と国内外ニュースから、話題のゲーム／セール／ガジェットを毎日ピックアップ。「なぜ今これが来ているか」を横断で読み解きます。</p>
+    <div class="stats">
+      <span class="stat"><i></i><b>10</b> のデータソースを横断</span>
+      <span class="stat"><i></i>セール・新作・eスポーツ・デバイス</span>
+      <span class="stat"><i></i>速報は<b>どこよりも早く</b></span>
+    </div>
   </div>
 </section>
 
 <main class="wrap">
-  <!--
-    ここには以前「注目株」「セール」「新作カレンダー」「デバイス」「人気記事TOP5」の
-    セクションがサンプル値で置かれていましたが、実データのパイプラインが未接続で
-    捏造値（架空のタイトル名・views数）だったため撤去しました。
-    実データを供給できるようになった段階で、記事一覧と同じ仕組みで再導入します。
-  -->
-  <h2 class="sec" id="articles"><span class="bar"></span>記事</h2>
-  <div class="cats" id="cats">
-    <span class="chip on" data-cat="">すべて</span>
-    <span class="chip" data-cat="セール分析">セール分析</span>
-    <span class="chip" data-cat="注目株">注目株</span>
-    <span class="chip" data-cat="新作">新作</span>
-    <span class="chip" data-cat="eスポーツ">eスポーツ</span>
-    <span class="chip" data-cat="デバイス">デバイス</span>
-    <span class="chip" data-cat="データ分析">データ分析</span>
-    <span class="chip" data-cat="考察">考察</span>
-  </div>
-  <div id="articleList">
-    <!--ARTICLES:START-->
+  <!-- いま読まれている記事（速報優先＋新着。実閲覧数の計測は今後導入予定） -->
+  <section class="block reveal" id="trending">
+    <div class="sec-head">
+      <div><div class="k">Now Trending</div>
+        <h2><span class="ic"></span>いま読まれている記事</h2></div>
+      <div class="note">速報・新着から注目のトピックを厳選</div>
+    </div>
+    <div class="grid">
+      <!--TRENDING:START-->
+      <a class="acard ranked" data-cat="新作" href="articles/20260706-2127-1.html">
+        <span class="rank">1</span><div class="th" style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1623730/header.jpg')"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『パルワールド』正式リリースが7月10日12時半頃に決定、開発元はセーブデータの引き継ぎ非推奨を明言</div>
+          <div class="ex">アーリーアクセスから約1年半、『パルワールド』の正式版（1.0）配信タイミングが7月10日12時半ごろと具体化した。開発元Pocketpairはセーブデータの引き継ぎは可能としつつも「本当はリセットを推奨する」と案内しており、既存プレイヤー</div>
+          <div class="d">2026/07/06</div></div>
+      </a>
+      <a class="acard ranked" data-cat="データ分析" href="articles/20260706-0915-1.html">
+        <span class="rank">2</span><div class="th" style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/2767030/header.jpg')"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">データ分析</span></div>
+          <div class="ttl">『Marvel Rivals』が前日比+28%で急増、Steamサマーセールの陰で盛り上がる同接ランキングを読む</div>
+          <div class="ex">Steamサマーセールの目玉として『サイバーパンク2077』や『Palworld』が注目を集める一方、同時接続者数の伸び率で見ると『Marvel Rivals』『Rainbow Six Siege』『Baldur&#x27;s Gate 3』が軒並み</div>
+          <div class="d">2026/07/06</div></div>
+      </a>
+      <!--TRENDING:END-->
+    </div>
+  </section>
+
+  <!-- 注目のデバイス情報（カテゴリ=デバイス） -->
+  <section class="block reveal" id="devices">
+    <div class="sec-head">
+      <div><div class="k">Featured Gear</div>
+        <h2><span class="ic"></span>注目のデバイス情報</h2></div>
+      <div class="note">マウス・モニター・GPU の新作／予約／ベンチマーク</div>
+    </div>
+    <div class="grid">
+      <!--DEVICES:START-->
+      <div class="empty">デバイス記事は近日公開。ゲーミングデバイスの新作・予約・ベンチマーク情報を追って掲載します。</div>
+      <!--DEVICES:END-->
+    </div>
+  </section>
+
+  <!-- 全記事（カテゴリ絞り込み可能） -->
+  <section class="block reveal" id="articles">
+    <div class="sec-head">
+      <div><div class="k">All Articles</div>
+        <h2><span class="ic"></span>記事一覧</h2></div>
+    </div>
+    <div class="cats" id="cats">
+      <span class="chip on" data-cat="">すべて</span>
+      <span class="chip" data-cat="セール分析">セール分析</span>
+      <span class="chip" data-cat="注目株">注目株</span>
+      <span class="chip" data-cat="新作">新作</span>
+      <span class="chip" data-cat="eスポーツ">eスポーツ</span>
+      <span class="chip" data-cat="デバイス">デバイス</span>
+      <span class="chip" data-cat="データ分析">データ分析</span>
+      <span class="chip" data-cat="考察">考察</span>
+    </div>
+    <div class="grid" id="articleList">
+      <!--ARTICLES:START-->
       <a class="acard" data-cat="新作" href="articles/20260706-2127-1.html">
         <div class="th" style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1623730/header.jpg')"></div>
-        <div><span class="cat">新作</span>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『パルワールド』正式リリースが7月10日12時半頃に決定、開発元はセーブデータの引き継ぎ非推奨を明言</div>
           <div class="ex">アーリーアクセスから約1年半、『パルワールド』の正式版（1.0）配信タイミングが7月10日12時半ごろと具体化した。開発元Pocketpairはセーブデータの引き継ぎは可能としつつも「本当はリセットを推奨する」と案内しており、既存プレイヤー</div>
           <div class="d">2026/07/06</div></div>
       </a>
       <a class="acard" data-cat="データ分析" href="articles/20260706-0915-1.html">
         <div class="th" style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/2767030/header.jpg')"></div>
-        <div><span class="cat">データ分析</span>
+        <div class="acbody"><div class="acmeta"><span class="cat">データ分析</span></div>
           <div class="ttl">『Marvel Rivals』が前日比+28%で急増、Steamサマーセールの陰で盛り上がる同接ランキングを読む</div>
           <div class="ex">Steamサマーセールの目玉として『サイバーパンク2077』や『Palworld』が注目を集める一方、同時接続者数の伸び率で見ると『Marvel Rivals』『Rainbow Six Siege』『Baldur&#x27;s Gate 3』が軒並み</div>
           <div class="d">2026/07/06</div></div>
       </a>
       <!--ARTICLES:END-->
-  </div>
-  <div class="empty" id="emptyMsg" hidden>このカテゴリの記事はまだありません。</div>
+    </div>
+    <div class="empty" id="emptyMsg" hidden>このカテゴリの記事はまだありません。</div>
+  </section>
 
   <footer>
     <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。</div>
-    (c) 2026 ゲームウォッチ ／ データで見るゲームトレンド
+    (c) 2026 ゲームウォッチ ／ データで見るゲームテックメディア
   </footer>
 </main>
 
 <script>
-  // カテゴリチップで記事一覧を絞り込む（静的サイト内で完結）
+  // カテゴリチップで記事一覧を絞り込む
   (function(){
     var chips = document.querySelectorAll('#cats .chip');
-    var cards = document.querySelectorAll('#articleList .acard');
+    var list = document.getElementById('articleList');
     var empty = document.getElementById('emptyMsg');
     chips.forEach(function(chip){
       chip.addEventListener('click', function(){
         chips.forEach(function(c){ c.classList.remove('on'); });
         chip.classList.add('on');
         var cat = chip.getAttribute('data-cat') || '';
+        var cards = list.querySelectorAll('.acard');
         var shown = 0;
         cards.forEach(function(card){
           var match = !cat || card.getAttribute('data-cat') === cat;
@@ -162,6 +291,18 @@
         if(empty) empty.hidden = shown !== 0;
       });
     });
+  })();
+
+  // スクロールで各セクションをふわっと表示
+  (function(){
+    if(!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {threshold:.08});
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
   })();
 </script>
 </body>
