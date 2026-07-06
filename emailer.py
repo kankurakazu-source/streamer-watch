@@ -102,10 +102,12 @@ def build_message(result: dict, from_addr: str, to_addr: str) -> MIMEMultipart:
 
 
 def build_article_message(article: dict, thread: dict, public_url: str, local_path: str,
-                          hero_url: str, from_addr: str, to_addr: str) -> MIMEMultipart:
+                          hero_url: str, image_path: str | None,
+                          from_addr: str, to_addr: str) -> MIMEMultipart:
     """
     記事1本の通知メール。「2ステップ・ポスト」（①親ポスト＝画像＋リンクなし／②リプ＝記事リンク）を
-    セットで表示。hero画像はSteam CDNのURLをそのまま<img>参照する（メールクライアントが表示）。
+    セットで表示。親ポスト用の画像(image_path)は、①インライン表示(CID)＋②保存できる添付ファイル の
+    両方でメールに載せる（Gmailが外部画像をブロックしても見え、そのまま保存してXに添付できる）。
     thread: {main, reply, main_weight, reply_weight}
     """
     now = datetime.now().strftime("%Y/%m/%d %H:%M")
@@ -125,14 +127,22 @@ def build_article_message(article: dict, thread: dict, public_url: str, local_pa
     etype = html.escape(article.get("event_type", "") or "")
     badge = ("🚨速報" if breaking else "📝記事")
 
-    root = MIMEMultipart("alternative")
+    # 添付画像を読み込む（あれば）。CID表示用と保存用の両方で使う。
+    img_data = None
+    img_name = "post_image.png"
+    if image_path and os.path.exists(image_path):
+        with open(image_path, "rb") as f:
+            img_data = f.read()
+        img_name = os.path.basename(image_path)
+    cid = make_msgid()[1:-1] if img_data else None
+
+    # MIME構造: mixed(related(alternative + inline画像) + 添付画像)
+    root = MIMEMultipart("mixed")
     root["Subject"] = f"{badge}ゲームウォッチ: {article.get('title','')[:40]} ({now})"
     root["From"] = from_addr
     root["To"] = to_addr
-
-    hero_block = (f"<img src='{html.escape(hero_url)}' width='100%' "
-                  f"style='max-width:560px;border-radius:12px;display:block;margin:0 0 14px;'>"
-                  if hero_url else "")
+    related = MIMEMultipart("related")
+    alt = MIMEMultipart("alternative")
 
     # 記事リンク: 公開URLがあればそれ、無ければローカルファイル(file://)を案内
     if public_url:
@@ -152,6 +162,18 @@ def build_article_message(article: dict, thread: dict, public_url: str, local_pa
         c = "#3cc7ff" if w <= 280 else "#ff5a3c"
         return f"<span style='color:{c};font-size:12px;'>&nbsp;{w}/280</span>"
 
+    # 親ポスト添付画像ブロック（CID表示。画像が無ければテキストの注意書き）
+    if cid:
+        post_img_block = (
+            f"<img src='cid:{cid}' width='100%' "
+            f"style='max-width:520px;border-radius:10px;display:block;margin:0 0 10px;'>"
+            f"<div style='color:#9aa7b4;font-size:12px;margin:0 0 12px;'>"
+            f"↑ この画像を保存して親ポストに添付（末尾に「{img_name}」も添付済み）</div>"
+        )
+    else:
+        post_img_block = ("<div style='color:#ffb454;font-size:12px;margin:0 0 12px;'>"
+                          "※今回は添付画像を生成できませんでした（画像なしで投稿してください）。</div>")
+
     body = f"""<!DOCTYPE html><html><body style="background:#0f1720;margin:0;padding:16px;
       font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;">
       <div style="color:#f5f7fa;font-size:18px;font-weight:bold;margin:0 0 4px;">{badge} 新着記事ができました</div>
@@ -160,7 +182,6 @@ def build_article_message(article: dict, thread: dict, public_url: str, local_pa
       <div style="background:#16202b;border:1px solid #24313d;border-radius:12px;padding:16px;margin:0 0 16px;">
         <span style="background:#3cc7ff;color:#0f1720;font-weight:bold;padding:3px 12px;border-radius:8px;">{category}</span>
         <div style="color:#f5f7fa;font-size:17px;font-weight:bold;margin:10px 0;">{title}</div>
-        {hero_block}
         <div style="color:#c7d2dc;font-size:14px;line-height:1.7;">{lead}</div>
         <div style="margin-top:14px;">
           <a href="{link_href}" style="background:#1a9e5a;color:#fff;text-decoration:none;
@@ -171,12 +192,13 @@ def build_article_message(article: dict, thread: dict, public_url: str, local_pa
 
       <div style="background:#1a2531;border:1px solid #2a3a48;border-radius:12px;padding:14px 16px;margin:0 0 12px;color:#c7d2dc;font-size:13px;line-height:1.7;">
         <b style="color:#f5f7fa;">🧵 2ステップ投稿の手順</b><br>
-        ① 下の「親ポスト」を<b>上のhero画像を添付して</b>ポスト（リンクを貼らずインプレッションを稼ぐ）<br>
+        ① 下の「親ポスト」を<b>下の画像を添付して</b>ポスト（リンクを貼らずインプレッションを稼ぐ）<br>
         ② 投稿できたら、その<b>自分のポストのリプ欄</b>に「返信」をぶら下げる（記事リンクはここだけ）
       </div>
 
       <div style="background:#16202b;border:1px solid #24313d;border-radius:12px;padding:16px;margin:0 0 12px;">
         <div style="color:#9aa7b4;font-size:12px;margin:0 0 8px;">① 親ポスト（画像添付・リンクなし）{_weight_span(mw)}</div>
+        {post_img_block}
         <div style="color:#f5f7fa;font-size:15px;line-height:1.7;">{main_html}</div>
         <div style="margin-top:12px;">
           <a href="{html.escape(intent_main)}" style="background:#1d9bf0;color:#fff;text-decoration:none;
@@ -196,18 +218,36 @@ def build_article_message(article: dict, thread: dict, public_url: str, local_pa
 
     plain = (f"新着記事 ({now})\n{article.get('title','')}\n\n"
              f"{article.get('lead','')}\n\n記事: {public_url or local_path}\n\n"
-             f"[2ステップ投稿]\n① 親ポスト（画像添付・リンクなし）:\n{main_txt}\n\n"
+             f"[2ステップ投稿]\n① 親ポスト（画像添付・リンクなし）:\n{main_txt}\n"
+             f"（親ポスト用の画像は添付ファイル {img_name} を保存して添付）\n\n"
              f"② 返信（リプ欄・記事リンク）:\n{reply_txt}\n")
-    root.attach(MIMEText(plain, "plain", "utf-8"))
-    root.attach(MIMEText(body, "html", "utf-8"))
+
+    alt.attach(MIMEText(plain, "plain", "utf-8"))
+    alt.attach(MIMEText(body, "html", "utf-8"))
+    related.attach(alt)
+
+    if img_data:
+        inline = MIMEImage(img_data, _subtype="png")
+        inline.add_header("Content-ID", f"<{cid}>")
+        inline.add_header("Content-Disposition", "inline", filename=img_name)
+        related.attach(inline)
+
+    root.attach(related)
+
+    if img_data:
+        attach = MIMEImage(img_data, _subtype="png")
+        attach.add_header("Content-Disposition", "attachment", filename=img_name)
+        root.attach(attach)
+
     return root
 
 
 def send_article_email(article: dict, thread: dict, public_url: str, local_path: str,
-                       hero_url: str, host: str, port: int,
+                       hero_url: str, image_path: str | None, host: str, port: int,
                        user: str, password: str, from_addr: str, to_addr: str) -> None:
     """記事通知メールをSMTP(STARTTLS)で送信する。失敗時は例外送出。"""
-    msg = build_article_message(article, thread, public_url, local_path, hero_url, from_addr, to_addr)
+    msg = build_article_message(article, thread, public_url, local_path, hero_url,
+                                image_path, from_addr, to_addr)
     with smtplib.SMTP(host, port, timeout=30) as s:
         s.starttls()
         s.login(user, password)

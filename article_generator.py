@@ -34,6 +34,7 @@ import config
 import storage
 import article_render
 import game_watch
+import image_card
 import trend_detector
 from collectors import steam_collector
 
@@ -194,6 +195,7 @@ def _enrich(article: dict, collected: dict) -> tuple[str, list[str]]:
     if main:
         g = _resolve_game(main, name_to_appid, appid_discount)
         hero_url = g.get("image_url", "")
+        article["main_appid"] = g.get("appid")  # 親ポスト添付画像の生成に使う
     article["hero_image_url"] = hero_url
 
     # 各セクションの購入ボックス
@@ -280,6 +282,37 @@ def publish(article: dict, hero_url: str) -> dict:
     return {"slug": slug, "path": article_path}
 
 
+def build_post_image(article: dict, slug: str) -> str | None:
+    """
+    親ポストにそのまま添付できる画像(PNG)を生成して返す。
+    - Steam公式アートが取れれば、それを敷いた「連想カード」(種別バッジ付き)。
+    - 取れなければ、タイトル＋結論のテキストカード（著作権リスクなし）。
+    失敗時は None。
+    """
+    # メール添付専用（デプロイ不要）なので output/ 配下に出す
+    card_dir = os.path.join(config.OUTPUT_DIR, "cards")
+    out_path = os.path.join(card_dir, f"article_{slug}.png")
+    ctype = "速報" if article.get("is_breaking") else "考察"
+    appid = article.get("main_appid")
+
+    try:
+        if appid:
+            img_bytes = steam_collector.fetch_game_image_bytes(appid)
+            if img_bytes:
+                draft = {"type": ctype, "headline": article.get("title", "")}
+                return image_card.render_art_card(img_bytes, draft, out_path, "画像: Steam")
+        # フォールバック: タイトル＋結論のテキストカード
+        draft = {
+            "type": ctype,
+            "headline": article.get("title", ""),
+            "bullets": [b for b in [article.get("tldr", "")] if b],
+        }
+        return image_card.render_card(draft, out_path)
+    except Exception as e:
+        print(f"[WARN] 親ポスト画像の生成に失敗: {e}")
+        return None
+
+
 def build_public_url(slug: str) -> str:
     """公開URL（SITE_BASE_URLがあれば）。無ければ空（未公開＝Xにはまだ載せられない）。"""
     base = (config.SITE_BASE_URL or "").strip()
@@ -321,6 +354,7 @@ def main():
     meta = publish(article, hero_url)
     public_url = build_public_url(meta["slug"])
     thread = article_render.build_x_thread(article, public_url)
+    post_image = build_post_image(article, meta["slug"])  # 親ポストに添付するPNG
 
     print(f"=== 公開: {meta['path']} ===")
     print(f"タイトル: {article.get('title','')}")
@@ -330,6 +364,7 @@ def main():
     print("\n--- Xポスト（2ステップ）---")
     print(f"[親ポスト・画像付き/リンクなし] ({thread['main_weight']}/280)")
     print(thread["main"])
+    print(f"[親ポスト添付画像] {post_image or '(生成なし)'}")
     print(f"\n[リプ・記事リンク] ({thread['reply_weight']}/280)")
     print(thread["reply"])
     if not public_url:
@@ -342,7 +377,7 @@ def main():
             import emailer
             local_path = os.path.abspath(meta["path"])
             emailer.send_article_email(
-                article, thread, public_url, local_path, hero_url,
+                article, thread, public_url, local_path, hero_url, post_image,
                 config.SMTP_HOST, config.SMTP_PORT,
                 config.GMAIL_ADDRESS, config.GMAIL_APP_PASSWORD,
                 config.GMAIL_ADDRESS, config.EMAIL_TO,
