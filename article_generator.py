@@ -34,6 +34,7 @@ import config
 import storage
 import article_render
 import game_watch
+import trend_detector
 from collectors import steam_collector
 
 ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
@@ -43,8 +44,20 @@ SYSTEM_PROMPT = """\
 編集ライターです。denfaminicogamer や FPS_G33KS のように、数字と一次情報に基づいた
 読み応えのある記事を書きます。読者が「これは買い/要チェック」と判断できる実用記事が目標です。
 
+【集客戦略＝トレンド・ハイジャック】
+このメディアの生命線は「話題の瞬発力」です。新作の発売/配信開始、大型アップデート（新マップ・
+新エージェント・パッチノート公開）、人気ゲーミングデバイスの予約開始/発売やGPUのベンチマーク、
+プロ大会（eスポーツ）の結果——こうした「今まさに検索されているイベント」に乗って、
+『どこよりも早いまとめ』を出すのが狙いです。速さと網羅性そのものが価値になります。
+提供される「今狙うべきイベント」から最も鮮度と関心が高いものを主役に選んでください。
+
+【反応（口コミ）の扱い＝重要】
+「ユーザーのリアルな反応」は、Steam同接の前日比、Twitch視聴者数、YouTube急上昇といった
+"測定できる数字"だけを根拠に要約します。実在しないSNSコメントや感想・引用を創作しては
+いけません（例「盛り上がっている」ではなく「前日同接比+○%と数字が伸びている」と書く）。
+
 記事の狙い:
-- Steamのセール・同接の伸び・新作・話題性など、提供データから今おもしろいトピックを1つ選ぶ。
+- 提供データ／検出イベントから、今いちばん検索・話題になっているトピックを1つ選ぶ。
 - 同時接続数の絶対値だけでなく「勢い（前日比の伸び）」も重視し、まだ無名でも伸びている作品を拾う。
 - セール対象タイトルは購入導線（buy）を付け、読者の行動につなげる。
 
@@ -52,7 +65,7 @@ SYSTEM_PROMPT = """\
 1. 本文は提供データ・公開情報に基づく事実のみ。数字は可能な範囲で入れるが、無い数字を作らない。
 2. 価格（円）は書かない。割引率はデータにある discount_percent のみ触れてよい（無ければ触れない）。
 3. 未確認の噂・リーク・発売日・炎上を断定しない。「〜のもよう」「〜との情報も」等でヘッジする。
-4. 開発元や人物の発言を捏造・誇張しない。
+4. 開発元や人物の発言、ユーザーの感想・口コミを捏造・誇張しない。反応は測定可能な数字のみ。
 5. 比較値は「前日同接比+○%」のように具体的に。曖昧な「前回比」やデータに無い比較は書かない。
 6. 半角ダブルクォート(")やバックスラッシュを本文に使わない。強調は「」を使う。
 7. 内部データの英字フィールド名（prev_day_players_pct 等）を本文にそのまま書かない。
@@ -66,17 +79,23 @@ USER_TEMPLATE = """\
 
 {data_json}
 
+■ 今狙うべきイベント（トレンド・ハイジャック候補。スコア順。速報性・関心の高い順）:
+{hot_events}
+
 直近に公開済みの記事タイトル（これらと重複しないトピックを選ぶこと）:
 {recent_titles}
 
-この中から、いま最も記事価値が高いトピックを【1つだけ】選び、1本の記事を書いてください。
-セール・急増・新作・話題のいずれかを軸に、読者が得をする実用記事にします。
+上記イベントの中から、いま最も検索・話題になっていて記事価値が高いものを【1つだけ】選び、
+『どこよりも早いまとめ』となる1本の記事を書いてください。明確なイベントが無い場合のみ、
+データから通常の考察記事を書いてかまいません。読者が得をする実用記事にします。
 
 カテゴリは次から1つ選ぶ: {categories}
 
 記事の構成:
-- title: 具体的で内容が伝わる見出し（誇張しすぎない。例「Steamサマーセール、勢いで選ぶ買い時タイトル」）
+- title: 具体的で内容が伝わる見出し（誇張しすぎない。速報なら「【速報】」等を付けてよい）
 - category: 上記から1つ
+- event_type: 乗ったイベントの種別。次から1つ: 新作・アプデ / デバイス / eスポーツ / 通常
+- is_breaking: 速報性が高い（発売当日・アプデ直後・大会直後など鮮度勝負）なら true、じっくり考察なら false
 - main_game: 記事の主役となる単一ゲームの正式名称（Steam画像検索用。日本語名可。複数まとめで主役が定まらなければ空）
 - lead: リード文（2〜3文。何が起きていて、なぜ今読む価値があるか）
 - tldr: 結論を一言で（迷ったら何を見る/買うべきか）
@@ -85,9 +104,13 @@ USER_TEMPLATE = """\
     body: 2〜4文の本文（数字や根拠を入れる。段落は改行で区切ってよい）
     game_name: そのセクションで購入導線を出す単一ゲームの正式名称。セール/購入対象でなければ空文字。
 - conclusion: まとめ（2〜3文）
-- x_post: この記事を紹介するX投稿の本文（日本語で約90字以内。全角2換算で230程度まで。
-    記事リンクは後でこちらが付けるのでURLは書かない。ハッシュタグも別途付けるので本文に含めない）
-- hashtags: 0〜2個（#は付けず語だけ。例: Steamセール）
+- x_main: 【親ポスト】記事リンクを貼らないX投稿本文。ここでインプレッションを稼ぐフック。
+    「思わず手が止まる最新情報・数字・比較の要点」をテキストだけで完結させる（画像は別途こちらが添付）。
+    日本語で約100字以内（全角2換算で230程度まで）。末尾に関連ハッシュタグを1〜2個入れてよい。
+    URLは絶対に含めない（Xはリンク付き投稿の表示を大きく下げるため）。煽りすぎない。
+- x_reply: 【リプ用の誘導文】親ポストのリプ欄に貼る一言。記事へ誘導するCTA。
+    例「詳しいスペック比較はこちらの記事にまとめています👇」。URLは書かない（こちらで付ける）。20〜40字。
+- hashtags: 0〜2個（#は付けず語だけ。トレンドに乗る語を選ぶ。例: VALORANT / Steamセール）
 - topic_key: 重複検知用のキー。主役ゲーム名 or トピックを短い日本語で（例「Steamサマーセール」）
 """
 
@@ -96,6 +119,8 @@ ARTICLE_SCHEMA = {
     "properties": {
         "title": {"type": "string"},
         "category": {"type": "string", "enum": config.ARTICLE_CATEGORIES},
+        "event_type": {"type": "string", "enum": ["新作・アプデ", "デバイス", "eスポーツ", "通常"]},
+        "is_breaking": {"type": "boolean"},
         "main_game": {"type": "string"},
         "lead": {"type": "string"},
         "tldr": {"type": "string"},
@@ -113,12 +138,13 @@ ARTICLE_SCHEMA = {
             },
         },
         "conclusion": {"type": "string"},
-        "x_post": {"type": "string"},
+        "x_main": {"type": "string"},
+        "x_reply": {"type": "string"},
         "hashtags": {"type": "array", "items": {"type": "string"}},
         "topic_key": {"type": "string"},
     },
-    "required": ["title", "category", "main_game", "lead", "tldr",
-                 "sections", "conclusion", "x_post", "hashtags", "topic_key"],
+    "required": ["title", "category", "event_type", "is_breaking", "main_game", "lead", "tldr",
+                 "sections", "conclusion", "x_main", "x_reply", "hashtags", "topic_key"],
     "additionalProperties": False,
 }
 
@@ -184,11 +210,12 @@ def _enrich(article: dict, collected: dict) -> tuple[str, list[str]]:
 
 
 def generate_article(collected: dict, recent: list[dict], api_key: str,
-                     model: str = "claude-sonnet-5") -> dict:
+                     hot_events_text: str = "", model: str = "claude-sonnet-5") -> dict:
     """Claudeに1本の記事を書かせる。structured outputsでJSON構造を強制。"""
     recent_titles = "\n".join(f"- {r['title']}" for r in recent) or "(まだありません)"
     user_prompt = USER_TEMPLATE.format(
         data_json=json.dumps(collected, ensure_ascii=False, indent=2),
+        hot_events=hot_events_text or "（検出なし）",
         recent_titles=recent_titles,
         categories=" / ".join(config.ARTICLE_CATEGORIES),
     )
@@ -275,9 +302,17 @@ def main():
     recent = storage.recent_article_topics(config.HISTORY_DB, days=21)
     print(f"直近公開済み: {len(recent)}件（重複回避）")
 
+    # トレンド・ハイジャック: 狙うべきイベントを検出してプロンプトに渡す
+    detection = trend_detector.detect(collected)
+    hot_text = trend_detector.format_for_prompt(detection)
+    print(f"=== 検出イベント: {sum(detection['counts'].values())}件"
+          f"（速報級={'あり' if detection['has_breaking'] else 'なし'}） ===")
+    for e in detection["hot_events"][:5]:
+        print(f"  [{e['event_type']}] {e['headline'][:48]}  (score={e['score']})")
+
     print("=== Claudeで記事を執筆中 ===")
     try:
-        article = generate_article(collected, recent, config.ANTHROPIC_API_KEY)
+        article = generate_article(collected, recent, config.ANTHROPIC_API_KEY, hot_events_text=hot_text)
     except Exception as e:
         print(f"[ERROR] 記事生成に失敗しました: {e}")
         return
@@ -285,14 +320,18 @@ def main():
     hero_url, disc_log = _enrich(article, collected)
     meta = publish(article, hero_url)
     public_url = build_public_url(meta["slug"])
-    x_post = article_render.build_x_post(article, public_url)
+    thread = article_render.build_x_thread(article, public_url)
 
     print(f"=== 公開: {meta['path']} ===")
     print(f"タイトル: {article.get('title','')}")
-    print(f"カテゴリ: {article.get('category','')} / セクション{len(article.get('sections',[]))}個"
+    print(f"種別: {article.get('event_type','-')} / 速報={article.get('is_breaking')} "
+          f"/ カテゴリ: {article.get('category','')} / セクション{len(article.get('sections',[]))}個"
           + (f" / セール検知: {', '.join(disc_log)}" if disc_log else ""))
-    print("\n--- Xポスト文面 ---")
-    print(x_post)
+    print("\n--- Xポスト（2ステップ）---")
+    print(f"[親ポスト・画像付き/リンクなし] ({thread['main_weight']}/280)")
+    print(thread["main"])
+    print(f"\n[リプ・記事リンク] ({thread['reply_weight']}/280)")
+    print(thread["reply"])
     if not public_url:
         print(f"\n[INFO] 公開URL未設定（config.SITE_BASE_URL が空）。ローカル確認用パス:")
         print(f"  file:///{os.path.abspath(meta['path']).replace(os.sep, '/')}")
@@ -303,7 +342,7 @@ def main():
             import emailer
             local_path = os.path.abspath(meta["path"])
             emailer.send_article_email(
-                article, x_post, public_url, local_path, hero_url,
+                article, thread, public_url, local_path, hero_url,
                 config.SMTP_HOST, config.SMTP_PORT,
                 config.GMAIL_ADDRESS, config.GMAIL_APP_PASSWORD,
                 config.GMAIL_ADDRESS, config.EMAIL_TO,

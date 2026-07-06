@@ -101,21 +101,32 @@ def build_message(result: dict, from_addr: str, to_addr: str) -> MIMEMultipart:
     return root
 
 
-def build_article_message(article: dict, x_post: str, public_url: str, local_path: str,
+def build_article_message(article: dict, thread: dict, public_url: str, local_path: str,
                           hero_url: str, from_addr: str, to_addr: str) -> MIMEMultipart:
     """
-    記事1本の通知メール。Xポスト文面（コピー用＋「Xで開く」）と記事リンクをセットで表示。
-    hero画像はSteam CDNのURLをそのまま<img>参照する（メールクライアントが表示）。
+    記事1本の通知メール。「2ステップ・ポスト」（①親ポスト＝画像＋リンクなし／②リプ＝記事リンク）を
+    セットで表示。hero画像はSteam CDNのURLをそのまま<img>参照する（メールクライアントが表示）。
+    thread: {main, reply, main_weight, reply_weight}
     """
     now = datetime.now().strftime("%Y/%m/%d %H:%M")
     title = html.escape(article.get("title", ""))
     category = html.escape(article.get("category", ""))
     lead = html.escape(article.get("lead", ""))
-    post_html = html.escape(x_post).replace("\n", "<br>")
-    intent = "https://x.com/intent/tweet?text=" + urllib.parse.quote(x_post)
+
+    main_txt = thread.get("main", "")
+    reply_txt = thread.get("reply", "")
+    main_html = html.escape(main_txt).replace("\n", "<br>")
+    reply_html = html.escape(reply_txt).replace("\n", "<br>")
+    intent_main = "https://x.com/intent/tweet?text=" + urllib.parse.quote(main_txt)
+    intent_reply = "https://x.com/intent/tweet?text=" + urllib.parse.quote(reply_txt)
+    mw, rw = thread.get("main_weight"), thread.get("reply_weight")
+
+    breaking = article.get("is_breaking")
+    etype = html.escape(article.get("event_type", "") or "")
+    badge = ("🚨速報" if breaking else "📝記事")
 
     root = MIMEMultipart("alternative")
-    root["Subject"] = f"📝ゲームウォッチ 新着記事: {article.get('title','')[:40]} ({now})"
+    root["Subject"] = f"{badge}ゲームウォッチ: {article.get('title','')[:40]} ({now})"
     root["From"] = from_addr
     root["To"] = to_addr
 
@@ -133,13 +144,18 @@ def build_article_message(article: dict, x_post: str, public_url: str, local_pat
         link_href = html.escape(file_url)
         link_label = "記事を開く（ローカル確認用）"
         link_note = ("<div style='color:#9aa7b4;font-size:12px;margin-top:6px;'>"
-                     "※まだ公開URLが未設定です。Xポストにリンクを載せるには、"
-                     "サイトを公開して config.SITE_BASE_URL を設定してください。</div>")
+                     "※まだ公開URLが未設定です。config.SITE_BASE_URL を設定してください。</div>")
+
+    def _weight_span(w):
+        if w is None:
+            return ""
+        c = "#3cc7ff" if w <= 280 else "#ff5a3c"
+        return f"<span style='color:{c};font-size:12px;'>&nbsp;{w}/280</span>"
 
     body = f"""<!DOCTYPE html><html><body style="background:#0f1720;margin:0;padding:16px;
       font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;">
-      <div style="color:#f5f7fa;font-size:18px;font-weight:bold;margin:0 0 4px;">📝 新着記事ができました</div>
-      <div style="color:#9aa7b4;font-size:12px;margin:0 0 16px;">{now} ／ 内容を確認し、良ければXにポストしてください（自動投稿はしません）</div>
+      <div style="color:#f5f7fa;font-size:18px;font-weight:bold;margin:0 0 4px;">{badge} 新着記事ができました</div>
+      <div style="color:#9aa7b4;font-size:12px;margin:0 0 16px;">{now} ／ {etype} ／ 内容を確認し、良ければ手動でポストしてください（自動投稿はしません）</div>
 
       <div style="background:#16202b;border:1px solid #24313d;border-radius:12px;padding:16px;margin:0 0 16px;">
         <span style="background:#3cc7ff;color:#0f1720;font-weight:bold;padding:3px 12px;border-radius:8px;">{category}</span>
@@ -153,29 +169,45 @@ def build_article_message(article: dict, x_post: str, public_url: str, local_pat
         {link_note}
       </div>
 
-      <div style="background:#16202b;border:1px solid #24313d;border-radius:12px;padding:16px;">
-        <div style="color:#9aa7b4;font-size:12px;margin:0 0 8px;">Xポスト文面（この記事の要約＋リンク）</div>
-        <div style="color:#f5f7fa;font-size:15px;line-height:1.7;">{post_html}</div>
+      <div style="background:#1a2531;border:1px solid #2a3a48;border-radius:12px;padding:14px 16px;margin:0 0 12px;color:#c7d2dc;font-size:13px;line-height:1.7;">
+        <b style="color:#f5f7fa;">🧵 2ステップ投稿の手順</b><br>
+        ① 下の「親ポスト」を<b>上のhero画像を添付して</b>ポスト（リンクを貼らずインプレッションを稼ぐ）<br>
+        ② 投稿できたら、その<b>自分のポストのリプ欄</b>に「返信」をぶら下げる（記事リンクはここだけ）
+      </div>
+
+      <div style="background:#16202b;border:1px solid #24313d;border-radius:12px;padding:16px;margin:0 0 12px;">
+        <div style="color:#9aa7b4;font-size:12px;margin:0 0 8px;">① 親ポスト（画像添付・リンクなし）{_weight_span(mw)}</div>
+        <div style="color:#f5f7fa;font-size:15px;line-height:1.7;">{main_html}</div>
         <div style="margin-top:12px;">
-          <a href="{html.escape(intent)}" style="background:#1d9bf0;color:#fff;text-decoration:none;
-             padding:9px 18px;border-radius:8px;font-size:14px;">Xで開く（文面プリフィル）</a>
+          <a href="{html.escape(intent_main)}" style="background:#1d9bf0;color:#fff;text-decoration:none;
+             padding:9px 18px;border-radius:8px;font-size:14px;">Xで開く（親ポスト）</a>
+        </div>
+      </div>
+
+      <div style="background:#16202b;border:1px solid #24313d;border-radius:12px;padding:16px;">
+        <div style="color:#9aa7b4;font-size:12px;margin:0 0 8px;">② 返信（親ポストのリプ欄に貼る・記事リンク）{_weight_span(rw)}</div>
+        <div style="color:#f5f7fa;font-size:15px;line-height:1.7;">{reply_html}</div>
+        <div style="margin-top:12px;">
+          <a href="{html.escape(intent_reply)}" style="background:#1d9bf0;color:#fff;text-decoration:none;
+             padding:9px 18px;border-radius:8px;font-size:14px;">Xで開く（返信）</a>
         </div>
       </div>
     </body></html>"""
 
     plain = (f"新着記事 ({now})\n{article.get('title','')}\n\n"
              f"{article.get('lead','')}\n\n記事: {public_url or local_path}\n\n"
-             f"--- Xポスト文面 ---\n{x_post}\n")
+             f"[2ステップ投稿]\n① 親ポスト（画像添付・リンクなし）:\n{main_txt}\n\n"
+             f"② 返信（リプ欄・記事リンク）:\n{reply_txt}\n")
     root.attach(MIMEText(plain, "plain", "utf-8"))
     root.attach(MIMEText(body, "html", "utf-8"))
     return root
 
 
-def send_article_email(article: dict, x_post: str, public_url: str, local_path: str,
+def send_article_email(article: dict, thread: dict, public_url: str, local_path: str,
                        hero_url: str, host: str, port: int,
                        user: str, password: str, from_addr: str, to_addr: str) -> None:
     """記事通知メールをSMTP(STARTTLS)で送信する。失敗時は例外送出。"""
-    msg = build_article_message(article, x_post, public_url, local_path, hero_url, from_addr, to_addr)
+    msg = build_article_message(article, thread, public_url, local_path, hero_url, from_addr, to_addr)
     with smtplib.SMTP(host, port, timeout=30) as s:
         s.starttls()
         s.login(user, password)

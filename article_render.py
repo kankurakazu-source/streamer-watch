@@ -22,6 +22,7 @@ import config
 from game_analyzer import weighted_len
 
 STEAM_CDN = "https://cdn.cloudflare.steamstatic.com/steam/apps/{appid}/header.jpg"
+_URL_RE = re.compile(r"https?://\S+")
 
 # カテゴリ→acardのアクセント色クラス（index.htmlのCSSに合わせる）
 _CAT_CLASS = {
@@ -278,8 +279,58 @@ def inject_articles(index_html: str, articles: list[dict]) -> str:
 
 
 # ============================================
-# X投稿の文面を組み立てる（要約＋記事リンク）
+# X投稿の文面を組み立てる（2ステップ・ポスト）
 # ============================================
+def _fit_reply(lead: str, url: str, max_weight: int) -> str:
+    """リプ用テキスト（誘導文＋URL）を280に収める。超えたら誘導文を短縮。"""
+    lead = (lead or "詳しくは記事にまとめています👇").strip()
+    while True:
+        text = (lead + ("\n" + url if url else "")).strip()
+        if weighted_len(text) <= max_weight or len(lead) <= 8:
+            return text
+        lead = lead[: max(8, len(lead) - 4)].rstrip("　 、。")
+
+
+def build_x_thread(article: dict, url: str, max_weight: int = 280) -> dict:
+    """
+    「2ステップ・ポスト」を組み立てる。
+      main : 親ポスト（フック。リンクを貼らずインプレッションを稼ぐ。画像は別途添付）
+      reply: リプ欄に貼る記事リンク付き投稿（関心を持った読者だけを誘導）
+    Xはリンク付き投稿の表示を下げるため、URLは reply 側だけに置く。
+    戻り値: {main, reply, main_weight, reply_weight}
+    """
+    # --- 親ポスト: x_main（無ければlead）＋ハッシュタグ。URLは絶対に入れない ---
+    base = (article.get("x_main") or article.get("lead") or "").strip()
+    base = _URL_RE.sub("", base).strip()  # 念のためAIが混入させたURLを除去
+    tags = " ".join(f"#{str(t).lstrip('#').strip()}"
+                    for t in article.get("hashtags", []) if str(t).strip())
+
+    def assemble_main(with_tags: bool) -> str:
+        parts = [base]
+        if with_tags and tags:
+            parts.append("\n" + tags)
+        return "".join(parts).strip()
+
+    main = assemble_main(True)
+    if weighted_len(main) > max_weight:
+        main = assemble_main(False)
+    if weighted_len(main) > max_weight:  # まだ超えるなら本文を末尾から詰める
+        while weighted_len(main) > max_weight and len(base) > 20:
+            base = base[:-4]
+            main = assemble_main(False)
+
+    # --- リプ: 誘導文＋記事URL ---
+    reply = _fit_reply(article.get("x_reply", ""), url, max_weight)
+
+    return {
+        "main": main,
+        "reply": reply,
+        "main_weight": weighted_len(main),
+        "reply_weight": weighted_len(reply),
+    }
+
+
+# 旧: 1ポストに要約＋リンクをまとめる版（後方互換のため残置）
 def build_x_post(article: dict, url: str, max_weight: int = 280) -> str:
     """
     記事の要約(x_post)＋ハッシュタグ＋記事URLでX投稿文面を作る。
