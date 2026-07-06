@@ -119,7 +119,10 @@ _PAGE = """<!DOCTYPE html>
 <meta name="twitter:title" content="{title}">
 <meta name="twitter:description" content="{og_desc}">
 <meta name="twitter:image" content="{og_image}">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231793c9'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="alternate icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <style>{css}</style>
 </head>
 <body>
