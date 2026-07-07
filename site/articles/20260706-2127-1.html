@@ -128,6 +128,18 @@
   .acard.ranked .th{width:110px;}
   .rank{position:absolute;top:8px;left:8px;z-index:2;min-width:26px;height:26px;padding:0 6px;display:flex;align-items:center;justify-content:center;
     font-weight:800;font-size:14px;color:#07101c;background:var(--grad);border-radius:8px;box-shadow:0 4px 14px rgba(57,216,255,.4);}
+  /* この記事を共有 */
+  .share-block{max-width:720px;margin:34px auto 0;padding-top:22px;border-top:1px solid var(--line-soft);text-align:center;}
+  .share-ttl{font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--muted);margin:0 0 16px;}
+  .share-row{display:flex;justify-content:center;gap:14px;}
+  .sbtn{width:50px;height:50px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:800;letter-spacing:.02em;box-shadow:0 4px 14px rgba(0,0,0,.35);
+    transition:transform .12s,filter .15s;}
+  .sbtn:hover{transform:translateY(-3px);filter:brightness(1.1);}
+  .sbtn.x{background:#000;border:1px solid #2a3448;}
+  .sbtn.fb{background:#1877F2;}
+  .sbtn.line{background:#06C755;font-size:13px;}
+  .sbtn.hb{background:#00A4DE;font-size:19px;}
   @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
     .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}}
 </style>
@@ -201,6 +213,15 @@
 <p>7月10日12時半ごろの正式リリースというタイムスタンプが出たことで、『パルワールド』は今週最大の注目イベントに躍り出た。セーブ引き継ぎの判断、セール中の購入検討、当日の同接動向――どれも今動くべき理由がある。続報が出次第、当日の実際の数字で追いかけたい。</p>
     <a class="back" href="../index.html">← トップに戻る</a>
   </article>
+  <section class="share-block">
+    <div class="share-ttl">この記事を共有</div>
+    <div class="share-row">
+      <a class="sbtn x" href="https://x.com/intent/tweet?text=%E3%80%8E%E3%83%91%E3%83%AB%E3%83%AF%E3%83%BC%E3%83%AB%E3%83%89%E3%80%8F%E6%AD%A3%E5%BC%8F%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B9%E3%81%8C7%E6%9C%8810%E6%97%A512%E6%99%82%E5%8D%8A%E9%A0%83%E3%81%AB%E6%B1%BA%E5%AE%9A%E3%80%81%E9%96%8B%E7%99%BA%E5%85%83%E3%81%AF%E3%82%BB%E3%83%BC%E3%83%96%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E5%BC%95%E3%81%8D%E7%B6%99%E3%81%8E%E9%9D%9E%E6%8E%A8%E5%A5%A8%E3%82%92%E6%98%8E%E8%A8%80&url=https%3A%2F%2Fgame-watch.pages.dev%2Farticles%2F20260706-2127-1.html" target="_blank" rel="nofollow noopener" aria-label="Xで共有"><svg viewBox='0 0 24 24' width='20' height='20' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a>
+      <a class="sbtn fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgame-watch.pages.dev%2Farticles%2F20260706-2127-1.html" target="_blank" rel="nofollow noopener" aria-label="Facebookで共有"><svg viewBox='0 0 24 24' width='22' height='22' aria-hidden='true'><path fill='currentColor' d='M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.53-1.5H17V3.6c-.28-.04-1.23-.12-2.34-.12-2.32 0-3.9 1.42-3.9 4.02v2.24H8v3.1h2.76V21h2.74z'/></svg></a>
+      <a class="sbtn line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fgame-watch.pages.dev%2Farticles%2F20260706-2127-1.html" target="_blank" rel="nofollow noopener" aria-label="LINEで共有">LINE</a>
+      <a class="sbtn hb" href="https://b.hatena.ne.jp/add?mode=confirm&url=https%3A%2F%2Fgame-watch.pages.dev%2Farticles%2F20260706-2127-1.html&title=%E3%80%8E%E3%83%91%E3%83%AB%E3%83%AF%E3%83%BC%E3%83%AB%E3%83%89%E3%80%8F%E6%AD%A3%E5%BC%8F%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B9%E3%81%8C7%E6%9C%8810%E6%97%A512%E6%99%82%E5%8D%8A%E9%A0%83%E3%81%AB%E6%B1%BA%E5%AE%9A%E3%80%81%E9%96%8B%E7%99%BA%E5%85%83%E3%81%AF%E3%82%BB%E3%83%BC%E3%83%96%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E5%BC%95%E3%81%8D%E7%B6%99%E3%81%8E%E9%9D%9E%E6%8E%A8%E5%A5%A8%E3%82%92%E6%98%8E%E8%A8%80" target="_blank" rel="nofollow noopener" aria-label="はてなブックマークに追加">B!</a>
+    </div>
+  </section>
   <section class="related-block">
     <div class="sec-head">
       <div><div class="k">POPULAR</div><h2><span class="ic"></span>人気の記事</h2></div>

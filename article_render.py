@@ -138,6 +138,18 @@ _CSS = """
   .acard.ranked .th{width:110px;}
   .rank{position:absolute;top:8px;left:8px;z-index:2;min-width:26px;height:26px;padding:0 6px;display:flex;align-items:center;justify-content:center;
     font-weight:800;font-size:14px;color:#07101c;background:var(--grad);border-radius:8px;box-shadow:0 4px 14px rgba(57,216,255,.4);}
+  /* この記事を共有 */
+  .share-block{max-width:720px;margin:34px auto 0;padding-top:22px;border-top:1px solid var(--line-soft);text-align:center;}
+  .share-ttl{font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--muted);margin:0 0 16px;}
+  .share-row{display:flex;justify-content:center;gap:14px;}
+  .sbtn{width:50px;height:50px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:800;letter-spacing:.02em;box-shadow:0 4px 14px rgba(0,0,0,.35);
+    transition:transform .12s,filter .15s;}
+  .sbtn:hover{transform:translateY(-3px);filter:brightness(1.1);}
+  .sbtn.x{background:#000;border:1px solid #2a3448;}
+  .sbtn.fb{background:#1877F2;}
+  .sbtn.line{background:#06C755;font-size:13px;}
+  .sbtn.hb{background:#00A4DE;font-size:19px;}
   @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
     .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}}
 """
@@ -185,6 +197,7 @@ _PAGE = """<!DOCTYPE html>
     {body}
     <a class="back" href="../index.html">← トップに戻る</a>
   </article>
+{share}
 {related}
   <footer>
     <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。</div>
@@ -217,6 +230,35 @@ def x_link_html(show_handle: bool = True) -> str:
     aria = f"公式X @{handle}"
     return (f"<a class=\"x-link\" href=\"{_esc(url)}\" target=\"_blank\" rel=\"noopener\" "
             f"aria-label=\"{_esc(aria)}\">{_X_SVG}{_esc(label)}</a>")
+
+
+# Facebook ロゴ（f マーク）
+_FB_SVG = ("<svg viewBox='0 0 24 24' width='22' height='22' aria-hidden='true'>"
+           "<path fill='currentColor' d='M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.53-1.5H17V3.6"
+           "c-.28-.04-1.23-.12-2.34-.12-2.32 0-3.9 1.42-3.9 4.02v2.24H8v3.1h2.76V21h2.74z'/></svg>")
+_XL_SVG = _X_SVG.replace("width='16' height='16'", "width='20' height='20'")
+
+
+def share_section(url: str, title: str) -> str:
+    """記事末尾の「この記事を共有」導線（X/Facebook/LINE/はてブ）。URLが無ければ空。"""
+    url = (url or "").strip()
+    if not url:
+        return ""
+    u = urllib.parse.quote(url, safe="")
+    t = urllib.parse.quote((title or "").strip(), safe="")
+    x_url = f"https://x.com/intent/tweet?text={t}&url={u}"
+    fb_url = f"https://www.facebook.com/sharer/sharer.php?u={u}"
+    line_url = f"https://social-plugins.line.me/lineit/share?url={u}"
+    hb_url = f"https://b.hatena.ne.jp/add?mode=confirm&url={u}&title={t}"
+    return f"""  <section class="share-block">
+    <div class="share-ttl">この記事を共有</div>
+    <div class="share-row">
+      <a class="sbtn x" href="{x_url}" target="_blank" rel="nofollow noopener" aria-label="Xで共有">{_XL_SVG}</a>
+      <a class="sbtn fb" href="{fb_url}" target="_blank" rel="nofollow noopener" aria-label="Facebookで共有">{_FB_SVG}</a>
+      <a class="sbtn line" href="{line_url}" target="_blank" rel="nofollow noopener" aria-label="LINEで共有">LINE</a>
+      <a class="sbtn hb" href="{hb_url}" target="_blank" rel="nofollow noopener" aria-label="はてなブックマークに追加">B!</a>
+    </div>
+  </section>"""
 
 
 def slugify(dt: datetime, seq: int = 1) -> str:
@@ -344,6 +386,7 @@ def render_article(article: dict, related: list[dict] | None = None) -> str:
     if canonical:
         cur_slug = canonical.rstrip("/").split("/")[-1].removesuffix(".html")
     related_html = related_section(related or [], current_slug=cur_slug)
+    share_html = share_section(canonical, article.get("title", ""))
 
     return _PAGE.format(
         title=_esc(article.get("title", "")),
@@ -362,6 +405,7 @@ def render_article(article: dict, related: list[dict] | None = None) -> str:
         x_nav=x_link_html(show_handle=False),
         x_footer=x_link_html(show_handle=True),
         related=related_html,
+        share=share_html,
     )
 
 
