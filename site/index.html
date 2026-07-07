@@ -47,19 +47,21 @@
   header{position:sticky;top:0;z-index:20;
     background:rgba(10,14,22,.72);backdrop-filter:blur(14px) saturate(140%);
     border-bottom:1px solid var(--line-soft);}
-  .head{display:flex;align-items:center;justify-content:space-between;height:62px;}
-  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:.01em;}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:12px;height:62px;}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:.01em;flex:0 0 auto;}
   .logo{text-decoration:none;}
   .logo-mark{width:30px;height:30px;border-radius:8px;display:block;flex:0 0 auto;
     box-shadow:0 0 16px rgba(57,216,255,.30);}
   .logo-name{display:inline-flex;flex-direction:column;line-height:1.04;}
   .logo-sub{font-size:9.5px;font-weight:700;letter-spacing:.13em;color:var(--accent);
     font-style:normal;text-transform:uppercase;margin-top:1px;}
-  nav{display:flex;align-items:center;gap:6px;}
-  nav a{position:relative;padding:8px 12px;font-size:13.5px;color:var(--muted);border-radius:9px;
+  nav{display:flex;align-items:center;gap:6px;min-width:0;flex-wrap:nowrap;
+    overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  nav::-webkit-scrollbar{display:none;}
+  nav a{position:relative;flex:0 0 auto;white-space:nowrap;padding:8px 12px;font-size:13.5px;color:var(--muted);border-radius:9px;
     transition:color .15s,background .15s;}
   nav a:hover{color:var(--text);background:rgba(255,255,255,.05);}
-  .x-link{display:inline-flex;align-items:center;gap:5px;color:var(--muted);transition:color .15s,background .15s;}
+  .x-link{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;color:var(--muted);transition:color .15s,background .15s;}
   .x-link:hover{color:var(--accent);}
   .x-link svg{width:16px;height:16px;display:block;}
   footer .social{margin:0 0 12px;}
@@ -164,7 +166,8 @@
     .hero .wrap{padding:40px 22px 44px;}
     .hero h1{font-size:31px;}
     .hero p{font-size:15px;}
-    nav a{padding:8px 8px;font-size:12.5px;}
+    nav{gap:2px;-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent);}
+    nav a{padding:8px 10px;font-size:13px;}
     .grid{grid-template-columns:1fr;gap:13px;}
     .acard .th{width:112px;height:78px;}
     .sec-head h2{font-size:20px;}
