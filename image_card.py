@@ -96,6 +96,18 @@ def _cover(im: Image.Image, w: int, h: int) -> Image.Image:
     return im.crop((left, top, left + w, top + h))
 
 
+def _contain(im: Image.Image, w: int, h: int, bg=(255, 255, 255)) -> Image.Image:
+    """アスペクト比を保って (w,h) 内に収め、余白を bg で埋める（商品画像の全体表示用）。"""
+    im = im.convert("RGB")
+    sw, sh = im.size
+    scale = min(w / sw, h / sh)
+    nw, nh = max(1, int(sw * scale)), max(1, int(sh * scale))
+    r = im.resize((nw, nh), Image.LANCZOS)
+    canvas = Image.new("RGB", (w, h), bg)
+    canvas.paste(r, ((w - nw) // 2, (h - nh) // 2))
+    return canvas
+
+
 def _badge(d, x, y, is_news, accent):
     label = "速報" if is_news else "考察"
     bf = _font(FONT_BOLD, 30)
@@ -170,6 +182,49 @@ def render_art_card(image_bytes: bytes, draft: dict, out_path: str,
     d.rectangle([0, 0, ACCENT_BAR_W, H], fill=accent)
     _badge(d, MARGIN, 34, is_news, accent)
 
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    img.save(out_path, "PNG")
+    return out_path
+
+
+def render_product_card(image_bytes: bytes, draft: dict, out_path: str,
+                        credit: str | None = None) -> str:
+    """
+    商品画像（楽天等・白背景/正方形が多い）を主役にしたカード。
+    左に白角丸パネルで商品を『全体表示(contain)』、右にタイトル。切り抜きで見切れない。
+    """
+    is_news = draft.get("type") == "速報"
+    accent = ACCENT_NEWS if is_news else ACCENT_TREND
+
+    img = Image.new("RGB", (W, H), BG)
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 0, ACCENT_BAR_W, H], fill=accent)
+    _badge(d, MARGIN, 34, is_news, accent)
+
+    # 商品を白角丸パネルに全体表示
+    PANEL, PX, PY, PAD = 404, MARGIN, 150, 26
+    panel = Image.new("RGB", (PANEL, PANEL), (255, 255, 255))
+    try:
+        prod = Image.open(io.BytesIO(image_bytes))
+        panel.paste(_contain(prod, PANEL - PAD * 2, PANEL - PAD * 2), (PAD, PAD))
+    except Exception:
+        pass
+    mask = Image.new("L", (PANEL, PANEL), 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, PANEL - 1, PANEL - 1], radius=24, fill=255)
+    img.paste(panel, (PX, PY), mask)
+
+    # タイトル（パネル右・縦中央）
+    tx = PX + PANEL + 44
+    maxw = W - MARGIN - tx
+    hf = _font(FONT_BOLD, 42)
+    line_h = 42 + 14
+    lines = _wrap(d, draft.get("headline", ""), hf, maxw)[:6]
+    ty = PY + max(0, (PANEL - line_h * len(lines)) // 2)
+    for ln in lines:
+        d.text((tx, ty), ln, font=hf, fill=TEXT)
+        ty += line_h
+
+    _footer(d, credit)
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     img.save(out_path, "PNG")
     return out_path

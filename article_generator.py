@@ -379,6 +379,18 @@ def build_post_image(article: dict, slug: str) -> str | None:
             if img_bytes:
                 draft = {"type": ctype, "headline": article.get("title", "")}
                 return image_card.render_art_card(img_bytes, draft, out_path, "画像: Steam")
+        else:
+            # Steam非対象（デバイス等）: 楽天等の商品画像(hero_image_url)を全体表示カードに
+            hero = (article.get("hero_image_url") or "").strip()
+            if hero:
+                try:
+                    r = requests.get(hero, timeout=10)
+                    if r.status_code == 200 and len(r.content) > 2000:
+                        draft = {"type": ctype, "headline": article.get("title", "")}
+                        return image_card.render_product_card(
+                            r.content, draft, out_path, "画像: 楽天市場")
+                except requests.exceptions.RequestException:
+                    pass
         # フォールバック: タイトル＋結論のテキストカード
         draft = {
             "type": ctype,
