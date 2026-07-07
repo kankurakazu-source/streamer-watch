@@ -106,7 +106,40 @@ _CSS = """
     background:linear-gradient(180deg,transparent,rgba(138,107,255,.04));}
   footer .disc{max-width:720px;margin:0 auto 14px;background:var(--card);border:1px solid var(--line-soft);
     border-radius:12px;padding:14px 16px;color:var(--muted);line-height:1.75;}
-  @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}}
+  /* 人気の記事（記事下の回遊導線） */
+  .related-block{max-width:1000px;margin:44px auto 0;}
+  .related-block .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 0 18px;}
+  .related-block .sec-head .k{font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
+  .related-block .sec-head h2{font-size:21px;margin:6px 0 0;font-weight:800;letter-spacing:.01em;display:flex;align-items:center;gap:11px;}
+  .related-block .sec-head h2 .ic{width:6px;height:22px;border-radius:3px;background:var(--grad);display:inline-block;}
+  .related-block .sec-head .note{font-size:12.5px;color:var(--dim);}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));}
+  .acard{position:relative;display:flex;gap:15px;background:var(--card);border:1px solid var(--line-soft);
+    border-radius:16px;padding:14px;overflow:hidden;transition:transform .22s,border-color .22s,box-shadow .22s,background .22s;}
+  .acard:hover{transform:translateY(-4px);background:var(--card-hi);border-color:rgba(57,216,255,.5);
+    box-shadow:var(--shadow),0 8px 34px rgba(57,216,255,.16);}
+  .acard .th{width:120px;height:82px;flex:0 0 auto;border-radius:11px;background:var(--bg2) center/cover no-repeat;transition:filter .22s;}
+  .acard:hover .th{filter:brightness(1.08) saturate(1.05);}
+  .acard .th.noimg{background:radial-gradient(120px 80px at 70% 20%,rgba(138,107,255,.35),transparent 60%),linear-gradient(135deg,#182236,#10182a);position:relative;}
+  .acard .th.noimg::after{content:"GADGET";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:10px;font-weight:800;letter-spacing:.22em;}
+  .acbody{min-width:0;display:flex;flex-direction:column;}
+  .acmeta{display:flex;align-items:center;gap:7px;margin-bottom:7px;flex-wrap:wrap;}
+  .acard .cat{display:inline-block;font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:100px;letter-spacing:.02em;
+    background:rgba(57,216,255,.14);color:var(--accent);border:1px solid rgba(57,216,255,.25);}
+  .acard .cat.o{background:rgba(255,106,61,.15);color:var(--sale);border-color:rgba(255,106,61,.3);}
+  .acard .cat.g{background:rgba(47,210,126,.15);color:var(--green);border-color:rgba(47,210,126,.3);}
+  .acard .cat.p{background:rgba(167,139,250,.16);color:var(--violet);border-color:rgba(167,139,250,.3);}
+  .acard .pill-break{font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 9px;border-radius:100px;color:#fff;
+    background:linear-gradient(135deg,#ff6a3d,#ff2d6e);box-shadow:0 0 14px rgba(255,45,110,.45);}
+  .acard .ttl{font-size:15px;font-weight:700;margin:0 0 6px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard:hover .ttl{color:#fff;}
+  .acard .ex{font-size:12px;color:var(--muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard .d{font-size:11px;color:var(--dim);margin-top:auto;padding-top:8px;}
+  .acard.ranked .th{width:110px;}
+  .rank{position:absolute;top:8px;left:8px;z-index:2;min-width:26px;height:26px;padding:0 6px;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:14px;color:#07101c;background:var(--grad);border-radius:8px;box-shadow:0 4px 14px rgba(57,216,255,.4);}
+  @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
+    .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}}
 """
 
 _PAGE = """<!DOCTYPE html>
@@ -152,6 +185,7 @@ _PAGE = """<!DOCTYPE html>
     {body}
     <a class="back" href="../index.html">← トップに戻る</a>
   </article>
+{related}
   <footer>
     <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。</div>
     <div class="social">{x_footer}</div>
@@ -261,13 +295,14 @@ def _buybox(game: dict) -> str:
     </div>"""
 
 
-def render_article(article: dict) -> str:
+def render_article(article: dict, related: list[dict] | None = None) -> str:
     """
     article: {
       title, category, lead, tldr, conclusion,
       hero_image_url (str, 任意),
       sections: [ {heading, body, buy:{name,image_url,discount_percent?}(任意)} ]
     }
+    related: 他記事のリスト（storage.list_articles）。渡すと末尾に「人気の記事」を出す。
     """
     now = datetime.now()
     hero_url = article.get("hero_image_url", "")
@@ -304,6 +339,12 @@ def render_article(article: dict) -> str:
     canonical_tag = f'<link rel="canonical" href="{_esc(canonical)}">' if canonical else ""
     og_url_tag = f'<meta property="og:url" content="{_esc(canonical)}">' if canonical else ""
 
+    # 記事末尾の「人気の記事」（自分自身は除外）
+    cur_slug = ""
+    if canonical:
+        cur_slug = canonical.rstrip("/").split("/")[-1].removesuffix(".html")
+    related_html = related_section(related or [], current_slug=cur_slug)
+
     return _PAGE.format(
         title=_esc(article.get("title", "")),
         css=_CSS,
@@ -320,6 +361,7 @@ def render_article(article: dict) -> str:
         og_url_tag=og_url_tag,
         x_nav=x_link_html(show_handle=False),
         x_footer=x_link_html(show_handle=True),
+        related=related_html,
     )
 
 
@@ -329,11 +371,12 @@ def render_article(article: dict) -> str:
 _ARTICLES_RE = re.compile(r"(<!--ARTICLES:START-->).*?(<!--ARTICLES:END-->)", re.DOTALL)
 
 
-def _article_card(a: dict, rank: int | None = None) -> str:
+def _article_card(a: dict, rank: int | None = None, base: str = "") -> str:
     """
     1記事分の一覧カード(acard)HTML。a: storage.list_articles の1要素。
     rank を渡すと「いま読まれている」用の順位バッジを付ける。
     画像が無い記事（デバイス記事など）は .noimg でプレースホルダ表示にする。
+    base はリンクの基準（トップ=""でarticles/…、記事ページ="/"で/articles/…の絶対パス）。
     """
     catcls = _CAT_CLASS.get(a.get("category", ""), "")
     cls = f"cat {catcls}".strip()
@@ -346,7 +389,7 @@ def _article_card(a: dict, rank: int | None = None) -> str:
         d = datetime.fromisoformat(a["created_at"]).strftime("%Y/%m/%d")
     except Exception:
         d = ""
-    href = f"{config.ARTICLES_SUBDIR}/{a['slug']}.html"
+    href = f"{base}{config.ARTICLES_SUBDIR}/{a['slug']}.html"
     rank_badge = f"<span class=\"rank\">{rank}</span>" if rank else ""
     breaking = ("<span class=\"pill-break\">速報</span>"
                 if a.get("is_breaking") else "")
@@ -380,6 +423,28 @@ def _sort_trending(articles: list[dict]) -> list[dict]:
         key=lambda a: (1 if a.get("is_breaking") else 0, a.get("created_at") or ""),
         reverse=True,
     )
+
+
+def related_section(articles: list[dict], current_slug: str = "", limit: int = 4) -> str:
+    """
+    記事ページ末尾に置く「人気の記事」セクション（トップの"いま読まれている"と同方式）。
+    current_slug の記事は除外。他記事が無ければ空文字を返す（＝セクション非表示）。
+    リンクは絶対パス(/articles/…)なので、どの記事ページからでも正しく辿れる。
+    """
+    others = [a for a in articles if a.get("slug") and a.get("slug") != current_slug]
+    picks = _sort_trending(others)[:limit]
+    if not picks:
+        return ""
+    cards = "\n".join(_article_card(a, rank=i, base="/") for i, a in enumerate(picks, 1))
+    return f"""  <section class="related-block">
+    <div class="sec-head">
+      <div><div class="k">POPULAR</div><h2><span class="ic"></span>人気の記事</h2></div>
+      <div class="note">よく読まれているトピックから</div>
+    </div>
+    <div class="grid">
+{cards}
+    </div>
+  </section>"""
 
 
 def inject_homepage(index_html: str, articles: list[dict]) -> str:

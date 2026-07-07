@@ -96,7 +96,40 @@
     background:linear-gradient(180deg,transparent,rgba(138,107,255,.04));}
   footer .disc{max-width:720px;margin:0 auto 14px;background:var(--card);border:1px solid var(--line-soft);
     border-radius:12px;padding:14px 16px;color:var(--muted);line-height:1.75;}
-  @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}}
+  /* 人気の記事（記事下の回遊導線） */
+  .related-block{max-width:1000px;margin:44px auto 0;}
+  .related-block .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 0 18px;}
+  .related-block .sec-head .k{font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
+  .related-block .sec-head h2{font-size:21px;margin:6px 0 0;font-weight:800;letter-spacing:.01em;display:flex;align-items:center;gap:11px;}
+  .related-block .sec-head h2 .ic{width:6px;height:22px;border-radius:3px;background:var(--grad);display:inline-block;}
+  .related-block .sec-head .note{font-size:12.5px;color:var(--dim);}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));}
+  .acard{position:relative;display:flex;gap:15px;background:var(--card);border:1px solid var(--line-soft);
+    border-radius:16px;padding:14px;overflow:hidden;transition:transform .22s,border-color .22s,box-shadow .22s,background .22s;}
+  .acard:hover{transform:translateY(-4px);background:var(--card-hi);border-color:rgba(57,216,255,.5);
+    box-shadow:var(--shadow),0 8px 34px rgba(57,216,255,.16);}
+  .acard .th{width:120px;height:82px;flex:0 0 auto;border-radius:11px;background:var(--bg2) center/cover no-repeat;transition:filter .22s;}
+  .acard:hover .th{filter:brightness(1.08) saturate(1.05);}
+  .acard .th.noimg{background:radial-gradient(120px 80px at 70% 20%,rgba(138,107,255,.35),transparent 60%),linear-gradient(135deg,#182236,#10182a);position:relative;}
+  .acard .th.noimg::after{content:"GADGET";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:10px;font-weight:800;letter-spacing:.22em;}
+  .acbody{min-width:0;display:flex;flex-direction:column;}
+  .acmeta{display:flex;align-items:center;gap:7px;margin-bottom:7px;flex-wrap:wrap;}
+  .acard .cat{display:inline-block;font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:100px;letter-spacing:.02em;
+    background:rgba(57,216,255,.14);color:var(--accent);border:1px solid rgba(57,216,255,.25);}
+  .acard .cat.o{background:rgba(255,106,61,.15);color:var(--sale);border-color:rgba(255,106,61,.3);}
+  .acard .cat.g{background:rgba(47,210,126,.15);color:var(--green);border-color:rgba(47,210,126,.3);}
+  .acard .cat.p{background:rgba(167,139,250,.16);color:var(--violet);border-color:rgba(167,139,250,.3);}
+  .acard .pill-break{font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 9px;border-radius:100px;color:#fff;
+    background:linear-gradient(135deg,#ff6a3d,#ff2d6e);box-shadow:0 0 14px rgba(255,45,110,.45);}
+  .acard .ttl{font-size:15px;font-weight:700;margin:0 0 6px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard:hover .ttl{color:#fff;}
+  .acard .ex{font-size:12px;color:var(--muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard .d{font-size:11px;color:var(--dim);margin-top:auto;padding-top:8px;}
+  .acard.ranked .th{width:110px;}
+  .rank{position:absolute;top:8px;left:8px;z-index:2;min-width:26px;height:26px;padding:0 6px;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:14px;color:#07101c;background:var(--grad);border-radius:8px;box-shadow:0 4px 14px rgba(57,216,255,.4);}
+  @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
+    .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}}
 </style>
 </head>
 <body>
@@ -182,6 +215,35 @@
 <p>『めっちゃカメレオン』は1500万本という数字自体がインディー作品として異例のスピードであり、著名人コラボの発表次第でさらなる話題化が見込まれます。同接がやや落ち着いた今こそ、次の波に備えてチェックしておきたいタイトルです。</p>
     <a class="back" href="../index.html">← トップに戻る</a>
   </article>
+  <section class="related-block">
+    <div class="sec-head">
+      <div><div class="k">POPULAR</div><h2><span class="ic"></span>人気の記事</h2></div>
+      <div class="note">よく読まれているトピックから</div>
+    </div>
+    <div class="grid">
+      <a class="acard ranked" data-cat="デバイス" href="/articles/20260707-1200-1.html">
+        <span class="rank">1</span><div class="th noimg"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
+          <div class="ttl">Amazonプライムデー先行セール、ゲーミング周辺機器が続々値下げ ロジクールMX MASTER 4など主要デバイスをまとめ</div>
+          <div class="ex">Amazonのプライムデー先行セールが7月7日から始まり、ゲーミングマウスやキーボード、ノートPCなど周辺機器の値下げが一斉に出そろった。プライムデー本番（7月10日〜13日）を待たずに在庫や価格が動く可能性があるため、狙っている製品がある</div>
+          <div class="d">2026/07/07</div></div>
+      </a>
+      <a class="acard ranked" data-cat="新作" href="/articles/20260706-2127-1.html">
+        <span class="rank">2</span><div class="th" style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1623730/header.jpg')"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『パルワールド』正式リリースが7月10日12時半頃に決定、開発元はセーブデータの引き継ぎ非推奨を明言</div>
+          <div class="ex">アーリーアクセスから約1年半、『パルワールド』の正式版（1.0）配信タイミングが7月10日12時半ごろと具体化した。開発元Pocketpairはセーブデータの引き継ぎは可能としつつも「本当はリセットを推奨する」と案内しており、既存プレイヤー</div>
+          <div class="d">2026/07/06</div></div>
+      </a>
+      <a class="acard ranked" data-cat="データ分析" href="/articles/20260706-0915-1.html">
+        <span class="rank">3</span><div class="th" style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/2767030/header.jpg')"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">データ分析</span></div>
+          <div class="ttl">『Marvel Rivals』が前日比+28%で急増、Steamサマーセールの陰で盛り上がる同接ランキングを読む</div>
+          <div class="ex">Steamサマーセールの目玉として『サイバーパンク2077』や『Palworld』が注目を集める一方、同時接続者数の伸び率で見ると『Marvel Rivals』『Rainbow Six Siege』『Baldur&#x27;s Gate 3』が軒並み</div>
+          <div class="d">2026/07/06</div></div>
+      </a>
+    </div>
+  </section>
   <footer>
     <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。</div>
     <div class="social"><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg> @game_infoman</a></div>

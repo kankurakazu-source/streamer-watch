@@ -281,8 +281,12 @@ def publish(article: dict, hero_url: str) -> dict:
     # OGP用の正規URL（公開URLベースがあれば）。render_article がog:url/canonicalに使う。
     article["canonical_url"] = build_public_url(slug)
 
-    # 記事HTML
-    html_str = article_render.render_article(article)
+    # 記事HTML（末尾の「人気の記事」用に既存記事を渡す。current はまだ未登録なので自然に除外される）
+    try:
+        related = storage.list_articles(config.HISTORY_DB, limit=12)
+    except Exception:
+        related = []
+    html_str = article_render.render_article(article, related=related)
     article_path = os.path.join(articles_dir, f"{slug}.html")
     with open(article_path, "w", encoding="utf-8") as f:
         f.write(html_str)
