@@ -449,23 +449,30 @@ def related_section(articles: list[dict], current_slug: str = "", limit: int = 4
 
 def inject_homepage(index_html: str, articles: list[dict]) -> str:
     """
-    トップページの3領域を再生成する:
+    トップページの領域を再生成する:
       TRENDING … いま読まれている記事（速報優先＋新着）上位5
+      GAMES    … 話題・注目ゲーム（デバイス以外＝ゲーム系）上位6
       DEVICES  … 注目のデバイス情報（カテゴリ/種別=デバイス）上位6
       ARTICLES … 全記事（カテゴリで絞り込み可能な一覧）
     """
+    def _is_device(a: dict) -> bool:
+        return a.get("category") == "デバイス" or a.get("event_type") == "デバイス"
+
     trending = _sort_trending(articles)[:5]
-    devices = [a for a in articles
-               if a.get("category") == "デバイス" or a.get("event_type") == "デバイス"][:6]
+    games = [a for a in _sort_trending(articles) if not _is_device(a)][:6]
+    devices = [a for a in articles if _is_device(a)][:6]
 
     trending_html = ("\n".join(_article_card(a, rank=i) for i, a in enumerate(trending, 1))
                      if trending else _empty_note("記事がまだありません。"))
+    games_html = ("\n".join(_article_card(a) for a in games) if games
+                  else _empty_note("ゲーム記事は近日公開。新作・セール・eスポーツの注目タイトルを追って掲載します。"))
     devices_html = ("\n".join(_article_card(a) for a in devices) if devices
                     else _empty_note("デバイス記事は近日公開。ゲーミングデバイスの新作・予約・ベンチマーク情報を追って掲載します。"))
     articles_html = ("\n".join(_article_card(a) for a in articles) if articles
                      else _empty_note("記事がまだありません。"))
 
     html = _replace_region(index_html, "TRENDING", trending_html)
+    html = _replace_region(html, "GAMES", games_html)
     html = _replace_region(html, "DEVICES", devices_html)
     html = _replace_region(html, "ARTICLES", articles_html)
     # 公式Xリンク（config.X_HANDLE 変更時に次回publishで自動反映）
