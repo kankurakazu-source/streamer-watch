@@ -37,6 +37,7 @@ import game_watch
 import image_card
 import trend_detector
 from collectors import steam_collector
+from collectors import rakuten_collector
 
 ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
 
@@ -198,30 +199,54 @@ def _enrich(article: dict, collected: dict) -> tuple[str, list[str]]:
 
     pools: dict[int, list[str]] = {}   # appid -> 画像URL群（キャッシュ）
     used: set[str] = set()             # 記事内で既に使った画像
+    rk_cache: dict[str, str] = {}      # 製品名 -> 楽天商品画像URL（キャッシュ）
 
-    def pick_image(appid, fallback: str) -> str:
-        """このappidの画像から、記事内でまだ使っていないものを1枚選ぶ。"""
-        if not appid:
-            return fallback
-        if appid not in pools:
+    def rakuten_image(name: str) -> str:
+        """Steam画像が無い製品(デバイス等)向け: 楽天商品検索で実画像を1枚取得。"""
+        name = (name or "").strip()
+        if not name or not config.RAKUTEN_APP_ID:
+            return ""
+        if name not in rk_cache:
             try:
-                pools[appid] = steam_collector.fetch_image_urls(appid)
+                rk_cache[name] = rakuten_collector.search_image(name, config.RAKUTEN_APP_ID)
             except Exception:
-                pools[appid] = []
-        for u in pools[appid]:
-            if u not in used:
-                used.add(u)
-                return u
-        # 全部使い切った/取得不可なら、先頭 or ヘッダーへフォールバック
-        return (pools[appid][0] if pools[appid] else fallback)
+                rk_cache[name] = ""
+        return rk_cache[name]
 
-    # hero画像（主役ゲーム）
+    def pick_image(appid, name: str, fallback: str) -> str:
+        """appidのSteam画像→無ければ楽天商品画像→fallback、の順で1枚選ぶ（記事内で重複回避）。"""
+        if appid:
+            if appid not in pools:
+                try:
+                    pools[appid] = steam_collector.fetch_image_urls(appid)
+                except Exception:
+                    pools[appid] = []
+            for u in pools[appid]:
+                if u not in used:
+                    used.add(u)
+                    return u
+            if pools[appid]:
+                return pools[appid][0]
+        # Steam画像なし → 楽天商品画像（製品名で検索）
+        r = rakuten_image(name)
+        if r:
+            if r not in used:
+                used.add(r)
+            return r
+        return fallback
+
+    # hero画像（主役ゲーム。デバイス記事は main_game 空のことが多いので先頭セクションの製品名で代替）
     hero_url = ""
     main = (article.get("main_game") or "").strip()
     if main:
         g = _resolve_game(main, name_to_appid, appid_discount)
         article["main_appid"] = g.get("appid")  # 親ポスト添付画像の生成に使う
-        hero_url = pick_image(g.get("appid"), g.get("image_url", ""))
+        hero_url = pick_image(g.get("appid"), main, g.get("image_url", ""))
+    if not hero_url:
+        secs = article.get("sections", []) or []
+        first_name = next((s.get("game_name", "").strip() for s in secs if s.get("game_name")), "")
+        if first_name:
+            hero_url = rakuten_image(first_name)
     article["hero_image_url"] = hero_url
 
     # 各セクション：購入ボックス＋（使い回さない）バナー画像
@@ -232,8 +257,11 @@ def _enrich(article: dict, collected: dict) -> tuple[str, list[str]]:
             sec["image_url"] = ""
             continue
         g = _resolve_game(gname, name_to_appid, appid_discount)
+        img = pick_image(g.get("appid"), gname, g.get("image_url", ""))
+        if img and not g.get("image_url"):
+            g["image_url"] = img   # 購入ボックスのサムネにも楽天画像を反映
         sec["buy"] = g
-        sec["image_url"] = pick_image(g.get("appid"), g.get("image_url", ""))
+        sec["image_url"] = img
         if g.get("discount_percent"):
             log.append(f"{gname} -{g['discount_percent']}%")
     return hero_url, log

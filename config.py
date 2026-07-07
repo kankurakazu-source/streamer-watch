@@ -210,4 +210,9 @@ def x_url() -> str:
 # 直書きしておくとローカルでもGitHub Actionsでも設定なしで機能する。
 AMAZON_ASSOC_TAG = os.environ.get("AMAZON_ASSOC_TAG", "") or ""        # Amazonアソシエイトのタグ(例: yourtag-22)
 RAKUTEN_AFFILIATE_ID = os.environ.get("RAKUTEN_AFFILIATE_ID", "") or "558dd68a.a8710327.558dd68b.2fef3e9e"  # 楽天アフィリエイトID(hb.afl用)
+
+# 楽天ウェブサービスのアプリID(applicationId)。商品検索API＝デバイス等の"実際の商品画像"取得に使う。
+# 無料: https://webservice.rakuten.co.jp/ でアプリ登録→applicationId を取得しここ(またはenv)に設定。
+# 未設定なら商品画像の取得はスキップ（従来どおり画像なし）。アフィリID(上)とは別物。
+RAKUTEN_APP_ID = os.environ.get("RAKUTEN_APP_ID", "") or ""
 DMM_AFFILIATE_ID = os.environ.get("DMM_AFFILIATE_ID", "") or ""        # DMMアフィリエイトID(af_id。例: yourname-990)
