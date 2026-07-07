@@ -211,8 +211,12 @@ def x_url() -> str:
 AMAZON_ASSOC_TAG = os.environ.get("AMAZON_ASSOC_TAG", "") or ""        # Amazonアソシエイトのタグ(例: yourtag-22)
 RAKUTEN_AFFILIATE_ID = os.environ.get("RAKUTEN_AFFILIATE_ID", "") or "558dd68a.a8710327.558dd68b.2fef3e9e"  # 楽天アフィリエイトID(hb.afl用)
 
-# 楽天ウェブサービスのアプリID(applicationId)。商品検索API＝デバイス等の"実際の商品画像"取得に使う。
-# 無料: https://webservice.rakuten.co.jp/ でアプリ登録→applicationId を取得しここ(またはenv)に設定。
-# 未設定なら商品画像の取得はスキップ（従来どおり画像なし）。アフィリID(上)とは別物。
-RAKUTEN_APP_ID = os.environ.get("RAKUTEN_APP_ID", "") or ""
+# 楽天 新プラットフォーム(Rakuten Developers)の認証情報。商品検索API＝デバイス等の
+# "実際の商品画像"取得に使う。2026年新仕様: applicationId(UUID)＋accessKey(pk_)＋Origin/Referer必須。
+# これらは秘匿情報として .env に置く（公開リポジトリに焼き込まない）。未設定なら画像取得スキップ。
+# アプリの「Allowed websites」に RAKUTEN_REFERRER のドメインを登録しておくこと。
+RAKUTEN_APP_ID = os.environ.get("RAKUTEN_APP_ID", "") or ""            # アプリケーションID(UUID形式)
+RAKUTEN_ACCESS_KEY = os.environ.get("RAKUTEN_ACCESS_KEY", "") or ""    # アクセスキー(pk_...)
+# API呼び出し時に送る Origin/Referer。未設定なら SITE_BASE_URL を使う（登録ドメインと一致させる）。
+RAKUTEN_REFERRER = os.environ.get("RAKUTEN_REFERRER", "") or SITE_BASE_URL
 DMM_AFFILIATE_ID = os.environ.get("DMM_AFFILIATE_ID", "") or ""        # DMMアフィリエイトID(af_id。例: yourname-990)

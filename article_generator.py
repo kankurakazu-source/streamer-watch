@@ -204,11 +204,15 @@ def _enrich(article: dict, collected: dict) -> tuple[str, list[str]]:
     def rakuten_image(name: str) -> str:
         """Steam画像が無い製品(デバイス等)向け: 楽天商品検索で実画像を1枚取得。"""
         name = (name or "").strip()
-        if not name or not config.RAKUTEN_APP_ID:
+        if not name or not (config.RAKUTEN_APP_ID and config.RAKUTEN_ACCESS_KEY):
             return ""
         if name not in rk_cache:
             try:
-                rk_cache[name] = rakuten_collector.search_image(name, config.RAKUTEN_APP_ID)
+                rk_cache[name] = rakuten_collector.search_image(
+                    name, config.RAKUTEN_APP_ID,
+                    access_key=config.RAKUTEN_ACCESS_KEY,
+                    referrer=config.RAKUTEN_REFERRER,
+                )
             except Exception:
                 rk_cache[name] = ""
         return rk_cache[name]
