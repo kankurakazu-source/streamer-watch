@@ -17,6 +17,7 @@ article_generator.py
     .venv\\Scripts\\python.exe article_generator.py
 """
 
+import argparse
 import json
 import os
 import re
@@ -82,7 +83,9 @@ SYSTEM_PROMPT = """\
 9. 誠実なトーン。過度な煽り・誹謗中傷はしない。読者の判断材料を提供する姿勢。
 """
 
-USER_TEMPLATE = """\
+# 安定プレフィックス（system＋この本文＝1回の実行の2記事で共通なのでプロンプトキャッシュ対象にする）。
+# 可変部分（重複回避リスト・avoid_note）は USER_VOLATILE として後ろに置く（キャッシュ非対象）。
+USER_STABLE = """\
 以下は本日収集したゲーム関連データ（Twitch人気ゲーム/YouTube急上昇日米/Steam売上・新作・セール・同接/
 国内外ニュース）です。
 
@@ -90,9 +93,6 @@ USER_TEMPLATE = """\
 
 ■ 今狙うべきイベント（トレンド・ハイジャック候補。スコア順。速報性・関心の高い順）:
 {hot_events}
-
-直近に公開済みの記事タイトル（これらと重複しないトピックを選ぶこと）:
-{recent_titles}
 
 上記イベントの中から、いま最も検索・話題になっていて記事価値が高いものを【1つだけ】選び、
 『どこよりも早いまとめ』となる1本の記事を書いてください。明確なイベントが無い場合のみ、
@@ -125,6 +125,12 @@ USER_TEMPLATE = """\
 - hashtags: 0〜2個（#は付けず語だけ。トレンドに乗る語を選ぶ。例: VALORANT / Steamセール）
 - topic_key: 重複検知用のキー。主役ゲーム名 or トピックを短い日本語で（例「Steamサマーセール」）
 """
+
+# 可変部分（記事ごとに変わる＝重複回避リストと avoid_note）。安定部分の後ろに連結する（キャッシュ非対象）。
+USER_VOLATILE = """\
+
+直近に公開済みの記事タイトル（これらと重複しないトピックを選ぶこと。同一トピックは避ける）:
+{recent_titles}{avoid_line}"""
 
 ARTICLE_SCHEMA = {
     "type": "object",
@@ -279,14 +285,23 @@ def _enrich(article: dict, collected: dict) -> tuple[str, list[str]]:
 
 
 def generate_article(collected: dict, recent: list[dict], api_key: str,
-                     hot_events_text: str = "", model: str = "claude-sonnet-5") -> dict:
-    """Claudeに1本の記事を書かせる。structured outputsでJSON構造を強制。"""
+                     hot_events_text: str = "", model: str = "claude-sonnet-5",
+                     avoid_note: str = "") -> dict:
+    """Claudeに1本の記事を書かせる。structured outputsでJSON構造を強制。
+    avoid_note: 同一実行で複数本書く際、既出カテゴリ/トピックを避けさせる追加指示。
+
+    プロンプトキャッシュ: 安定部分(system＋収集データ＋イベント＋構成指示)を cache_control で
+    キャッシュし、可変部分(重複回避リスト・avoid_note)を後ろに置く。1回の実行で2本目以降は
+    巨大な入力(収集データ)がキャッシュ読み出しになり入力コストが大幅に下がる。出力は不変。"""
     recent_titles = "\n".join(f"- {r['title']}" for r in recent) or "(まだありません)"
-    user_prompt = USER_TEMPLATE.format(
+    stable_text = USER_STABLE.format(
         data_json=json.dumps(collected, ensure_ascii=False, indent=2),
         hot_events=hot_events_text or "（検出なし）",
-        recent_titles=recent_titles,
         categories=" / ".join(config.ARTICLE_CATEGORIES),
+    )
+    volatile_text = USER_VOLATILE.format(
+        recent_titles=recent_titles,
+        avoid_line=("\n" + avoid_note if avoid_note else ""),
     )
     headers = {
         "Content-Type": "application/json",
@@ -297,23 +312,36 @@ def generate_article(collected: dict, recent: list[dict], api_key: str,
         "model": model,
         "max_tokens": 4000,
         "system": SYSTEM_PROMPT,
-        "messages": [{"role": "user", "content": user_prompt}],
+        "messages": [{"role": "user", "content": [
+            {"type": "text", "text": stable_text, "cache_control": {"type": "ephemeral"}},
+            {"type": "text", "text": volatile_text},
+        ]}],
         "thinking": {"type": "disabled"},
         "output_config": {"format": {"type": "json_schema", "schema": ARTICLE_SCHEMA}},
     }
     resp = requests.post(ANTHROPIC_API_URL, headers=headers, json=body, timeout=90)
+    # 万一キャッシュ指定が拒否されても記事生成を止めない（プレーン結合で再送＝品質は同じ）
+    if resp.status_code == 400 and "cache" in resp.text.lower():
+        print("[WARN] prompt cache 非対応のためフォールバック（コスト削減は無効・品質は不変）")
+        body["messages"] = [{"role": "user", "content": stable_text + volatile_text}]
+        resp = requests.post(ANTHROPIC_API_URL, headers=headers, json=body, timeout=90)
     if resp.status_code != 200:
         raise RuntimeError(f"Anthropic API失敗 (HTTP {resp.status_code}): {resp.text}")
     result = resp.json()
+    u = result.get("usage", {}) or {}
+    print(f"[usage] input={u.get('input_tokens')} "
+          f"cache_write={u.get('cache_creation_input_tokens')} "
+          f"cache_read={u.get('cache_read_input_tokens')} output={u.get('output_tokens')}")
     text = "\n".join(c["text"] for c in result.get("content", []) if c.get("type") == "text").strip()
     text = text.replace("```json", "").replace("```", "").strip()
     return json.loads(text)
 
 
-def publish(article: dict, hero_url: str) -> dict:
-    """記事HTMLを書き出し、DBに登録し、トップページの一覧を更新。戻り値: メタ情報。"""
+def publish(article: dict, hero_url: str, seq: int = 1) -> dict:
+    """記事HTMLを書き出し、DBに登録し、トップページの一覧を更新。戻り値: メタ情報。
+    seq: 同一実行で複数本公開する際にスラッグを分けるための連番(1,2,...)。"""
     now = datetime.now()
-    slug = article_render.slugify(now, seq=1)
+    slug = article_render.slugify(now, seq=seq)
     articles_dir = os.path.join(config.SITE_DIR, config.ARTICLES_SUBDIR)
     os.makedirs(articles_dir, exist_ok=True)
 
@@ -418,37 +446,34 @@ def build_public_url(slug: str) -> str:
     return f"{base.rstrip('/')}/{config.ARTICLES_SUBDIR}/{slug}.html"
 
 
-def main():
-    if not config.ANTHROPIC_API_KEY:
-        print("[ERROR] ANTHROPIC_API_KEY が未設定です。.env を確認してください。")
-        return
+# --- 実行成功マーカー（1時間後リトライの二重生成防止に使う） ---
+_RUNS_DIR = os.path.join(config.OUTPUT_DIR, "runs")
+_LAST_SUCCESS = os.path.join(_RUNS_DIR, "last_success.txt")
 
-    print("=== 記事生成: データ収集開始 ===")
-    collected = game_watch.collect_all()
-    if not game_watch.has_signal(collected):
-        print("収集データが無かったため、記事生成を中止しました。")
-        return
 
-    recent = storage.recent_article_topics(config.HISTORY_DB, days=21)
-    print(f"直近公開済み: {len(recent)}件（重複回避）")
-
-    # トレンド・ハイジャック: 狙うべきイベントを検出してプロンプトに渡す
-    detection = trend_detector.detect(collected)
-    hot_text = trend_detector.format_for_prompt(detection)
-    print(f"=== 検出イベント: {sum(detection['counts'].values())}件"
-          f"（速報級={'あり' if detection['has_breaking'] else 'なし'}） ===")
-    for e in detection["hot_events"][:5]:
-        print(f"  [{e['event_type']}] {e['headline'][:48]}  (score={e['score']})")
-
-    print("=== Claudeで記事を執筆中 ===")
+def _mark_success():
+    """記事を作成できた時刻を記録する。"""
     try:
-        article = generate_article(collected, recent, config.ANTHROPIC_API_KEY, hot_events_text=hot_text)
+        os.makedirs(_RUNS_DIR, exist_ok=True)
+        with open(_LAST_SUCCESS, "w", encoding="utf-8") as f:
+            f.write(datetime.now().isoformat())
     except Exception as e:
-        print(f"[ERROR] 記事生成に失敗しました: {e}")
-        return
+        print(f"[WARN] 成功マーカーの記録に失敗: {e}")
 
+
+def _recent_success(minutes: int = 70) -> bool:
+    """直近 minutes 分以内に記事作成が成功していれば True。"""
+    try:
+        t = datetime.fromisoformat(open(_LAST_SUCCESS, encoding="utf-8").read().strip())
+        return (datetime.now() - t).total_seconds() < minutes * 60
+    except Exception:
+        return False
+
+
+def _publish_and_notify(article: dict, collected: dict, seq: int) -> None:
+    """1本の記事を公開し、Xポスト文面を表示、メール通知する。"""
     hero_url, disc_log = _enrich(article, collected)
-    meta = publish(article, hero_url)
+    meta = publish(article, hero_url, seq=seq)
     public_url = build_public_url(meta["slug"])
     thread = article_render.build_x_thread(article, public_url)
     post_image = build_post_image(article, meta["slug"])  # 親ポストに添付するPNG
@@ -468,7 +493,6 @@ def main():
         print(f"\n[INFO] 公開URL未設定（config.SITE_BASE_URL が空）。ローカル確認用パス:")
         print(f"  file:///{os.path.abspath(meta['path']).replace(os.sep, '/')}")
 
-    # メール通知（設定があれば）
     if config.email_enabled():
         try:
             import emailer
@@ -479,11 +503,69 @@ def main():
                 config.GMAIL_ADDRESS, config.GMAIL_APP_PASSWORD,
                 config.GMAIL_ADDRESS, config.EMAIL_TO,
             )
-            print(f"\n=== メール送信済み: {config.EMAIL_TO} ===")
+            print(f"=== メール送信済み: {config.EMAIL_TO} ===")
         except Exception as e:
             print(f"[WARN] メール送信失敗: {e}")
     else:
-        print("\n[INFO] メール未設定（.envにGMAIL_ADDRESS/GMAIL_APP_PASSWORDを入れると送信します）")
+        print("[INFO] メール未設定（.envにGMAIL_ADDRESS/GMAIL_APP_PASSWORDを入れると送信します）")
+
+
+def main():
+    ap = argparse.ArgumentParser(description="ガジェゲ 記事生成")
+    ap.add_argument("--count", type=int, default=1, help="1回で作る記事数（既定1）")
+    ap.add_argument("--mode", choices=["primary", "retry"], default="primary",
+                    help="retry は直近70分以内に成功していればスキップ（1時間後リトライ用）")
+    args = ap.parse_args()
+    count = max(1, args.count)
+
+    if not config.ANTHROPIC_API_KEY:
+        print("[ERROR] ANTHROPIC_API_KEY が未設定です。.env を確認してください。")
+        return
+
+    # リトライ実行: 直近の定時実行が成功済みなら二重生成しない
+    if args.mode == "retry" and _recent_success(minutes=70):
+        print("[retry] 直近70分以内に成功済みのためスキップします。")
+        return
+
+    print(f"=== 記事生成: データ収集開始（{count}本 / mode={args.mode}）===")
+    collected = game_watch.collect_all()
+    if not game_watch.has_signal(collected):
+        print("収集データが無かったため、記事生成を中止しました。")
+        return
+
+    recent = storage.recent_article_topics(config.HISTORY_DB, days=21)
+    print(f"直近公開済み: {len(recent)}件（重複回避）")
+
+    # トレンド・ハイジャック: 狙うべきイベントを検出してプロンプトに渡す
+    detection = trend_detector.detect(collected)
+    hot_text = trend_detector.format_for_prompt(detection)
+    print(f"=== 検出イベント: {sum(detection['counts'].values())}件"
+          f"（速報級={'あり' if detection['has_breaking'] else 'なし'}） ===")
+    for e in detection["hot_events"][:5]:
+        print(f"  [{e['event_type']}] {e['headline'][:48]}  (score={e['score']})")
+
+    produced = []  # [(category, title), ...]
+    for i in range(count):
+        avoid_note = ""
+        if produced:
+            done = "／".join(f"{c}「{t[:20]}」" for c, t in produced)
+            avoid_note = (f"※重要: 今回の実行では既に次の記事を作成済み: {done}。"
+                          "今回は必ず別カテゴリ・別トピックを選び、内容が重複しないようにすること。")
+        print(f"\n=== Claudeで記事を執筆中 ({i + 1}/{count}) ===")
+        try:
+            article = generate_article(collected, recent, config.ANTHROPIC_API_KEY,
+                                       hot_events_text=hot_text, avoid_note=avoid_note)
+        except Exception as e:
+            print(f"[ERROR] 記事生成に失敗しました: {e}")
+            break
+        _publish_and_notify(article, collected, seq=i + 1)
+        title = article.get("title", "")
+        produced.append((article.get("category", ""), title))
+        recent = recent + [{"title": title, "topic_key": article.get("topic_key", "")}]
+
+    if produced:
+        _mark_success()
+    print(f"\n=== 完了: {len(produced)}本を生成しました ===")
 
 
 if __name__ == "__main__":
