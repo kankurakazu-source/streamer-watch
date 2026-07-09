@@ -36,7 +36,7 @@ _CSS = """
     --bg:#0a0e16; --bg2:#0c1220; --card:#121a29; --card-hi:#172135; --line:#243046; --line-soft:#1a2334;
     --text:#eef2f8; --muted:#a7b7ca; --dim:#647689;
     --accent:#39d8ff; --accent-2:#8a6bff; --sale:#ff6a3d; --green:#2fd27e; --violet:#a78bfa;
-    --amazon:#ff9900; --rakuten:#c5121a; --dmm:#f04e23;
+    --amazon:#ff9900; --rakuten:#c5121a; --dmm:#f04e23; --steam:#1387b8;
     --shadow:0 10px 30px rgba(0,0,0,.45);
     --grad:linear-gradient(135deg,var(--accent),var(--accent-2));
   }
@@ -99,6 +99,7 @@ _CSS = """
   .buy.amazon{background:var(--amazon);color:#231a08;}
   .buy.rakuten{background:var(--rakuten);}
   .buy.dmm{background:var(--dmm);}
+  .buy.steam{background:var(--steam);}
   .pnote{font-size:11px;color:var(--dim);margin-top:10px;line-height:1.7;}
   .back{display:inline-flex;align-items:center;gap:6px;margin:30px 0 0;font-size:14px;font-weight:700;color:var(--accent);}
   .back:hover{gap:10px;transition:gap .15s;}
@@ -322,6 +323,11 @@ def _buybox(game: dict) -> str:
     th = f"<div class='th' style=\"background-image:url('{_esc(img)}')\"></div>" if img else "<div class='th'></div>"
     dp = game.get("discount_percent")
     off = f"<div class='off'>-{int(dp)}% セール中</div>" if dp else ""
+    # Steamゲーム(appidあり)は公式ストアへの導線を先頭に付ける（アフィリ制度は無いのでUX目的）
+    appid = game.get("appid")
+    steam_btn = (f"<a class=\"buy steam\" href=\"https://store.steampowered.com/app/{int(appid)}/\" "
+                 f"target=\"_blank\" rel=\"nofollow noopener\">Steamで見る</a>\n        "
+                 if appid else "")
     return f"""<div class="buybox">
       <div class="bt">{th}
         <div style="flex:1">
@@ -329,7 +335,7 @@ def _buybox(game: dict) -> str:
         </div>
       </div>
       <div class="buys">
-        <a class="buy amazon" href="{_esc(links['amazon'])}" target="_blank" rel="nofollow noopener">Amazonで見る</a>
+        {steam_btn}<a class="buy amazon" href="{_esc(links['amazon'])}" target="_blank" rel="nofollow noopener">Amazonで見る</a>
         <a class="buy rakuten" href="{_esc(links['rakuten'])}" target="_blank" rel="nofollow noopener">楽天</a>
         <a class="buy dmm" href="{_esc(links['dmm'])}" target="_blank" rel="nofollow noopener">DMM</a>
       </div>
