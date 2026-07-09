@@ -14,6 +14,7 @@ X投稿の文面を組み立てるためのユーティリティ。
 """
 
 import html
+import random
 import re
 import urllib.parse
 from datetime import datetime
@@ -23,6 +24,20 @@ from game_analyzer import weighted_len
 
 STEAM_CDN = "https://cdn.cloudflare.steamstatic.com/steam/apps/{appid}/header.jpg"
 _URL_RE = re.compile(r"https?://\S+")
+
+# 親ポストに入れる「リプ(2つ目)へ誘導」する一文。毎回ランダムで表現を変える。
+_REPLY_GUIDES = [
+    "詳細はリプ欄へ👇",
+    "続きはリプ欄のリンクから👇",
+    "価格・詳細はリプ欄に👇",
+    "まとめはリプのリンクへ👇",
+    "詳しくはリプ欄をチェック👇",
+    "リプ欄に詳細まとめてます👇",
+    "続きと比較はリプのリンクで👇",
+    "全部リプ欄にまとめた👇",
+    "気になる人はリプ欄へ👇",
+    "詳細・根拠はリプの記事で👇",
+]
 
 # カテゴリ→acardのアクセント色クラス（index.htmlのCSSに合わせる）
 _CAT_CLASS = {
@@ -564,8 +579,8 @@ def build_x_thread(article: dict, url: str, max_weight: int = 280) -> dict:
     tags = " ".join(f"#{str(t).lstrip('#').strip()}"
                     for t in article.get("hashtags", []) if str(t).strip())
 
-    # リプ(2つ目)へ誘導する一文。URL(=リプに記事リンクがある)時のみ付ける。
-    guide = "詳細はリプ欄へ👇"
+    # リプ(2つ目)へ誘導する一文。URL(=リプに記事リンクがある)時のみ付ける。毎回ランダムで変える。
+    guide = random.choice(_REPLY_GUIDES)
 
     def assemble_main(with_tags: bool, with_guide: bool = True) -> str:
         parts = [base]
