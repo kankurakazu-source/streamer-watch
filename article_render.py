@@ -564,16 +564,21 @@ def build_x_thread(article: dict, url: str, max_weight: int = 280) -> dict:
     tags = " ".join(f"#{str(t).lstrip('#').strip()}"
                     for t in article.get("hashtags", []) if str(t).strip())
 
-    def assemble_main(with_tags: bool) -> str:
+    # リプ(2つ目)へ誘導する一文。URL(=リプに記事リンクがある)時のみ付ける。
+    guide = "詳細はリプ欄へ👇"
+
+    def assemble_main(with_tags: bool, with_guide: bool = True) -> str:
         parts = [base]
+        if with_guide and url:
+            parts.append("\n\n" + guide)
         if with_tags and tags:
             parts.append("\n" + tags)
         return "".join(parts).strip()
 
     main = assemble_main(True)
-    if weighted_len(main) > max_weight:
+    if weighted_len(main) > max_weight:      # 超えたらまずタグを外す（誘導文は残す）
         main = assemble_main(False)
-    if weighted_len(main) > max_weight:  # まだ超えるなら本文を末尾から詰める
+    if weighted_len(main) > max_weight:      # まだ超えるなら本文を末尾から詰める（誘導文は残す）
         while weighted_len(main) > max_weight and len(base) > 20:
             base = base[:-4]
             main = assemble_main(False)
