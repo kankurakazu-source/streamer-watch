@@ -133,6 +133,28 @@ USER_VOLATILE = """\
 直近に公開済みの記事タイトル（これらと重複しないトピックを選ぶこと。同一トピックは避ける）:
 {recent_titles}{avoid_line}"""
 
+# エバーグリーン記事（資産型）指示。USER_STABLE（プロンプトキャッシュ対象）は変更したくないため、
+# volatile側（avoid_noteと同じ経路）に連結する。週2回・2本目のみに付与する運用（main()参照）。
+EVERGREEN_NOTE = """\
+
+【重要: 今回は速報ニュースではなく、エバーグリーン記事（資産型）を書くこと】
+今回は「今まさに検索されているイベント」の速報ではなく、半年後に読まれても価値が
+失われない『比較・ランキング・選び方・買い時ガイド』型の記事を書く。トレンド・
+ハイジャックの1トピック速報ではなく、じっくり読ませる保存版の記事にする。
+
+- title: 検索されやすいキーワードを自然に含める（例:「おすすめ」「比較」「選び方」
+    「初心者」「2026年版」等）。誇張しすぎない具体的な見出しにする。
+- category: 「ガイド」を選ぶ。
+- event_type: 「通常」を選ぶ。
+- is_breaking: false にする（速報ではないため）。
+- sections: 4〜6個で構成し、じっくり比較・整理する（3個以下にしない）。各セクションで
+    扱うゲーム/製品には game_name を必ず入れて購入導線(buy)を付ける。
+- 提供データ（Steam同接・割引・Twitch/YouTubeの数字）を根拠として活用すること。
+    データに無い数字・スペックを作ってはいけない（既存の制約と同じ）。
+- x_main: 「保存したくなるまとめ」系のフックにする（「保存版」「まとめて比較」等、
+    後で読み返したくなる見出し）。速報感を出す煽り文句は避ける。
+"""
+
 ARTICLE_SCHEMA = {
     "type": "object",
     "properties": {
@@ -287,13 +309,15 @@ def _enrich(article: dict, collected: dict) -> tuple[str, list[str]]:
 
 def generate_article(collected: dict, recent: list[dict], api_key: str,
                      hot_events_text: str = "", model: str = "claude-sonnet-5",
-                     avoid_note: str = "") -> dict:
+                     avoid_note: str = "", evergreen: bool = False) -> dict:
     """Claudeに1本の記事を書かせる。structured outputsでJSON構造を強制。
     avoid_note: 同一実行で複数本書く際、既出カテゴリ/トピックを避けさせる追加指示。
+    evergreen: True なら EVERGREEN_NOTE を volatile 側に連結し、資産型記事を書かせる。
 
     プロンプトキャッシュ: 安定部分(system＋収集データ＋イベント＋構成指示)を cache_control で
-    キャッシュし、可変部分(重複回避リスト・avoid_note)を後ろに置く。1回の実行で2本目以降は
-    巨大な入力(収集データ)がキャッシュ読み出しになり入力コストが大幅に下がる。出力は不変。"""
+    キャッシュし、可変部分(重複回避リスト・avoid_note・EVERGREEN_NOTE)を後ろに置く。1回の実行で
+    2本目以降は巨大な入力(収集データ)がキャッシュ読み出しになり入力コストが大幅に下がる。出力は不変。
+    EVERGREEN_NOTE は USER_STABLE ではなく volatile 側に付けることでキャッシュを壊さない。"""
     recent_titles = "\n".join(f"- {r['title']}" for r in recent) or "(まだありません)"
     stable_text = USER_STABLE.format(
         data_json=json.dumps(collected, ensure_ascii=False, indent=2),
@@ -304,6 +328,8 @@ def generate_article(collected: dict, recent: list[dict], api_key: str,
         recent_titles=recent_titles,
         avoid_line=("\n" + avoid_note if avoid_note else ""),
     )
+    if evergreen:
+        volatile_text += EVERGREEN_NOTE
     headers = {
         "Content-Type": "application/json",
         "x-api-key": api_key,
@@ -526,11 +552,23 @@ def _publish_and_notify(article: dict, collected: dict, seq: int) -> None:
         print("[INFO] メール未設定（.envにGMAIL_ADDRESS/GMAIL_APP_PASSWORDを入れると送信します）")
 
 
+def _is_evergreen_slot(now: datetime | None = None) -> bool:
+    """自動でエバーグリーン記事を混ぜる時間帯かどうか。
+    発動条件: JST（マシンのローカル時刻）の火曜・金曜、かつ実行時刻が14〜17時台。
+    これは primary(15:00) とその1時間後retry(16:00)の両方をカバーするための範囲。
+    週2回・該当実行の2本目の記事だけをエバーグリーンにする運用（main()側で判定）。"""
+    now = now or datetime.now()
+    # Python の weekday(): 月=0, 火=1, 水=2, 木=3, 金=4, 土=5, 日=6
+    return now.weekday() in (1, 4) and 14 <= now.hour <= 17
+
+
 def main():
     ap = argparse.ArgumentParser(description="ガジェゲ 記事生成")
     ap.add_argument("--count", type=int, default=1, help="1回で作る記事数（既定1）")
     ap.add_argument("--mode", choices=["primary", "retry"], default="primary",
                     help="retry は直近70分以内に成功していればスキップ（1時間後リトライ用）")
+    ap.add_argument("--evergreen", action="store_true",
+                    help="指定時はこの実行の全記事をエバーグリーン記事にする（手動テスト・強制用）")
     args = ap.parse_args()
     count = max(1, args.count)
 
@@ -577,10 +615,18 @@ def main():
             done = "／".join(f"{c}「{t[:20]}」" for c, t in produced)
             avoid_note = (f"※重要: 今回の実行では既に次の記事を作成済み: {done}。"
                           "今回は必ず別カテゴリ・別トピックを選び、内容が重複しないようにすること。")
+        # エバーグリーン判定:
+        #   --evergreen 指定時はこの実行の全記事をエバーグリーンにする（手動テスト・強制用）。
+        #   自動ルール: 火・金の14〜17時台（primary 15:00 / retry 16:00）は、2本目の記事だけ
+        #   （1本目は通常ニュースのまま速報性を維持しつつ、2本目で検索資産を積む）。
+        evergreen = args.evergreen or (i == 1 and _is_evergreen_slot())
         print(f"\n=== Claudeで記事を執筆中 ({i + 1}/{count}) ===")
+        if evergreen:
+            print("[エバーグリーン記事モード] 比較・ランキング・選び方ガイド型の記事を生成します。")
         try:
             article = generate_article(collected, recent, config.ANTHROPIC_API_KEY,
-                                       hot_events_text=hot_text, avoid_note=avoid_note)
+                                       hot_events_text=hot_text, avoid_note=avoid_note,
+                                       evergreen=evergreen)
         except Exception as e:
             print(f"[ERROR] 記事生成に失敗しました: {e}")
             break

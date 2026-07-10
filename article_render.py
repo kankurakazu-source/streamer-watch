@@ -118,12 +118,17 @@ _CSS = """
   .buy.dmm{background:var(--dmm);}
   .buy.steam{background:var(--steam);}
   .pnote{font-size:11px;color:var(--dim);margin-top:10px;line-height:1.7;}
+  .pr-note{font-size:11.5px;color:var(--dim);margin:0 0 20px;padding:8px 12px;
+    border:1px solid var(--line-soft);border-radius:8px;background:rgba(255,255,255,.02);line-height:1.7;}
   .back{display:inline-flex;align-items:center;gap:6px;margin:30px 0 0;font-size:14px;font-weight:700;color:var(--accent);}
   .back:hover{gap:10px;transition:gap .15s;}
   footer{margin-top:46px;border-top:1px solid var(--line-soft);padding:26px 0 44px;color:var(--dim);font-size:12px;
     background:linear-gradient(180deg,transparent,rgba(138,107,255,.04));}
   footer .disc{max-width:720px;margin:0 auto 14px;background:var(--card);border:1px solid var(--line-soft);
     border-radius:12px;padding:14px 16px;color:var(--muted);line-height:1.75;}
+  footer .flinks{max-width:720px;margin:0 auto 12px;font-size:11.5px;color:var(--dim);}
+  footer .flinks a{color:var(--dim);text-decoration:underline;text-underline-offset:2px;}
+  footer .flinks a:hover{color:var(--accent);}
   /* 人気の記事（記事下の回遊導線） */
   .related-block{max-width:1000px;margin:44px auto 0;}
   .related-block .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 0 18px;}
@@ -210,6 +215,7 @@ _PAGE = """<!DOCTYPE html>
     <span class="cat">{category}</span>
     <h1>{title}</h1>
     <div class="meta">{date} ・ ガジェゲ編集部</div>
+    <div class="pr-note">※本記事にはアフィリエイト広告（プロモーション）が含まれます。</div>
     {hero}
     <p class="lead">{lead}</p>
     {tldr}
@@ -221,6 +227,7 @@ _PAGE = """<!DOCTYPE html>
   <footer>
     <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。</div>
     <div class="social">{x_footer}</div>
+    <div class="flinks"><a href="../about.html">運営者情報</a> ・ <a href="../privacy.html">プライバシーポリシー</a></div>
     (c) {year} ガジェゲ（Gadget×Game） ／ データで見るゲームトレンド
   </footer>
 </main>
@@ -600,7 +607,7 @@ def write_sitemap(site_dir: str, base_url: str) -> None:
 
     # site直下の特定ページ（テンプレ類は含めない明示リスト方式）
     # Cloudflare Pagesが.html付きURLを拡張子なしに308リダイレクトするため、locは拡張子なしで登録する。
-    for name in ("deals.html",):
+    for name in ("deals.html", "about.html", "privacy.html"):
         path = os.path.join(site_dir, name)
         if os.path.isfile(path):
             lastmod = datetime.fromtimestamp(os.path.getmtime(path)).strftime("%Y-%m-%d")
