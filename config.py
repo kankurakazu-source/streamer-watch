@@ -234,9 +234,8 @@ RAKUTEN_AFFILIATE_ID = os.environ.get("RAKUTEN_AFFILIATE_ID", "") or "558dd68a.a
 # アプリの「Allowed websites」に RAKUTEN_REFERRER のドメインを登録しておくこと。
 RAKUTEN_APP_ID = os.environ.get("RAKUTEN_APP_ID", "") or ""            # アプリケーションID(UUID形式)
 RAKUTEN_ACCESS_KEY = os.environ.get("RAKUTEN_ACCESS_KEY", "") or ""    # アクセスキー(pk_...)
-# API呼び出し時に送る Origin/Referer。未設定時の既定は SITE_BASE_URL に追従させず、
-# 楽天アプリのAllowed websitesに登録済みの旧ドメイン(pages.dev)に固定する。
-# SITE_BASE_URLは独自ドメイン移行後gadgegame.comになったが、楽天側の登録ドメインは
-# 変更していないため、ここは意図的に旧ドメインのまま固定する（.envのRAKUTEN_REFERRERで上書き可）。
-RAKUTEN_REFERRER = os.environ.get("RAKUTEN_REFERRER", "") or "https://game-watch.pages.dev"
+# API呼び出し時に送る Origin/Referer。未設定なら SITE_BASE_URL を使う。
+# ※このドメインが楽天アプリの「Allowed websites」に登録されていないと403になる。
+#   ドメイン変更時は必ず楽天Developers側にも新ドメインを追加登録すること（2026-07-11 gadgegame.com 登録済）。
+RAKUTEN_REFERRER = os.environ.get("RAKUTEN_REFERRER", "") or SITE_BASE_URL
 DMM_AFFILIATE_ID = os.environ.get("DMM_AFFILIATE_ID", "") or "gameinfoman-001"  # DMMアフィリエイトID(af_id)
