@@ -14,6 +14,8 @@ X投稿の文面を組み立てるためのユーティリティ。
 """
 
 import html
+import json
+import os
 import random
 import re
 import urllib.parse
@@ -189,6 +191,7 @@ _PAGE = """<!DOCTYPE html>
 <meta name="twitter:title" content="{title}">
 <meta name="twitter:description" content="{og_desc}">
 <meta name="twitter:image" content="{og_image}">
+{jsonld}
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="alternate icon" href="/favicon.ico">
@@ -358,6 +361,30 @@ def _buybox(game: dict) -> str:
     </div>"""
 
 
+def _article_jsonld(article: dict, canonical: str, image_url: str, now: datetime) -> str:
+    """
+    記事の構造化データ(JSON-LD, schema.org/Article)を組み立てる。
+    検索エンジンがheadline・公開日・著者・画像などを機械可読な形で把握できるようにするためのSEO対応。
+    json.dumpsで生成する（手書き文字列連結だとエスケープ漏れの恐れがあるため）。
+    """
+    date_iso = now.strftime("%Y-%m-%dT%H:%M:%S+09:00")
+    data = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": article.get("title", ""),
+        "description": (article.get("lead") or article.get("tldr") or "").strip(),
+        "datePublished": date_iso,
+        "dateModified": date_iso,
+        "author": {"@type": "Organization", "name": "ガジェゲ"},
+        "publisher": {"@type": "Organization", "name": "ガジェゲ"},
+    }
+    if image_url:
+        data["image"] = image_url
+    if canonical:
+        data["mainEntityOfPage"] = {"@type": "WebPage", "@id": canonical}
+    return f'<script type="application/ld+json">{json.dumps(data, ensure_ascii=False)}</script>'
+
+
 def render_article(article: dict, related: list[dict] | None = None) -> str:
     """
     article: {
@@ -401,6 +428,7 @@ def render_article(article: dict, related: list[dict] | None = None) -> str:
     canonical = (article.get("canonical_url") or "").strip()
     canonical_tag = f'<link rel="canonical" href="{_esc(canonical)}">' if canonical else ""
     og_url_tag = f'<meta property="og:url" content="{_esc(canonical)}">' if canonical else ""
+    jsonld = _article_jsonld(article, canonical, hero_url, now)
 
     # 記事末尾の「人気の記事」（自分自身は除外）
     cur_slug = ""
@@ -423,6 +451,7 @@ def render_article(article: dict, related: list[dict] | None = None) -> str:
         og_image=_esc(og_image),
         canonical_tag=canonical_tag,
         og_url_tag=og_url_tag,
+        jsonld=jsonld,
         x_nav=x_link_html(show_handle=False),
         x_footer=x_link_html(show_handle=True),
         related=related_html,
@@ -553,6 +582,50 @@ def inject_articles(index_html: str, articles: list[dict]) -> str:
 
 
 # ============================================
+# sitemap.xml / robots.txt の自動生成
+# ============================================
+def write_sitemap(site_dir: str, base_url: str) -> None:
+    """
+    site/index.html と site/articles/*.html を列挙して sitemap.xml と robots.txt を
+    site_dir 直下に書き出す。publish()のたびに呼ばれ、記事が増えるたびに自動更新される。
+    lastmod は各ファイルの更新日時(YYYY-MM-DD)。
+    """
+    base = (base_url or "").rstrip("/")
+    entries: list[tuple[str, str]] = []
+
+    index_path = os.path.join(site_dir, "index.html")
+    if os.path.isfile(index_path):
+        lastmod = datetime.fromtimestamp(os.path.getmtime(index_path)).strftime("%Y-%m-%d")
+        entries.append((f"{base}/", lastmod))
+
+    articles_dir = os.path.join(site_dir, config.ARTICLES_SUBDIR)
+    if os.path.isdir(articles_dir):
+        for name in sorted(os.listdir(articles_dir)):
+            if not name.endswith(".html"):
+                continue
+            path = os.path.join(articles_dir, name)
+            lastmod = datetime.fromtimestamp(os.path.getmtime(path)).strftime("%Y-%m-%d")
+            entries.append((f"{base}/{config.ARTICLES_SUBDIR}/{name}", lastmod))
+
+    urls_xml = "\n".join(
+        f"  <url>\n    <loc>{_esc(u)}</loc>\n    <lastmod>{lm}</lastmod>\n  </url>"
+        for u, lm in entries
+    )
+    sitemap = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"{urls_xml}\n"
+        "</urlset>\n"
+    )
+    with open(os.path.join(site_dir, "sitemap.xml"), "w", encoding="utf-8") as f:
+        f.write(sitemap)
+
+    robots = "User-agent: *\nAllow: /\nSitemap: {}/sitemap.xml\n".format(base)
+    with open(os.path.join(site_dir, "robots.txt"), "w", encoding="utf-8") as f:
+        f.write(robots)
+
+
+# ============================================
 # X投稿の文面を組み立てる（2ステップ・ポスト）
 # ============================================
 def _fit_reply(lead: str, url: str, max_weight: int) -> str:
@@ -565,14 +638,21 @@ def _fit_reply(lead: str, url: str, max_weight: int) -> str:
         lead = lead[: max(8, len(lead) - 4)].rstrip("　 、。")
 
 
-def build_x_thread(article: dict, url: str, max_weight: int = 280) -> dict:
+def build_x_thread(article: dict, url: str, max_weight: int = 280,
+                   linkless: bool = False) -> dict:
     """
     「2ステップ・ポスト」を組み立てる。
       main : 親ポスト（フック。リンクを貼らずインプレッションを稼ぐ。画像は別途添付）
       reply: リプ欄に貼る記事リンク付き投稿（関心を持った読者だけを誘導）
     Xはリンク付き投稿の表示を下げるため、URLは reply 側だけに置く。
-    戻り値: {main, reply, main_weight, reply_weight}
+    戻り値: {main, reply, main_weight, reply_weight, linkless}
+
+    linkless=True のときは検索ban対策の「リンク無し・単発ポスト」モード。
+    誘導文もリプ（記事リンク）も付けず、本文＋ハッシュタグだけの1投稿にする。
     """
+    if linkless:
+        url = ""  # 誘導文（guide）が付かなくなる＋リプにURLが入らなくなる
+
     # --- 親ポスト: x_main（無ければlead）＋ハッシュタグ。URLは絶対に入れない ---
     base = (article.get("x_main") or article.get("lead") or "").strip()
     base = _URL_RE.sub("", base).strip()  # 念のためAIが混入させたURLを除去
@@ -598,14 +678,15 @@ def build_x_thread(article: dict, url: str, max_weight: int = 280) -> dict:
             base = base[:-4]
             main = assemble_main(False)
 
-    # --- リプ: 誘導文＋記事URL ---
-    reply = _fit_reply(article.get("x_reply", ""), url, max_weight)
+    # --- リプ: 誘導文＋記事URL（linkless時はリプ自体を作らない） ---
+    reply = "" if linkless else _fit_reply(article.get("x_reply", ""), url, max_weight)
 
     return {
         "main": main,
         "reply": reply,
         "main_weight": weighted_len(main),
         "reply_weight": weighted_len(reply),
+        "linkless": linkless,
     }
 
 

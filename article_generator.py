@@ -380,6 +380,12 @@ def publish(article: dict, hero_url: str, seq: int = 1) -> dict:
     except FileNotFoundError:
         print("[WARN] site/index.html が見つからず、一覧更新はスキップしました。")
 
+    # sitemap.xml / robots.txt を最新の記事一覧で更新
+    try:
+        article_render.write_sitemap(config.SITE_DIR, config.SITE_BASE_URL)
+    except Exception as e:
+        print(f"[WARN] sitemap生成に失敗: {e}")
+
     return {"slug": slug, "path": article_path}
 
 
@@ -475,7 +481,8 @@ def _publish_and_notify(article: dict, collected: dict, seq: int) -> None:
     hero_url, disc_log = _enrich(article, collected)
     meta = publish(article, hero_url, seq=seq)
     public_url = build_public_url(meta["slug"])
-    thread = article_render.build_x_thread(article, public_url)
+    linkless = getattr(config, "X_LINKLESS_MODE", False)
+    thread = article_render.build_x_thread(article, public_url, linkless=linkless)
     post_image = build_post_image(article, meta["slug"])  # 親ポストに添付するPNG
 
     print(f"=== 公開: {meta['path']} ===")
@@ -483,12 +490,18 @@ def _publish_and_notify(article: dict, collected: dict, seq: int) -> None:
     print(f"種別: {article.get('event_type','-')} / 速報={article.get('is_breaking')} "
           f"/ カテゴリ: {article.get('category','')} / セクション{len(article.get('sections',[]))}個"
           + (f" / セール検知: {', '.join(disc_log)}" if disc_log else ""))
-    print("\n--- Xポスト（2ステップ）---")
-    print(f"[親ポスト・画像付き/リンクなし] ({thread['main_weight']}/280)")
-    print(thread["main"])
-    print(f"[親ポスト添付画像] {post_image or '(生成なし)'}")
-    print(f"\n[リプ・記事リンク] ({thread['reply_weight']}/280)")
-    print(thread["reply"])
+    if linkless:
+        print("\n--- Xポスト（リンク無し・単発／検索ban対策モード）---")
+        print(f"[投稿・画像付き/リンクなし] ({thread['main_weight']}/280)")
+        print(thread["main"])
+        print(f"[添付画像] {post_image or '(生成なし)'}")
+    else:
+        print("\n--- Xポスト（2ステップ）---")
+        print(f"[親ポスト・画像付き/リンクなし] ({thread['main_weight']}/280)")
+        print(thread["main"])
+        print(f"[親ポスト添付画像] {post_image or '(生成なし)'}")
+        print(f"\n[リプ・記事リンク] ({thread['reply_weight']}/280)")
+        print(thread["reply"])
     if not public_url:
         print(f"\n[INFO] 公開URL未設定（config.SITE_BASE_URL が空）。ローカル確認用パス:")
         print(f"  file:///{os.path.abspath(meta['path']).replace(os.sep, '/')}")

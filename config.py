@@ -205,6 +205,21 @@ def x_url() -> str:
     h = x_handle()
     return f"https://x.com/{h}" if h else ""
 
+
+def _env_bool(name: str, default: bool) -> bool:
+    v = os.environ.get(name)
+    if v is None:
+        return default
+    return v.strip().lower() in ("1", "true", "yes", "on")
+
+
+# 検索ban対策の一時運用フラグ。
+# True の間は、自動メールのX投稿文を「リンク無し・単発ポスト」に切り替える
+# （外部リンクの反復投稿が新規アカウントの検索デブーストの主因のため、当面リンクを外す）。
+# ★ban解除後に元の「2ステップ（親ポスト＋リプに記事リンク）」へ戻すには、
+#   下の既定値を False にする（または環境変数 X_LINKLESS_MODE=0 を設定する）だけでよい。
+X_LINKLESS_MODE = _env_bool("X_LINKLESS_MODE", True)
+
 # アフィリエイト設定（取得後に各購入リンクへ付与する。未設定なら通常の検索リンク）
 # これらは公開リンクに埋め込まれる非秘匿情報。env が無ければ下の既定値（直書き）を使う。
 # 直書きしておくとローカルでもGitHub Actionsでも設定なしで機能する。

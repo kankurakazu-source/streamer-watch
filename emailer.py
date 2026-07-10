@@ -117,6 +117,7 @@ def build_article_message(article: dict, thread: dict, public_url: str, local_pa
 
     main_txt = thread.get("main", "")
     reply_txt = thread.get("reply", "")
+    linkless = bool(thread.get("linkless"))  # 検索ban対策: リンク無し単発モード
     main_html = html.escape(main_txt).replace("\n", "<br>")
     reply_html = html.escape(reply_txt).replace("\n", "<br>")
     intent_main = "https://x.com/intent/tweet?text=" + urllib.parse.quote(main_txt)
@@ -174,6 +175,39 @@ def build_article_message(article: dict, thread: dict, public_url: str, local_pa
         post_img_block = ("<div style='color:#ffb454;font-size:12px;margin:0 0 12px;'>"
                           "※今回は添付画像を生成できませんでした（画像なしで投稿してください）。</div>")
 
+    # 投稿手順・投稿ブロックは linkless（検索ban対策）で切り替える
+    if linkless:
+        steps_block = (
+            '<div style="background:#2a2413;border:1px solid #4a3f1a;border-radius:12px;'
+            'padding:14px 16px;margin:0 0 12px;color:#e8dfb8;font-size:13px;line-height:1.7;">'
+            '<b style="color:#ffd966;">⚠ 検索ban対策モード（リンク無し・単発投稿）</b><br>'
+            '下の投稿を<b>画像を添付して</b>そのままポスト。<b>記事リンクは貼らない</b>（リプ返信も不要）。<br>'
+            '<span style="color:#b9ae82;font-size:12px;">'
+            '※ban解除後に元の「2ステップ（リプに記事リンク）」へ戻すには config.X_LINKLESS_MODE を False に。</span>'
+            '</div>'
+        )
+        main_label = "投稿（画像添付・リンクなし）"
+        reply_block = ""  # リプ欄は出さない
+    else:
+        steps_block = (
+            '<div style="background:#1a2531;border:1px solid #2a3a48;border-radius:12px;'
+            'padding:14px 16px;margin:0 0 12px;color:#c7d2dc;font-size:13px;line-height:1.7;">'
+            '<b style="color:#f5f7fa;">🧵 2ステップ投稿の手順</b><br>'
+            '① 下の「親ポスト」を<b>下の画像を添付して</b>ポスト（リンクを貼らずインプレッションを稼ぐ）<br>'
+            '② 投稿できたら、その<b>自分のポストのリプ欄</b>に「返信」をぶら下げる（記事リンクはここだけ）'
+            '</div>'
+        )
+        main_label = "① 親ポスト（画像添付・リンクなし）"
+        reply_block = f"""
+      <div style="background:#16202b;border:1px solid #24313d;border-radius:12px;padding:16px;">
+        <div style="color:#9aa7b4;font-size:12px;margin:0 0 8px;">② 返信（親ポストのリプ欄に貼る・記事リンク）{_weight_span(rw)}</div>
+        <div style="color:#f5f7fa;font-size:15px;line-height:1.7;">{reply_html}</div>
+        <div style="margin-top:12px;">
+          <a href="{html.escape(intent_reply)}" style="background:#1d9bf0;color:#fff;text-decoration:none;
+             padding:9px 18px;border-radius:8px;font-size:14px;">Xで開く（返信）</a>
+        </div>
+      </div>"""
+
     body = f"""<!DOCTYPE html><html><body style="background:#0f1720;margin:0;padding:16px;
       font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;">
       <div style="color:#f5f7fa;font-size:18px;font-weight:bold;margin:0 0 4px;">{badge} 新着記事ができました</div>
@@ -190,37 +224,32 @@ def build_article_message(article: dict, thread: dict, public_url: str, local_pa
         {link_note}
       </div>
 
-      <div style="background:#1a2531;border:1px solid #2a3a48;border-radius:12px;padding:14px 16px;margin:0 0 12px;color:#c7d2dc;font-size:13px;line-height:1.7;">
-        <b style="color:#f5f7fa;">🧵 2ステップ投稿の手順</b><br>
-        ① 下の「親ポスト」を<b>下の画像を添付して</b>ポスト（リンクを貼らずインプレッションを稼ぐ）<br>
-        ② 投稿できたら、その<b>自分のポストのリプ欄</b>に「返信」をぶら下げる（記事リンクはここだけ）
-      </div>
+      {steps_block}
 
       <div style="background:#16202b;border:1px solid #24313d;border-radius:12px;padding:16px;margin:0 0 12px;">
-        <div style="color:#9aa7b4;font-size:12px;margin:0 0 8px;">① 親ポスト（画像添付・リンクなし）{_weight_span(mw)}</div>
+        <div style="color:#9aa7b4;font-size:12px;margin:0 0 8px;">{main_label}{_weight_span(mw)}</div>
         {post_img_block}
         <div style="color:#f5f7fa;font-size:15px;line-height:1.7;">{main_html}</div>
         <div style="margin-top:12px;">
           <a href="{html.escape(intent_main)}" style="background:#1d9bf0;color:#fff;text-decoration:none;
-             padding:9px 18px;border-radius:8px;font-size:14px;">Xで開く（親ポスト）</a>
+             padding:9px 18px;border-radius:8px;font-size:14px;">Xで開く（投稿）</a>
         </div>
       </div>
-
-      <div style="background:#16202b;border:1px solid #24313d;border-radius:12px;padding:16px;">
-        <div style="color:#9aa7b4;font-size:12px;margin:0 0 8px;">② 返信（親ポストのリプ欄に貼る・記事リンク）{_weight_span(rw)}</div>
-        <div style="color:#f5f7fa;font-size:15px;line-height:1.7;">{reply_html}</div>
-        <div style="margin-top:12px;">
-          <a href="{html.escape(intent_reply)}" style="background:#1d9bf0;color:#fff;text-decoration:none;
-             padding:9px 18px;border-radius:8px;font-size:14px;">Xで開く（返信）</a>
-        </div>
-      </div>
+      {reply_block}
     </body></html>"""
 
-    plain = (f"新着記事 ({now})\n{article.get('title','')}\n\n"
-             f"{article.get('lead','')}\n\n記事: {public_url or local_path}\n\n"
-             f"[2ステップ投稿]\n① 親ポスト（画像添付・リンクなし）:\n{main_txt}\n"
-             f"（親ポスト用の画像は添付ファイル {img_name} を保存して添付）\n\n"
-             f"② 返信（リプ欄・記事リンク）:\n{reply_txt}\n")
+    if linkless:
+        plain = (f"新着記事 ({now})\n{article.get('title','')}\n\n"
+                 f"{article.get('lead','')}\n\n記事: {public_url or local_path}\n\n"
+                 f"[検索ban対策・リンク無し単発投稿]\n投稿（画像添付・リンクなし）:\n{main_txt}\n"
+                 f"（用の画像は添付ファイル {img_name} を保存して添付）\n"
+                 f"※記事リンクは貼らない（リプ返信も不要）\n")
+    else:
+        plain = (f"新着記事 ({now})\n{article.get('title','')}\n\n"
+                 f"{article.get('lead','')}\n\n記事: {public_url or local_path}\n\n"
+                 f"[2ステップ投稿]\n① 親ポスト（画像添付・リンクなし）:\n{main_txt}\n"
+                 f"（親ポスト用の画像は添付ファイル {img_name} を保存して添付）\n\n"
+                 f"② 返信（リプ欄・記事リンク）:\n{reply_txt}\n")
 
     alt.attach(MIMEText(plain, "plain", "utf-8"))
     alt.attach(MIMEText(body, "html", "utf-8"))
