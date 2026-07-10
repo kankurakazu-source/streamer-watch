@@ -8,6 +8,8 @@ Steamの公開エンドポイント（APIキー不要）から、硬い数字ネ
 同接は storage の game_snapshots に保存して前回比の急増検知に使う想定。
 """
 
+import time
+
 import requests
 
 STEAM_PLAYERS_URL = "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/"
@@ -122,6 +124,38 @@ def fetch_player_counts(appid_names: dict) -> list[dict]:
         rows.append({"appid": int(appid), "name": name, "player_count": fetch_player_count(appid)})
     rows.sort(key=lambda r: (r["player_count"] or -1), reverse=True)
     return rows
+
+
+def fetch_discounts(appids: list[int], cc: str = "jp") -> dict[int, int]:
+    """
+    各appidの現在の割引率(discount_percent)を取得する。
+    セール・買い時トラッカー用: 価格そのものは扱わず、割引率のみ返す。
+    無料ゲームや取得失敗(price_overviewが無い等)は0を返す（1件失敗しても続行）。
+    戻り値: {appid: discount_percent}
+    """
+    out: dict[int, int] = {}
+    for appid in appids:
+        try:
+            aid = int(appid)
+        except (TypeError, ValueError):
+            continue
+        discount = 0
+        try:
+            resp = requests.get(
+                STEAM_APPDETAILS_URL,
+                params={"appids": aid, "cc": cc, "filters": "price_overview"},
+                timeout=10,
+            )
+            resp.raise_for_status()
+            entry = resp.json().get(str(aid), {})
+            if entry.get("success"):
+                price = entry.get("data", {}).get("price_overview", {}) or {}
+                discount = int(price.get("discount_percent") or 0)
+        except (requests.exceptions.RequestException, ValueError, AttributeError):
+            discount = 0
+        out[aid] = discount
+        time.sleep(0.5)  # 連続アクセスによるレート制限回避
+    return out
 
 
 def _parse_items(items: list) -> list[dict]:

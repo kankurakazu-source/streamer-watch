@@ -34,6 +34,7 @@ import requests
 import config
 import storage
 import article_render
+import deals_tracker
 import game_watch
 import image_card
 import trend_detector
@@ -542,6 +543,16 @@ def main():
 
     print(f"=== 記事生成: データ収集開始（{count}本 / mode={args.mode}）===")
     collected = game_watch.collect_all()
+
+    # セール・買い時トラッカー: 割引記録＋deals.html生成（失敗しても記事生成は止めない）
+    try:
+        deals_tracker.record_discounts(collected)
+        deals_data = deals_tracker.build_deals_data(config.HISTORY_DB)
+        deals_tracker.render_deals_page(deals_data, os.path.join(config.SITE_DIR, "deals.html"))
+        print(f"=== セール・買い時トラッカー更新: {len(deals_data)}件 ===")
+    except Exception as e:
+        print(f"[WARN] セール・買い時トラッカーの更新に失敗: {e}")
+
     if not game_watch.has_signal(collected):
         print("収集データが無かったため、記事生成を中止しました。")
         return

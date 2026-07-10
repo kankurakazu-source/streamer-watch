@@ -201,7 +201,7 @@ _PAGE = """<!DOCTYPE html>
 <body>
 <header><div class="wrap head">
   <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="28" height="28"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
-  <nav><a href="../index.html">トップ</a>{x_nav}</nav>
+  <nav><a href="../index.html">トップ</a><a href="../deals.html">🔥セール・買い時</a>{x_nav}</nav>
 </div></header>
 
 <main class="wrap">
@@ -597,6 +597,13 @@ def write_sitemap(site_dir: str, base_url: str) -> None:
     if os.path.isfile(index_path):
         lastmod = datetime.fromtimestamp(os.path.getmtime(index_path)).strftime("%Y-%m-%d")
         entries.append((f"{base}/", lastmod))
+
+    # site直下の特定ページ（テンプレ類は含めない明示リスト方式）
+    for name in ("deals.html",):
+        path = os.path.join(site_dir, name)
+        if os.path.isfile(path):
+            lastmod = datetime.fromtimestamp(os.path.getmtime(path)).strftime("%Y-%m-%d")
+            entries.append((f"{base}/{name}", lastmod))
 
     articles_dir = os.path.join(site_dir, config.ARTICLES_SUBDIR)
     if os.path.isdir(articles_dir):
