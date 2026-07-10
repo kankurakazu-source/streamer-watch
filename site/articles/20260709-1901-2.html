@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="Steam版『Limbus Company』が過去最多31万人集結、同接記録更新の裏側を読む">
 <meta name="twitter:description" content="『Limbus Company』がリリース4年目にして過去最高の盛り上がりを見せている。ディストピア都市を描くRPG『Limbus Company』のSteam版が最大同接を更新し約16万人に達したとの報道があり、AUTOMATON側の集計では約31万人という数字も伝えられている。前作『Library Of Ruina">
 <meta name="twitter:image" content="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1973530/2a692ea70cc4226c1b8015c6d29baca30a3fb6b0/ss_2a692ea70cc4226c1b8015c6d29baca30a3fb6b0.1920x1080.jpg?t=1783074489">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Steam版『Limbus Company』が過去最多31万人集結、同接記録更新の裏側を読む", "description": "『Limbus Company』がリリース4年目にして過去最高の盛り上がりを見せている。ディストピア都市を描くRPG『Limbus Company』のSteam版が最大同接を更新し約16万人に達したとの報道があり、AUTOMATON側の集計では約31万人という数字も伝えられている。前作『Library Of Ruina", "datePublished": "2026-07-09T19:01:00+09:00", "dateModified": "2026-07-09T19:01:00+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1973530/2a692ea70cc4226c1b8015c6d29baca30a3fb6b0/ss_2a692ea70cc4226c1b8015c6d29baca30a3fb6b0.1920x1080.jpg?t=1783074489", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260709-1901-2"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Steam版『Limbus Company』が過去最多31万人集結、同接記録更新の裏側を読む", "description": "『Limbus Company』がリリース4年目にして過去最高の盛り上がりを見せている。ディストピア都市を描くRPG『Limbus Company』のSteam版が最大同接を更新し約16万人に達したとの報道があり、AUTOMATON側の集計では約31万人という数字も伝えられている。前作『Library Of Ruina", "datePublished": "2026-07-09T19:01:00+09:00", "dateModified": "2026-07-09T19:01:00+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1973530/2a692ea70cc4226c1b8015c6d29baca30a3fb6b0/ss_2a692ea70cc4226c1b8015c6d29baca30a3fb6b0.1920x1080.jpg?t=1783074489", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260709-1901-2"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://gadgegame.com/"}, {"@type": "ListItem", "position": 2, "name": "データ分析", "item": "https://gadgegame.com/category/data"}, {"@type": "ListItem", "position": 3, "name": "Steam版『Limbus Company』が過去最多31万人集結、同接記録更新の裏側を読む", "item": "https://gadgegame.com/articles/20260709-1901-2"}]}</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="alternate icon" href="/favicon.ico">
@@ -145,12 +145,30 @@
   .sbtn.hb{background:#00A4DE;font-size:19px;}
   @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
     .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}}
+
+  /* ===== バックフィル: 目次(TOC) + img化に伴う overflow/object-fit ===== */
+  .toc{background:rgba(255,255,255,.02);border:1px solid var(--line-soft);border-radius:14px;
+    padding:16px 20px;margin:24px 0;}
+  .toc .lbl{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+  .toc ol{margin:10px 0 0;padding-left:22px;}
+  .toc li{margin:7px 0;color:var(--muted);}
+  .toc li::marker{color:var(--accent);font-weight:800;}
+  .toc a{color:var(--text);}
+  .toc a:hover{color:var(--accent);}
+  .hero{overflow:hidden;}
+  .hero img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .gimg{overflow:hidden;}
+  .gimg img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .buybox .th{overflow:hidden;}
+  .buybox .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .acard .th{overflow:hidden;}
+  .acard .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
 </style>
 </head>
 <body>
 <header><div class="wrap head">
   <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="28" height="28"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
-  <nav><a href="../index.html">トップ</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
+  <nav><a href="../index.html">トップ</a><a href="../archive.html">全記事</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
 </div></header>
 
 <main class="wrap">
@@ -158,16 +176,17 @@
     <div class="crumb"><a href="../index.html">ホーム</a> › データ分析</div>
     <span class="cat">データ分析</span>
     <h1>Steam版『Limbus Company』が過去最多31万人集結、同接記録更新の裏側を読む</h1>
-    <div class="meta">2026/07/09 ・ ガジェゲ編集部</div>
+    <div class="meta">2026/07/09 ・ 文: <a href="../about.html">ガジェゲ編集部</a></div>
     <div class="pr-note">※本記事にはアフィリエイト広告（プロモーション）が含まれます。</div>
-    <div class='hero' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1973530/2a692ea70cc4226c1b8015c6d29baca30a3fb6b0/ss_2a692ea70cc4226c1b8015c6d29baca30a3fb6b0.1920x1080.jpg?t=1783074489')"></div>
+    <div class='hero'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1973530/2a692ea70cc4226c1b8015c6d29baca30a3fb6b0/ss_2a692ea70cc4226c1b8015c6d29baca30a3fb6b0.1920x1080.jpg?t=1783074489" alt="Steam版『Limbus Company』が過去最多31万人集結、同接記録更新の裏側を読むのメインビジュアル" fetchpriority="high"></div>
     <p class="lead">『Limbus Company』がリリース4年目にして過去最高の盛り上がりを見せている。ディストピア都市を描くRPG『Limbus Company』のSteam版が最大同接を更新し約16万人に達したとの報道があり、AUTOMATON側の集計では約31万人という数字も伝えられている。前作『Library Of Ruina』要素を扱うイベントが火付け役とみられ、今なぜ伸びているのかを整理する。</p>
     <div class='tldr'><div class='lbl'>結論</div><div class='body'>新規イベントが既存ファンだけでなく前作ファンも呼び込み、同接記録を塗り替えている。今が最も注目度の高いタイミングだ。</div></div>
-    <h2 class='g'>何が起きたのか－最大同接更新の中身</h2>
-<div class='gimg' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1973530/609232637733e0fe1a875a2583decfb438c03ddf/ss_609232637733e0fe1a875a2583decfb438c03ddf.1920x1080.jpg?t=1783074489')"></div>
+    <nav class='toc'><div class='lbl'>目次</div><ol><li><a href="#sec-1">何が起きたのか－最大同接更新の中身</a></li><li><a href="#sec-2">火付け役は前作『Library Of Ruina』要素イベント</a></li><li><a href="#sec-3">サーバー混雑という副作用</a></li><li><a href="#sec-4">今後の動き－記念配布に注目</a></li></ol></nav>
+    <h2 class='g' id='sec-1'>何が起きたのか－最大同接更新の中身</h2>
+<div class='gimg'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1973530/609232637733e0fe1a875a2583decfb438c03ddf/ss_609232637733e0fe1a875a2583decfb438c03ddf.1920x1080.jpg?t=1783074489" alt="何が起きたのか－最大同接更新の中身" loading="lazy"></div>
 <p>GameSparkの報道によれば、『Limbus Company』のSteam版が最大同接を更新し約16万人に達した。一方でAUTOMATONは4年目にして過去最多となる約31万人がサーバーに集結し、混雑による悲鳴も出ていると伝えている。数字の出所が異なるため単純比較はできないが、いずれの報道も「過去最高水準の同接」という点で一致している。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1973530/header.jpg')"></div>
+      <div class="bt"><div class='th'><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1973530/header.jpg" alt="Limbus Company" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">Limbus Company</div>
         </div>
@@ -180,11 +199,11 @@
       </div>
       <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
     </div>
-<h2 class='g'>火付け役は前作『Library Of Ruina』要素イベント</h2>
-<div class='gimg' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1973530/a805c5a206ab90a89eb24879997248394fbf2d02/ss_a805c5a206ab90a89eb24879997248394fbf2d02.1920x1080.jpg?t=1783074489')"></div>
+<h2 class='g' id='sec-2'>火付け役は前作『Library Of Ruina』要素イベント</h2>
+<div class='gimg'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1973530/a805c5a206ab90a89eb24879997248394fbf2d02/ss_a805c5a206ab90a89eb24879997248394fbf2d02.1920x1080.jpg?t=1783074489" alt="火付け役は前作『Library Of Ruina』要素イベント" loading="lazy"></div>
 <p>今回の盛り上がりの背景には、前作『Library Of Ruina』の要素を扱うイベントの実装があるとみられる。シリーズを追ってきた既存ファンだけでなく、前作経験者を呼び込む導線として機能した可能性が高い。運営側もこの盛り上がりを受けて、サーバー混雑への謝礼を兼ねた記念配布を予定しているとの情報もある。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1973530/header.jpg')"></div>
+      <div class="bt"><div class='th'><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1973530/header.jpg" alt="Limbus Company" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">Limbus Company</div>
         </div>
@@ -197,13 +216,13 @@
       </div>
       <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
     </div>
-<h2 class='g'>サーバー混雑という副作用</h2>
+<h2 class='g' id='sec-3'>サーバー混雑という副作用</h2>
 <p>同接の急増はポジティブな指標である一方、サーバー混雑という副作用も生んでいる。長時間サービスを運営してきたタイトルが4年目にこの規模の同接を記録するのは珍しく、既存プレイヤーの復帰と新規流入が同時に起きている状況とみられる。プレイを検討する読者は、混雑が落ち着くタイミングを見て始めるのも一つの手だ。</p>
-<h2 class='g'>今後の動き－記念配布に注目</h2>
-<div class='gimg' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1973530/f109b332dfb973cd3da7520a716fd3c3660f3c0f/ss_f109b332dfb973cd3da7520a716fd3c3660f3c0f.1920x1080.jpg?t=1783074489')"></div>
+<h2 class='g' id='sec-4'>今後の動き－記念配布に注目</h2>
+<div class='gimg'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1973530/f109b332dfb973cd3da7520a716fd3c3660f3c0f/ss_f109b332dfb973cd3da7520a716fd3c3660f3c0f.1920x1080.jpg?t=1783074489" alt="今後の動き－記念配布に注目" loading="lazy"></div>
 <p>開発元は今回の盛り上がりを祝う形で、サーバー混雑への謝礼を兼ねた記念配布（詫び要素）を予定しているとの情報がある。長期運営タイトルがここまでの同接を記録するのは、コンテンツ更新の設計として一つの成功例といえる。今後の配布内容やイベント継続期間は要チェックだ。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1973530/header.jpg')"></div>
+      <div class="bt"><div class='th'><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1973530/header.jpg" alt="Limbus Company" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">Limbus Company</div>
         </div>
@@ -236,28 +255,28 @@
     </div>
     <div class="grid">
       <a class="acard ranked" data-cat="新作" href="/articles/20260709-1900-1.html">
-        <span class="rank">1</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3839790/bc04b725e6c5c48327bcea684d70bfae1d725e1f/ss_bc04b725e6c5c48327bcea684d70bfae1d725e1f.1920x1080.jpg?t=1783522815')"></div>
+        <span class="rank">1</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3839790/bc04b725e6c5c48327bcea684d70bfae1d725e1f/ss_bc04b725e6c5c48327bcea684d70bfae1d725e1f.1920x1080.jpg?t=1783522815" alt="『GRANBLUE FANTASY: Relink - Endless Ragnarok』本日配信開始、Steam同接は約4万人で好発進" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『GRANBLUE FANTASY: Relink - Endless Ragnarok』本日配信開始、Steam同接は約4万人で好発進</div>
           <div class="ex">Cygameの3DアクションRPG『GRANBLUE FANTASY: Relink』の大型拡張「Endless Ragnarok」が本日7月9日に配信開始となった。Steamストアの売上ランキング上位を関連アイテムが独占しており、同接も約</div>
           <div class="d">2026/07/09</div></div>
       </a>
       <a class="acard ranked" data-cat="データ分析" href="/articles/20260709-1501-2.html">
-        <span class="rank">2</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2767030/1c1c765a7655599e3cf15c8934217ff60a1410ed/ss_1c1c765a7655599e3cf15c8934217ff60a1410ed.1920x1080.jpg?t=1781255145')"></div>
+        <span class="rank">2</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2767030/1c1c765a7655599e3cf15c8934217ff60a1410ed/ss_1c1c765a7655599e3cf15c8934217ff60a1410ed.1920x1080.jpg?t=1781255145" alt="Marvel Rivals、Steam同接が前日比+116%で急伸 シーズン9発表が呼び水に" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">データ分析</span><span class="pill-break">速報</span></div>
           <div class="ttl">Marvel Rivals、Steam同接が前日比+116%で急伸 シーズン9発表が呼び水に</div>
           <div class="ex">Steamの同接ランキングでMarvel Rivalsが前日比+115.9%と急伸し、約7.7万人まで伸びた。7月7日に公開されたシーズン9発表ストリームが約117万回視聴を記録しており、新シーズン情報の反響が同接の数字に直結した形だ。数字</div>
           <div class="d">2026/07/09</div></div>
       </a>
       <a class="acard ranked" data-cat="新作" href="/articles/20260709-1500-1.html">
-        <span class="rank">3</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1336490/ss_c7a8ad6065ddaa4789935d28d99e24c940c2181c.1920x1080.jpg?t=1783396552')"></div>
+        <span class="rank">3</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1336490/ss_c7a8ad6065ddaa4789935d28d99e24c940c2181c.1920x1080.jpg?t=1783396552" alt="『アゲインスト・ザ・ストーム』大型アプデ「Over-Haulers」配信開始、物流システムを刷新した運送人カスタマイズを解説" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『アゲインスト・ザ・ストーム』大型アプデ「Over-Haulers」配信開始、物流システムを刷新した運送人カスタマイズを解説</div>
           <div class="ex">ローグライト街づくり『アゲインスト・ザ・ストーム』に7月8日、大型アップデート「Over-Haulers」が配信された。今回の中心は運送人システムの刷新で、物流面の自由度が大きく増した。発売から継続して大型アプデを重ねてきた作品であり、既存</div>
           <div class="d">2026/07/09</div></div>
       </a>
       <a class="acard ranked" data-cat="新作" href="/articles/20260709-1242-2.html">
-        <span class="rank">4</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2436940/ss_6dc776bb4cd7565deba0801e6c51389d008c0e74.1920x1080.jpg?t=1783515618')"></div>
+        <span class="rank">4</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2436940/ss_6dc776bb4cd7565deba0801e6c51389d008c0e74.1920x1080.jpg?t=1783515618" alt="『セフィリア』7月31日に正式リリース決定、4人マルチ対応のウサギ冒険ローグライトがついにエンディング実装" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『セフィリア』7月31日に正式リリース決定、4人マルチ対応のウサギ冒険ローグライトがついにエンディング実装</div>
           <div class="ex">TEAM HORAYは7月8日、ローグライトアクション『セフィリア』の正式リリースを7月31日に行うと発表した。正式版アップデートでは物語の結末となるエンディングが新たに実装される見込みで、早期アクセス期間中から追われていたコンテンツ不足の</div>

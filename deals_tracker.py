@@ -11,6 +11,7 @@ deals_tracker.py
 
 import html
 import os
+import re
 import urllib.parse
 from datetime import datetime, timedelta, timezone
 
@@ -169,6 +170,56 @@ def build_deals_data(db_path: str) -> list[dict]:
 
     deals.sort(key=lambda d: (_VERDICT_ORDER.get(d["verdict"], 9), -d["current_discount"]))
     return deals
+
+
+# ============================================
+# トップページの「いま買い時」ストリップ
+# ============================================
+def deals_strip_html(deals: list[dict]) -> str:
+    """
+    トップページのヒーロー直後に置くコンパクトな「いま買い時」ストリップ。
+    verdictが 買い時/セール中/セール中・計測中 のタイトルを割引率降順に最大3件表示する。
+    該当が無ければ「現在セール検知なし」の1行リンクを返す（帯自体は消さない）。
+    """
+    picks = [d for d in deals if d.get("verdict") in ("買い時", "セール中", "セール中・計測中")]
+    picks.sort(key=lambda d: -(d.get("current_discount") or 0))
+    picks = picks[:3]
+
+    if not picks:
+        return ('  <section class="deals-strip"><div class="wrap">'
+                '<div class="ds-empty">現在セール検知なし。トラッカーで毎日ウォッチ中 → '
+                '<a href="deals.html">買い時トラッカーを見る</a></div>'
+                '</div></section>')
+
+    cards = []
+    for d in picks:
+        thumb = STEAM_CDN_HEADER.format(appid=d["appid"])
+        badge_cls = _VERDICT_CLASS.get(d["verdict"], "wait")
+        cards.append(
+            '<a class="ds-card" href="deals.html">'
+            f'<div class="ds-th" style="background-image:url(\'{_esc(thumb)}\')"></div>'
+            f'<div class="ds-name">{_esc(d["name"])}</div>'
+            f'<span class="ds-off">-{d["current_discount"]}%</span>'
+            f'<span class="ds-badge {badge_cls}">{_esc(d["verdict"])}</span>'
+            '</a>'
+        )
+    return ('  <section class="deals-strip"><div class="wrap">'
+            '<span class="ds-lbl">🔥いま買い時</span>'
+            '<div class="ds-row">' + "".join(cards) + '</div>'
+            '<a class="ds-more" href="deals.html">→ 買い時トラッカーを見る</a>'
+            '</div></section>')
+
+
+_DEALSSTRIP_RE = re.compile(r"(<!--DEALSSTRIP:START-->).*?(<!--DEALSSTRIP:END-->)", re.DOTALL)
+
+
+def inject_deals_strip(index_html: str, deals: list[dict]) -> str:
+    """index.html の DEALSSTRIP マーカー領域を最新の deals_strip_html で差し替える(マーカーが無ければ無変更)。"""
+    if not _DEALSSTRIP_RE.search(index_html):
+        return index_html
+    inner = deals_strip_html(deals)
+    replacement = f"<!--DEALSSTRIP:START-->\n{inner}\n      <!--DEALSSTRIP:END-->"
+    return _DEALSSTRIP_RE.sub(lambda m: replacement, index_html)
 
 
 # ============================================
@@ -403,6 +454,7 @@ def render_deals_page(deals: list[dict], out_path: str) -> None:
     <a href="index.html#games">ゲーム</a>
     <a href="index.html#devices">デバイス</a>
     <a href="index.html#articles">記事</a>
+    <a href="archive.html">全記事</a>
     <a class="on" href="deals.html">セール・買い時</a>
     {_x_link_html(False)}
   </nav>

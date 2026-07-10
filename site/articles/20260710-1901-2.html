@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="活俠傳、9月15日に約1年ぶり大型アプデ 新ルート追加と高難度モード「勇者」実装へ">
 <meta name="twitter:description" content="「ブサイク人生RPG」として異色の人気を保つ『活俠傳 Legend of Mortal』に、約1年ぶりとなる大型アップデートが決定した。9月15日には新ルートと高難度モードが加わる予定で、リリースから時間が経った今も開発が継続している点は評価材料になる。息の長いタイトルへの追加投資として注目したい。">
 <meta name="twitter:image" content="https://gadgegame.com/ogp.png">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "活俠傳、9月15日に約1年ぶり大型アプデ 新ルート追加と高難度モード「勇者」実装へ", "description": "「ブサイク人生RPG」として異色の人気を保つ『活俠傳 Legend of Mortal』に、約1年ぶりとなる大型アップデートが決定した。9月15日には新ルートと高難度モードが加わる予定で、リリースから時間が経った今も開発が継続している点は評価材料になる。息の長いタイトルへの追加投資として注目したい。", "datePublished": "2026-07-10T19:01:00+09:00", "dateModified": "2026-07-10T19:01:00+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://gadgegame.com/ogp.png", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260710-1901-2"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "活俠傳、9月15日に約1年ぶり大型アプデ 新ルート追加と高難度モード「勇者」実装へ", "description": "「ブサイク人生RPG」として異色の人気を保つ『活俠傳 Legend of Mortal』に、約1年ぶりとなる大型アップデートが決定した。9月15日には新ルートと高難度モードが加わる予定で、リリースから時間が経った今も開発が継続している点は評価材料になる。息の長いタイトルへの追加投資として注目したい。", "datePublished": "2026-07-10T19:01:00+09:00", "dateModified": "2026-07-10T19:01:00+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://gadgegame.com/ogp.png", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260710-1901-2"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://gadgegame.com/"}, {"@type": "ListItem", "position": 2, "name": "新作", "item": "https://gadgegame.com/category/new"}, {"@type": "ListItem", "position": 3, "name": "活俠傳、9月15日に約1年ぶり大型アプデ 新ルート追加と高難度モード「勇者」実装へ", "item": "https://gadgegame.com/articles/20260710-1901-2"}]}</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="alternate icon" href="/favicon.ico">
@@ -145,12 +145,30 @@
   .sbtn.hb{background:#00A4DE;font-size:19px;}
   @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
     .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}}
+
+  /* ===== バックフィル: 目次(TOC) + img化に伴う overflow/object-fit ===== */
+  .toc{background:rgba(255,255,255,.02);border:1px solid var(--line-soft);border-radius:14px;
+    padding:16px 20px;margin:24px 0;}
+  .toc .lbl{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+  .toc ol{margin:10px 0 0;padding-left:22px;}
+  .toc li{margin:7px 0;color:var(--muted);}
+  .toc li::marker{color:var(--accent);font-weight:800;}
+  .toc a{color:var(--text);}
+  .toc a:hover{color:var(--accent);}
+  .hero{overflow:hidden;}
+  .hero img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .gimg{overflow:hidden;}
+  .gimg img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .buybox .th{overflow:hidden;}
+  .buybox .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .acard .th{overflow:hidden;}
+  .acard .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
 </style>
 </head>
 <body>
 <header><div class="wrap head">
   <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="28" height="28"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
-  <nav><a href="../index.html">トップ</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
+  <nav><a href="../index.html">トップ</a><a href="../archive.html">全記事</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
 </div></header>
 
 <main class="wrap">
@@ -158,12 +176,13 @@
     <div class="crumb"><a href="../index.html">ホーム</a> › 新作</div>
     <span class="cat">新作</span>
     <h1>活俠傳、9月15日に約1年ぶり大型アプデ 新ルート追加と高難度モード「勇者」実装へ</h1>
-    <div class="meta">2026/07/10 ・ ガジェゲ編集部</div>
+    <div class="meta">2026/07/10 ・ 文: <a href="../about.html">ガジェゲ編集部</a></div>
     <div class="pr-note">※本記事にはアフィリエイト広告（プロモーション）が含まれます。</div>
     
     <p class="lead">「ブサイク人生RPG」として異色の人気を保つ『活俠傳 Legend of Mortal』に、約1年ぶりとなる大型アップデートが決定した。9月15日には新ルートと高難度モードが加わる予定で、リリースから時間が経った今も開発が継続している点は評価材料になる。息の長いタイトルへの追加投資として注目したい。</p>
     <div class='tldr'><div class='lbl'>結論</div><div class='body'>9月15日の大型アプデで新ルートと高難度モード「勇者」が追加、既存ユーザーの再訪機会になる。</div></div>
-    <h2 class='g'>9月15日アプデの内容</h2>
+    <nav class='toc'><div class='lbl'>目次</div><ol><li><a href="#sec-1">9月15日アプデの内容</a></li><li><a href="#sec-2">独特な世界観とキャラクター人気</a></li><li><a href="#sec-3">高難度モード「勇者」の狙い</a></li></ol></nav>
+    <h2 class='g' id='sec-1'>9月15日アプデの内容</h2>
 <p>開発元の原始鳥熊（Obb Studio）は7月10日、『活俠傳』の大型アップデートを9月15日に配信すると発表した。虞小梅と郁竹という2人のキャラクターのルートが新たに追加されるほか、高難度モード「勇者」も実装される。約1年ぶりとなる規模のアップデートで、既存システムの改良も含まれるという。</p>
 <div class="buybox">
       <div class="bt"><div class='th'></div>
@@ -178,9 +197,9 @@
       </div>
       <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
     </div>
-<h2 class='g'>独特な世界観とキャラクター人気</h2>
+<h2 class='g' id='sec-2'>独特な世界観とキャラクター人気</h2>
 <p>『活俠傳』は「ブサイク人生RPG」と呼ばれる異色のコンセプトで話題になったタイトルだ。見た目にこだわらない独自路線ながら、キャラクター性とストーリーで支持を得てきた経緯があり、新ルート追加はキャラクター人気を反映した施策とみられる。</p>
-<h2 class='g'>高難度モード「勇者」の狙い</h2>
+<h2 class='g' id='sec-3'>高難度モード「勇者」の狙い</h2>
 <p>新モード「勇者」の詳細はまだ明らかになっていないが、既存の攻略が一巡したコアユーザー向けのやり込み要素になる可能性が高い。長期運営を見据えたコンテンツ追加であり、リプレイ性を高める狙いがあるといえる。</p>
 <h2 class='g'>まとめ</h2>
 <p>約1年ぶりの大型アプデは、既存ファンの再訪と新規層の獲得を両立させる施策といえる。9月15日の配信までに詳細情報が追加で出る可能性もあるため、続報を待ちたい。</p>
@@ -202,28 +221,28 @@
     </div>
     <div class="grid">
       <a class="acard ranked" data-cat="新作" href="/articles/20260710-1900-1.html">
-        <span class="rank">1</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4704690/6c0a47cc2fba1b160901d1553637a764198bdc98/ss_6c0a47cc2fba1b160901d1553637a764198bdc98.1920x1080.jpg?t=1782561846')"></div>
+        <span class="rank">1</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4704690/6c0a47cc2fba1b160901d1553637a764198bdc98/ss_6c0a47cc2fba1b160901d1553637a764198bdc98.1920x1080.jpg?t=1782561846" alt="『めっちゃカメレオン』ヒカキン氏コラボの新マップが本日配信へ、Steam同接3.7万人からの再加速に注目" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『めっちゃカメレオン』ヒカキン氏コラボの新マップが本日配信へ、Steam同接3.7万人からの再加速に注目</div>
           <div class="ex">個人開発者LEMORION氏が手掛ける『めっちゃカメレオン』に、YouTuberヒカキン氏とのコラボと見られる新マップが本日夜に配信される見込みだ。発売から短期間で1500万本を突破した勢いのあるインディー作が、著名クリエイターとの接点でさ</div>
           <div class="d">2026/07/10</div></div>
       </a>
       <a class="acard ranked" data-cat="データ分析" href="/articles/20260710-1501-2.html">
-        <span class="rank">2</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1783654507')"></div>
+        <span class="rank">2</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1783654507" alt="『パルワールド』正式版1.0リリース、Steam同接が前日比+552%で約23万人に急増 レビュー動向も好調" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">データ分析</span><span class="pill-break">速報</span></div>
           <div class="ttl">『パルワールド』正式版1.0リリース、Steam同接が前日比+552%で約23万人に急増 レビュー動向も好調</div>
           <div class="ex">『Palworld / パルワールド』が本日、正式版1.0へ移行した。Steam同接は約23万人に達し、前日比では+552.2%という跳ね上がり方を見せている。直前まで続いていた30%オフのセールと正式版移行のタイミングが重なり、新規勢と復</div>
           <div class="d">2026/07/10</div></div>
       </a>
       <a class="acard ranked" data-cat="デバイス" href="/articles/20260710-1500-1.html">
-        <span class="rank">3</span><div class="th" style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/ask-direct/cabinet/item_image_202503_2/4719331763978-1.jpg?_ex=600x600')"></div>
+        <span class="rank">3</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/ask-direct/cabinet/item_image_202503_2/4719331763978-1.jpg?_ex=600x600" alt="GIGABYTE、Ryzen AI+RTX 50搭載の16型薄型ゲーミングノート「AERO X16」発売、実売48万円前後で本日より順次展開" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
           <div class="ttl">GIGABYTE、Ryzen AI+RTX 50搭載の16型薄型ゲーミングノート「AERO X16」発売、実売48万円前後で本日より順次展開</div>
           <div class="ex">GIGABYTEが7月10日、Ryzen AIとGeForce RTX 50 Laptop GPUを組み合わせた16型薄型ゲーミングノート「AERO X16」シリーズ2モデルの発売を開始した。薄型筐体に最新世代のAI対応CPUと高性能GPU</div>
           <div class="d">2026/07/10</div></div>
       </a>
       <a class="acard ranked" data-cat="新作" href="/articles/20260710-1101-2.html">
-        <span class="rank">4</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053')"></div>
+        <span class="rank">4</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053" alt="『アサシン クリード ブラック フラッグ RE:シンクロ』Steam同接10万人でシリーズ最大記録、発売直後の勢いを読む" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『アサシン クリード ブラック フラッグ RE:シンクロ』Steam同接10万人でシリーズ最大記録、発売直後の勢いを読む</div>
           <div class="ex">Ubisoftが7月9日に配信した『アサシン クリード ブラック フラッグ RE:シンクロ』が、Steam同時接続約10万人を記録し『アサシン クリード』シリーズ史上最大の盛況となった。最新のAnvilエンジンで作り直された海賊アクションが</div>

@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="『パルワールド』正式版1.0リリース、Steam同接が前日比+552%で約23万人に急増 レビュー動向も好調">
 <meta name="twitter:description" content="『Palworld / パルワールド』が本日、正式版1.0へ移行した。Steam同接は約23万人に達し、前日比では+552.2%という跳ね上がり方を見せている。直前まで続いていた30%オフのセールと正式版移行のタイミングが重なり、新規勢と復帰勢が同時に押し寄せた格好だ。">
 <meta name="twitter:image" content="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1783654507">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "『パルワールド』正式版1.0リリース、Steam同接が前日比+552%で約23万人に急増 レビュー動向も好調", "description": "『Palworld / パルワールド』が本日、正式版1.0へ移行した。Steam同接は約23万人に達し、前日比では+552.2%という跳ね上がり方を見せている。直前まで続いていた30%オフのセールと正式版移行のタイミングが重なり、新規勢と復帰勢が同時に押し寄せた格好だ。", "datePublished": "2026-07-10T15:01:00+09:00", "dateModified": "2026-07-10T15:01:00+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1783654507", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260710-1501-2"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "『パルワールド』正式版1.0リリース、Steam同接が前日比+552%で約23万人に急増 レビュー動向も好調", "description": "『Palworld / パルワールド』が本日、正式版1.0へ移行した。Steam同接は約23万人に達し、前日比では+552.2%という跳ね上がり方を見せている。直前まで続いていた30%オフのセールと正式版移行のタイミングが重なり、新規勢と復帰勢が同時に押し寄せた格好だ。", "datePublished": "2026-07-10T15:01:00+09:00", "dateModified": "2026-07-10T15:01:00+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1783654507", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260710-1501-2"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://gadgegame.com/"}, {"@type": "ListItem", "position": 2, "name": "データ分析", "item": "https://gadgegame.com/category/data"}, {"@type": "ListItem", "position": 3, "name": "『パルワールド』正式版1.0リリース、Steam同接が前日比+552%で約23万人に急増 レビュー動向も好調", "item": "https://gadgegame.com/articles/20260710-1501-2"}]}</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="alternate icon" href="/favicon.ico">
@@ -145,12 +145,30 @@
   .sbtn.hb{background:#00A4DE;font-size:19px;}
   @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
     .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}}
+
+  /* ===== バックフィル: 目次(TOC) + img化に伴う overflow/object-fit ===== */
+  .toc{background:rgba(255,255,255,.02);border:1px solid var(--line-soft);border-radius:14px;
+    padding:16px 20px;margin:24px 0;}
+  .toc .lbl{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+  .toc ol{margin:10px 0 0;padding-left:22px;}
+  .toc li{margin:7px 0;color:var(--muted);}
+  .toc li::marker{color:var(--accent);font-weight:800;}
+  .toc a{color:var(--text);}
+  .toc a:hover{color:var(--accent);}
+  .hero{overflow:hidden;}
+  .hero img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .gimg{overflow:hidden;}
+  .gimg img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .buybox .th{overflow:hidden;}
+  .buybox .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .acard .th{overflow:hidden;}
+  .acard .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
 </style>
 </head>
 <body>
 <header><div class="wrap head">
   <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="28" height="28"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
-  <nav><a href="../index.html">トップ</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
+  <nav><a href="../index.html">トップ</a><a href="../archive.html">全記事</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
 </div></header>
 
 <main class="wrap">
@@ -158,16 +176,17 @@
     <div class="crumb"><a href="../index.html">ホーム</a> › データ分析</div>
     <span class="cat">データ分析</span>
     <h1>『パルワールド』正式版1.0リリース、Steam同接が前日比+552%で約23万人に急増 レビュー動向も好調</h1>
-    <div class="meta">2026/07/10 ・ ガジェゲ編集部</div>
+    <div class="meta">2026/07/10 ・ 文: <a href="../about.html">ガジェゲ編集部</a></div>
     <div class="pr-note">※本記事にはアフィリエイト広告（プロモーション）が含まれます。</div>
-    <div class='hero' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1783654507')"></div>
+    <div class='hero'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1783654507" alt="『パルワールド』正式版1.0リリース、Steam同接が前日比+552%で約23万人に急増 レビュー動向も好調のメインビジュアル" fetchpriority="high"></div>
     <p class="lead">『Palworld / パルワールド』が本日、正式版1.0へ移行した。Steam同接は約23万人に達し、前日比では+552.2%という跳ね上がり方を見せている。直前まで続いていた30%オフのセールと正式版移行のタイミングが重なり、新規勢と復帰勢が同時に押し寄せた格好だ。</p>
     <div class='tldr'><div class='lbl'>結論</div><div class='body'>正式版移行直後のいま最も同接の伸びが大きいタイトルであり、値下げ中に触ってみる価値が高い。</div></div>
-    <h2 class='g'>同接データで見る正式版の勢い</h2>
-<div class='gimg' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/648ed4266fc18f413292292741304ef648421c55/ss_648ed4266fc18f413292292741304ef648421c55.1920x1080.jpg?t=1783654507')"></div>
+    <nav class='toc'><div class='lbl'>目次</div><ol><li><a href="#sec-1">同接データで見る正式版の勢い</a></li><li><a href="#sec-2">直前までの割引価格が残る</a></li><li><a href="#sec-3">報道側の反応も好意的</a></li><li><a href="#sec-4">旧Modや引き継ぎに関する注意点</a></li></ol></nav>
+    <h2 class='g' id='sec-1'>同接データで見る正式版の勢い</h2>
+<div class='gimg'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/648ed4266fc18f413292292741304ef648421c55/ss_648ed4266fc18f413292292741304ef648421c55.1920x1080.jpg?t=1783654507" alt="同接データで見る正式版の勢い" loading="lazy"></div>
 <p>Steamの同時接続数は約23万人で、前日比+552.2%という極端な伸びを記録した。Twitch側でも配信数7、視聴者数は約1.3万人規模で観測されており、視聴・プレイ双方で注目が集まっているのが分かる。ゲーム内新コンテンツの大量投入と、正式版移行という節目が重なったことが要因とみられる。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1623730/header.jpg')"></div>
+      <div class="bt"><div class='th'><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1623730/header.jpg" alt="Palworld / パルワールド" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">Palworld / パルワールド</div><div class='off'>-30% セール中</div>
         </div>
@@ -180,11 +199,11 @@
       </div>
       <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
     </div>
-<h2 class='g'>直前までの割引価格が残る</h2>
-<div class='gimg' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_b3cea7c9f04a67d784d4c6a0c157a11d6268b189.1920x1080.jpg?t=1783654507')"></div>
+<h2 class='g' id='sec-2'>直前までの割引価格が残る</h2>
+<div class='gimg'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_b3cea7c9f04a67d784d4c6a0c157a11d6268b189.1920x1080.jpg?t=1783654507" alt="直前までの割引価格が残る" loading="lazy"></div>
 <p>Steamストアでは現時点で30%オフの表示が確認できる。正式版移行に合わせて値下げが終了する可能性もあるため、購入を検討している場合は早めの確認が望ましい。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1623730/header.jpg')"></div>
+      <div class="bt"><div class='th'><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1623730/header.jpg" alt="Palworld / パルワールド" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">Palworld / パルワールド</div><div class='off'>-30% セール中</div>
         </div>
@@ -197,9 +216,9 @@
       </div>
       <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
     </div>
-<h2 class='g'>報道側の反応も好意的</h2>
+<h2 class='g' id='sec-3'>報道側の反応も好意的</h2>
 <p>国内メディアでは正式版の変更点を検証する記事が出ており、初期版からの改善が「だいたい全部」に及ぶと報じられている。海外メディアのレビューでも、1.0版は「正しい改善を積み重ねている」との評価が出ている。数字だけでなく報道の論調からも、今回のアップデートが単なる小変更ではないことがうかがえる。</p>
-<h2 class='g'>旧Modや引き継ぎに関する注意点</h2>
+<h2 class='g' id='sec-4'>旧Modや引き継ぎに関する注意点</h2>
 <p>公式は正式版移行にあたり旧Modの削除やセーブデータの引き継ぎ非推奨を明言している。復帰プレイヤーは環境を整理してから起動する必要がある点は留意すべきだ。</p>
 <h2 class='g'>まとめ</h2>
 <p>同接の伸び率だけで見れば、本日のトレンドの中で『パルワールド』の勢いは群を抜いている。値下げが残っているうちに触ってみるか、正式版の変更点をじっくり確認してから判断するか、いずれにしても今が動くタイミングといえる。</p>
@@ -221,28 +240,28 @@
     </div>
     <div class="grid">
       <a class="acard ranked" data-cat="デバイス" href="/articles/20260710-1500-1.html">
-        <span class="rank">1</span><div class="th" style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/ask-direct/cabinet/item_image_202503_2/4719331763978-1.jpg?_ex=600x600')"></div>
+        <span class="rank">1</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/ask-direct/cabinet/item_image_202503_2/4719331763978-1.jpg?_ex=600x600" alt="GIGABYTE、Ryzen AI+RTX 50搭載の16型薄型ゲーミングノート「AERO X16」発売、実売48万円前後で本日より順次展開" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
           <div class="ttl">GIGABYTE、Ryzen AI+RTX 50搭載の16型薄型ゲーミングノート「AERO X16」発売、実売48万円前後で本日より順次展開</div>
           <div class="ex">GIGABYTEが7月10日、Ryzen AIとGeForce RTX 50 Laptop GPUを組み合わせた16型薄型ゲーミングノート「AERO X16」シリーズ2モデルの発売を開始した。薄型筐体に最新世代のAI対応CPUと高性能GPU</div>
           <div class="d">2026/07/10</div></div>
       </a>
       <a class="acard ranked" data-cat="新作" href="/articles/20260710-1101-2.html">
-        <span class="rank">2</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053')"></div>
+        <span class="rank">2</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053" alt="『アサシン クリード ブラック フラッグ RE:シンクロ』Steam同接10万人でシリーズ最大記録、発売直後の勢いを読む" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『アサシン クリード ブラック フラッグ RE:シンクロ』Steam同接10万人でシリーズ最大記録、発売直後の勢いを読む</div>
           <div class="ex">Ubisoftが7月9日に配信した『アサシン クリード ブラック フラッグ RE:シンクロ』が、Steam同時接続約10万人を記録し『アサシン クリード』シリーズ史上最大の盛況となった。最新のAnvilエンジンで作り直された海賊アクションが</div>
           <div class="d">2026/07/10</div></div>
       </a>
       <a class="acard ranked" data-cat="新作" href="/articles/20260710-1100-1.html">
-        <span class="rank">3</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665')"></div>
+        <span class="rank">3</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665" alt="『パルワールド』正式版1.0が本日ローンチ、直前トレイラーでSteam同接3.5万人と堅調な仕上がり" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『パルワールド』正式版1.0が本日ローンチ、直前トレイラーでSteam同接3.5万人と堅調な仕上がり</div>
           <div class="ex">ポケットペアは7月9日、アーリーアクセス中の『パルワールド』が7月10日にリリースする正式版1.0のローンチトレイラーを公開した。Steamでは同接約3.5万人（前日比+7.5%）を維持したまま正式版突入を迎え、ストアページでは30%オフの</div>
           <div class="d">2026/07/10</div></div>
       </a>
       <a class="acard ranked" data-cat="デバイス" href="/articles/20260710-0801-2.html">
-        <span class="rank">4</span><div class="th" style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_gold/dospara-r/img/item/526330.jpg?_ex=600x600')"></div>
+        <span class="rank">4</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_gold/dospara-r/img/item/526330.jpg?_ex=600x600" alt="PNY「RTX 5070 Ti Dual-Fan Slim」発売、2スロット厚スリム設計でSFF機に刺さる一枚" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
           <div class="ttl">PNY「RTX 5070 Ti Dual-Fan Slim」発売、2スロット厚スリム設計でSFF機に刺さる一枚</div>
           <div class="ex">PNYが2スロット厚のデュアルファン設計を採用した「GeForce RTX 5070 Ti Dual-Fan Slim Overclocked」を発売した。RTX 5070 Ti搭載カードは基本的に大型のトリプルファン仕様が多く、コンパクト</div>

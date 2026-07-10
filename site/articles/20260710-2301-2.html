@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="『アサシン クリード ブラック フラッグ RE:シンクロ』急上昇、Steam同接7.7万人でTwitch視聴も前日比+98%">
 <meta name="twitter:description" content="『アサシン クリード ブラック フラッグ RE:シンクロ』の勢いが止まらない。Steam同接は約7.7万人に達し、Twitch視聴数も前日比+98%と急伸している。発売直後の熱狂がなお継続している状況を数字で確認する。">
 <meta name="twitter:image" content="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "『アサシン クリード ブラック フラッグ RE:シンクロ』急上昇、Steam同接7.7万人でTwitch視聴も前日比+98%", "description": "『アサシン クリード ブラック フラッグ RE:シンクロ』の勢いが止まらない。Steam同接は約7.7万人に達し、Twitch視聴数も前日比+98%と急伸している。発売直後の熱狂がなお継続している状況を数字で確認する。", "datePublished": "2026-07-10T23:01:42+09:00", "dateModified": "2026-07-10T23:01:42+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260710-2301-2"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "『アサシン クリード ブラック フラッグ RE:シンクロ』急上昇、Steam同接7.7万人でTwitch視聴も前日比+98%", "description": "『アサシン クリード ブラック フラッグ RE:シンクロ』の勢いが止まらない。Steam同接は約7.7万人に達し、Twitch視聴数も前日比+98%と急伸している。発売直後の熱狂がなお継続している状況を数字で確認する。", "datePublished": "2026-07-10T23:01:42+09:00", "dateModified": "2026-07-10T23:01:42+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260710-2301-2"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://gadgegame.com/"}, {"@type": "ListItem", "position": 2, "name": "データ分析", "item": "https://gadgegame.com/category/data"}, {"@type": "ListItem", "position": 3, "name": "『アサシン クリード ブラック フラッグ RE:シンクロ』急上昇、Steam同接7.7万人でTwitch視聴も前日比+98%", "item": "https://gadgegame.com/articles/20260710-2301-2"}]}</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="alternate icon" href="/favicon.ico">
@@ -150,12 +150,30 @@
   .sbtn.hb{background:#00A4DE;font-size:19px;}
   @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
     .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}}
+
+  /* ===== バックフィル: 目次(TOC) + img化に伴う overflow/object-fit ===== */
+  .toc{background:rgba(255,255,255,.02);border:1px solid var(--line-soft);border-radius:14px;
+    padding:16px 20px;margin:24px 0;}
+  .toc .lbl{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+  .toc ol{margin:10px 0 0;padding-left:22px;}
+  .toc li{margin:7px 0;color:var(--muted);}
+  .toc li::marker{color:var(--accent);font-weight:800;}
+  .toc a{color:var(--text);}
+  .toc a:hover{color:var(--accent);}
+  .hero{overflow:hidden;}
+  .hero img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .gimg{overflow:hidden;}
+  .gimg img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .buybox .th{overflow:hidden;}
+  .buybox .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .acard .th{overflow:hidden;}
+  .acard .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
 </style>
 </head>
 <body>
 <header><div class="wrap head">
   <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="28" height="28"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
-  <nav><a href="../index.html">トップ</a><a href="../deals.html">🔥セール・買い時</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
+  <nav><a href="../index.html">トップ</a><a href="../archive.html">全記事</a><a href="../deals.html">🔥セール・買い時</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
 </div></header>
 
 <main class="wrap">
@@ -163,16 +181,17 @@
     <div class="crumb"><a href="../index.html">ホーム</a> › データ分析</div>
     <span class="cat">データ分析</span>
     <h1>『アサシン クリード ブラック フラッグ RE:シンクロ』急上昇、Steam同接7.7万人でTwitch視聴も前日比+98%</h1>
-    <div class="meta">2026/07/10 ・ ガジェゲ編集部</div>
+    <div class="meta">2026/07/10 ・ 文: <a href="../about.html">ガジェゲ編集部</a></div>
     <div class="pr-note">※本記事にはアフィリエイト広告（プロモーション）が含まれます。</div>
-    <div class='hero' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053')"></div>
+    <div class='hero'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053" alt="『アサシン クリード ブラック フラッグ RE:シンクロ』急上昇、Steam同接7.7万人でTwitch視聴も前日比+98%のメインビジュアル" fetchpriority="high"></div>
     <p class="lead">『アサシン クリード ブラック フラッグ RE:シンクロ』の勢いが止まらない。Steam同接は約7.7万人に達し、Twitch視聴数も前日比+98%と急伸している。発売直後の熱狂がなお継続している状況を数字で確認する。</p>
     <div class='tldr'><div class='lbl'>結論</div><div class='body'>Steam同接・Twitch視聴とも急伸継続中で、発売直後の今がプレイヤー流入のピークといえる。購入を迷っているなら今週が判断のタイミングだ。</div></div>
-    <h2 class='g'>Steam同接は7.7万人、前日から大幅増</h2>
-<div class='gimg' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/f084448247301f9b445e92ceb202eaa591cf65d1/ss_f084448247301f9b445e92ceb202eaa591cf65d1.1920x1080.jpg?t=1783617053')"></div>
+    <nav class='toc'><div class='lbl'>目次</div><ol><li><a href="#sec-1">Steam同接は7.7万人、前日から大幅増</a></li><li><a href="#sec-2">Twitchでも視聴数が急伸</a></li><li><a href="#sec-3">McDonald&#x27;s やDead by Daylightなど異色コラボも話題に</a></li><li><a href="#sec-4">YouTubeでも急上昇枠に定着</a></li></ol></nav>
+    <h2 class='g' id='sec-1'>Steam同接は7.7万人、前日から大幅増</h2>
+<div class='gimg'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/f084448247301f9b445e92ceb202eaa591cf65d1/ss_f084448247301f9b445e92ceb202eaa591cf65d1.1920x1080.jpg?t=1783617053" alt="Steam同接は7.7万人、前日から大幅増" loading="lazy"></div>
 <p>Steam同接プレイヤー数は約7.7万人に達し、集計上の前日比は極端な伸びを示している。これは配信直後特有の急伸で、発売初期の勢いがそのまま数字に反映された結果だ。Steamのトップセラーにも名を連ねており、パッケージ版だけでなくデジタル版の需要も高いとみられる。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/3751950/header.jpg')"></div>
+      <div class="bt"><div class='th'><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/3751950/header.jpg" alt="アサシン クリード ブラック フラッグ RE:シンクロ" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">アサシン クリード ブラック フラッグ RE:シンクロ</div>
         </div>
@@ -185,11 +204,11 @@
       </div>
       <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
     </div>
-<h2 class='g'>Twitchでも視聴数が急伸</h2>
-<div class='gimg' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/a79f6dada7c7ca555c1be440793ee46813acf9ca/ss_a79f6dada7c7ca555c1be440793ee46813acf9ca.1920x1080.jpg?t=1783617053')"></div>
+<h2 class='g' id='sec-2'>Twitchでも視聴数が急伸</h2>
+<div class='gimg'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/a79f6dada7c7ca555c1be440793ee46813acf9ca/ss_a79f6dada7c7ca555c1be440793ee46813acf9ca.1920x1080.jpg?t=1783617053" alt="Twitchでも視聴数が急伸" loading="lazy"></div>
 <p>Twitchでは同接視聴が約4.8万人に達し、前日比+98%という高い伸びを記録した。トップストリーマーの配信タイトルにも「新作アサシンクリード」「最難易度」といった言葉が並び、発売直後特有の探索プレイが視聴の主軸になっている。ストリーマー経由の流入も継続の重要な鍵になりそうだ。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/3751950/header.jpg')"></div>
+      <div class="bt"><div class='th'><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/3751950/header.jpg" alt="アサシン クリード ブラック フラッグ RE:シンクロ" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">アサシン クリード ブラック フラッグ RE:シンクロ</div>
         </div>
@@ -202,9 +221,9 @@
       </div>
       <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
     </div>
-<h2 class='g'>McDonald&#x27;s やDead by Daylightなど異色コラボも話題に</h2>
+<h2 class='g' id='sec-3'>McDonald&#x27;s やDead by Daylightなど異色コラボも話題に</h2>
 <p>IGNの報道によると、Dead by Daylightやコントロール、McDonald&#x27;sなど複数の企業・ゲームが本作の宣伝に絡んでいるとの情報がある。異色の組み合わせが話題性を後押しし、SNS上での言及増加にもつながっているとみられる。ただし公式発表の詳細は今後の情報を待つ必要がある。</p>
-<h2 class='g'>YouTubeでも急上昇枠に定着</h2>
+<h2 class='g' id='sec-4'>YouTubeでも急上昇枠に定着</h2>
 <p>YouTube急上昇（JP）にも関連プレイ動画がランクインしており、動画経由の関心の高さも裏付けられる。発売直後のプレイ動画は視聴数が伸びやすく、この勢いが数日続くかが今後の指標になる。</p>
 <h2 class='g'>まとめ</h2>
 <p>Steam・Twitch双方で急伸を見せている『アサシン クリード ブラック フラッグ RE:シンクロ』は、発売直後の話題のピークにあるといえる。数字の伸びが継続するかどうか、次の数日間の動向を注視したい。</p>
@@ -226,28 +245,28 @@
     </div>
     <div class="grid">
       <a class="acard ranked" data-cat="新作" href="/articles/20260710-2301-1.html">
-        <span class="rank">1</span><div class="th" style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600')"></div>
+        <span class="rank">1</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600" alt="『アークナイツ：エンドフィールド』新バージョン「向淵行」7月16日配信、メイン任務スキップで復帰・新規のハードルを大幅緩和" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『アークナイツ：エンドフィールド』新バージョン「向淵行」7月16日配信、メイン任務スキップで復帰・新規のハードルを大幅緩和</div>
           <div class="ex">『アークナイツ：エンドフィールド』の新バージョン「向淵行」が7月16日に配信予定であることが公式番組で明らかになった。新オペレーターや新エリアに加え、常時開放イベント「先行解放：武陵」でメイン任務のスキップが可能になる点が大きな変更点だ。復</div>
           <div class="d">2026/07/10</div></div>
       </a>
       <a class="acard ranked" data-cat="新作" href="/articles/20260710-1900-1.html">
-        <span class="rank">2</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4704690/6c0a47cc2fba1b160901d1553637a764198bdc98/ss_6c0a47cc2fba1b160901d1553637a764198bdc98.1920x1080.jpg?t=1782561846')"></div>
+        <span class="rank">2</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4704690/6c0a47cc2fba1b160901d1553637a764198bdc98/ss_6c0a47cc2fba1b160901d1553637a764198bdc98.1920x1080.jpg?t=1782561846" alt="『めっちゃカメレオン』ヒカキン氏コラボの新マップが本日配信へ、Steam同接3.7万人からの再加速に注目" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『めっちゃカメレオン』ヒカキン氏コラボの新マップが本日配信へ、Steam同接3.7万人からの再加速に注目</div>
           <div class="ex">個人開発者LEMORION氏が手掛ける『めっちゃカメレオン』に、YouTuberヒカキン氏とのコラボと見られる新マップが本日夜に配信される見込みだ。発売から短期間で1500万本を突破した勢いのあるインディー作が、著名クリエイターとの接点でさ</div>
           <div class="d">2026/07/10</div></div>
       </a>
       <a class="acard ranked" data-cat="データ分析" href="/articles/20260710-1501-2.html">
-        <span class="rank">3</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1783654507')"></div>
+        <span class="rank">3</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1783654507" alt="『パルワールド』正式版1.0リリース、Steam同接が前日比+552%で約23万人に急増 レビュー動向も好調" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">データ分析</span><span class="pill-break">速報</span></div>
           <div class="ttl">『パルワールド』正式版1.0リリース、Steam同接が前日比+552%で約23万人に急増 レビュー動向も好調</div>
           <div class="ex">『Palworld / パルワールド』が本日、正式版1.0へ移行した。Steam同接は約23万人に達し、前日比では+552.2%という跳ね上がり方を見せている。直前まで続いていた30%オフのセールと正式版移行のタイミングが重なり、新規勢と復</div>
           <div class="d">2026/07/10</div></div>
       </a>
       <a class="acard ranked" data-cat="デバイス" href="/articles/20260710-1500-1.html">
-        <span class="rank">4</span><div class="th" style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/ask-direct/cabinet/item_image_202503_2/4719331763978-1.jpg?_ex=600x600')"></div>
+        <span class="rank">4</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/ask-direct/cabinet/item_image_202503_2/4719331763978-1.jpg?_ex=600x600" alt="GIGABYTE、Ryzen AI+RTX 50搭載の16型薄型ゲーミングノート「AERO X16」発売、実売48万円前後で本日より順次展開" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
           <div class="ttl">GIGABYTE、Ryzen AI+RTX 50搭載の16型薄型ゲーミングノート「AERO X16」発売、実売48万円前後で本日より順次展開</div>
           <div class="ex">GIGABYTEが7月10日、Ryzen AIとGeForce RTX 50 Laptop GPUを組み合わせた16型薄型ゲーミングノート「AERO X16」シリーズ2モデルの発売を開始した。薄型筐体に最新世代のAI対応CPUと高性能GPU</div>

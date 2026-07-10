@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if(location.hostname.endsWith('.pages.dev')){location.replace('https://gadgegame.com'+location.pathname+location.search+location.hash);}</script>
+<title>記事一覧｜ガジェゲ</title>
+<meta name="description" content="ガジェゲの公開済み全24記事を新しい順に掲載する記事一覧アーカイブ。">
+<link rel="canonical" href="https://gadgegame.com/archive">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ガジェゲ（Gadget×Game）">
+<meta property="og:title" content="記事一覧｜ガジェゲ">
+<meta property="og:description" content="ガジェゲの公開済み全24記事を新しい順に掲載する記事一覧アーカイブ。">
+<meta property="og:url" content="https://gadgegame.com/archive">
+<meta property="og:image" content="https://gadgegame.com/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="記事一覧｜ガジェゲ">
+<meta name="twitter:description" content="ガジェゲの公開済み全24記事を新しい順に掲載する記事一覧アーカイブ。">
+<meta name="twitter:image" content="https://gadgegame.com/ogp.png">
+<script type="application/ld+json"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "記事一覧｜ガジェゲ", "description": "ガジェゲの公開済み全24記事を新しい順に掲載する記事一覧アーカイブ。", "url": "https://gadgegame.com/archive"}</script></script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="alternate icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<style>
+  :root{
+    --bg:#0a0e16; --bg2:#0c1220; --card:#121a29; --card-hi:#172135; --line:#243046; --line-soft:#1a2334;
+    --text:#eef2f8; --muted:#9db0c6; --dim:#647689;
+    --accent:#39d8ff; --accent-2:#8a6bff; --sale:#ff6a3d; --green:#2fd27e; --violet:#a78bfa;
+    --shadow:0 10px 30px rgba(0,0,0,.45);
+    --grad:linear-gradient(135deg,var(--accent),var(--accent-2));
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Noto Sans JP","Segoe UI",system-ui,-apple-system,"Meiryo",sans-serif;
+    line-height:1.75;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:"palt";}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px;}
+  header{position:sticky;top:0;z-index:20;background:rgba(10,14,22,.72);
+    backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--line-soft);}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:12px;height:62px;}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;flex:0 0 auto;text-decoration:none;}
+  .logo-mark{width:30px;height:30px;border-radius:8px;display:block;flex:0 0 auto;box-shadow:0 0 16px rgba(57,216,255,.30);}
+  .logo-name{display:inline-flex;flex-direction:column;line-height:1.04;}
+  .logo-sub{font-size:9.5px;font-weight:700;letter-spacing:.13em;color:var(--accent);font-style:normal;text-transform:uppercase;margin-top:1px;}
+  nav{display:flex;align-items:center;gap:6px;min-width:0;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  nav::-webkit-scrollbar{display:none;}
+  nav a{position:relative;flex:0 0 auto;white-space:nowrap;padding:8px 12px;font-size:13.5px;color:var(--muted);
+    border-radius:9px;transition:color .15s,background .15s;}
+  nav a:hover{color:var(--text);background:rgba(255,255,255,.05);}
+  nav a.on{color:var(--text);background:rgba(57,216,255,.12);}
+  .x-link{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;color:var(--muted);transition:color .15s;}
+  .x-link:hover{color:var(--accent);}
+  .x-link svg{width:16px;height:16px;display:block;}
+  footer .social{margin:0 0 12px;}
+  footer .social .x-link{font-weight:700;color:var(--text);}
+  footer .social .x-link:hover{color:var(--accent);}
+
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line-soft);
+    background:radial-gradient(900px 380px at 12% -20%,rgba(57,216,255,.20),transparent 60%),
+      radial-gradient(760px 360px at 92% 0%,rgba(138,107,255,.18),transparent 55%),
+      linear-gradient(180deg,#0b1120,#0a0e16);}
+  .hero .wrap{padding:44px 22px 36px;}
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.16em;
+    color:var(--accent);text-transform:uppercase;margin-bottom:16px;}
+  .kicker::before{content:"";width:26px;height:2px;background:var(--grad);border-radius:2px;}
+  .hero h1{font-size:32px;line-height:1.3;margin:0 0 12px;font-weight:800;letter-spacing:.005em;max-width:780px;}
+  .hero h1 .c{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero p{margin:0;color:var(--muted);font-size:15px;max-width:640px;line-height:1.85;}
+
+  main{padding:34px 0 10px;}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));}
+  .acard{position:relative;display:flex;gap:15px;background:var(--card);border:1px solid var(--line-soft);
+    border-radius:16px;padding:14px;overflow:hidden;transition:transform .22s,border-color .22s,box-shadow .22s,background .22s;}
+  .acard:hover{transform:translateY(-4px);background:var(--card-hi);border-color:rgba(57,216,255,.5);
+    box-shadow:var(--shadow),0 8px 34px rgba(57,216,255,.16);}
+  .acard .th{width:120px;height:82px;flex:0 0 auto;border-radius:11px;background:var(--bg2) center/cover no-repeat;overflow:hidden;transition:filter .22s;}
+  .acard .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .acard:hover .th{filter:brightness(1.08) saturate(1.05);}
+  .acard .th.noimg{background:radial-gradient(120px 80px at 70% 20%,rgba(138,107,255,.35),transparent 60%),linear-gradient(135deg,#182236,#10182a);position:relative;}
+  .acard .th.noimg::after{content:"GADGET";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:10px;font-weight:800;letter-spacing:.22em;}
+  .acbody{min-width:0;display:flex;flex-direction:column;}
+  .acmeta{display:flex;align-items:center;gap:7px;margin-bottom:7px;flex-wrap:wrap;}
+  .cat{display:inline-block;font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:100px;letter-spacing:.02em;
+    background:rgba(57,216,255,.14);color:var(--accent);border:1px solid rgba(57,216,255,.25);}
+  .cat.o{background:rgba(255,106,61,.15);color:var(--sale);border-color:rgba(255,106,61,.3);}
+  .cat.g{background:rgba(47,210,126,.15);color:var(--green);border-color:rgba(47,210,126,.3);}
+  .cat.p{background:rgba(167,139,250,.16);color:var(--violet);border-color:rgba(167,139,250,.3);}
+  .pill-break{font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 9px;border-radius:100px;color:#fff;
+    background:linear-gradient(135deg,#ff6a3d,#ff2d6e);box-shadow:0 0 14px rgba(255,45,110,.45);}
+  .acard .ttl{font-size:15px;font-weight:700;margin:0 0 6px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard:hover .ttl{color:#fff;}
+  .acard .ex{font-size:12px;color:var(--muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard .d{font-size:11px;color:var(--dim);margin-top:auto;padding-top:8px;}
+  .rank{position:absolute;top:8px;left:8px;z-index:2;min-width:26px;height:26px;padding:0 6px;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:14px;color:#07101c;background:var(--grad);border-radius:8px;box-shadow:0 4px 14px rgba(57,216,255,.4);}
+
+  .empty{grid-column:1/-1;color:var(--muted);font-size:13.5px;padding:26px 18px;text-align:center;
+    background:var(--card);border:1px dashed var(--line);border-radius:14px;}
+
+  .pager{display:flex;align-items:center;justify-content:center;gap:14px;margin:34px 0 6px;flex-wrap:wrap;}
+  .pager .pg{font-size:13px;font-weight:700;color:var(--muted);padding:8px 14px;border-radius:10px;
+    border:1px solid var(--line);transition:color .15s,border-color .15s;}
+  .pager a.pg:hover{color:var(--text);border-color:var(--accent);}
+  .pager .pg.disabled{opacity:.35;pointer-events:none;}
+  .pager .pg-nums{display:flex;gap:6px;}
+  .pager .pg-num{font-size:13px;font-weight:700;color:var(--muted);width:32px;height:32px;display:inline-flex;
+    align-items:center;justify-content:center;border-radius:9px;border:1px solid var(--line);}
+  .pager a.pg-num:hover{color:var(--text);border-color:var(--accent);}
+  .pager .pg-num.on{background:var(--grad);color:#07101c;border-color:transparent;}
+
+  footer{margin-top:44px;border-top:1px solid var(--line-soft);padding:26px 0 46px;color:var(--dim);font-size:12px;
+    background:linear-gradient(180deg,transparent,rgba(138,107,255,.04));}
+  footer .disc{background:var(--card);border:1px solid var(--line-soft);border-radius:12px;padding:14px 16px;
+    margin-bottom:16px;color:var(--muted);line-height:1.75;}
+  footer .flinks{font-size:11.5px;color:var(--dim);margin-bottom:12px;}
+  footer .flinks a{color:var(--dim);text-decoration:underline;text-underline-offset:2px;}
+  footer .flinks a:hover{color:var(--accent);}
+
+  @media(max-width:680px){
+    .head{height:56px;}
+    .hero .wrap{padding:34px 22px 28px;}
+    .hero h1{font-size:24px;}
+    nav{gap:2px;-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent);}
+    nav a{padding:8px 10px;font-size:13px;}
+    .grid{grid-template-columns:1fr;gap:13px;}
+    .acard .th{width:110px;height:74px;}
+  }
+</style>
+</head>
+<body>
+<header><div class="wrap head">
+  <a class="logo" href="index.html"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="30" height="30"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
+  <nav>
+    <a href="index.html#trending">いま読まれている</a>
+    <a href="index.html#games">ゲーム</a>
+    <a href="index.html#devices">デバイス</a>
+    <a class="on" href="archive.html">全記事</a>
+    <a href="deals.html">🔥セール・買い時</a>
+    <a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a>
+  </nav>
+</div></header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="kicker">Article Archive</div>
+    <h1>全記事アーカイブ</h1>
+    <p>公開済み全24記事を新しい順に掲載。</p>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="grid">
+      <a class="acard" data-cat="データ分析" href="articles/20260710-2301-2.html">
+        <div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053" alt="『アサシン クリード ブラック フラッグ RE:シンクロ』急上昇、Steam同接7.7万人でTwitch視聴も前日比+98%" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">データ分析</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『アサシン クリード ブラック フラッグ RE:シンクロ』急上昇、Steam同接7.7万人でTwitch視聴も前日比+98%</div>
+          <div class="ex">『アサシン クリード ブラック フラッグ RE:シンクロ』の勢いが止まらない。Steam同接は約7.7万人に達し、Twitch視聴数も前日比+98%と急伸している。発売直後の熱狂がなお継続している状況を数字で確認する。</div>
+          <div class="d">2026/07/10</div></div>
+      </a>
+      <a class="acard" data-cat="新作" href="articles/20260710-2301-1.html">
+        <div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600" alt="『アークナイツ：エンドフィールド』新バージョン「向淵行」7月16日配信、メイン任務スキップで復帰・新規のハードルを大幅緩和" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『アークナイツ：エンドフィールド』新バージョン「向淵行」7月16日配信、メイン任務スキップで復帰・新規のハードルを大幅緩和</div>
+          <div class="ex">『アークナイツ：エンドフィールド』の新バージョン「向淵行」が7月16日に配信予定であることが公式番組で明らかになった。新オペレーターや新エリアに加え、常時開放イベント「先行解放：武陵」でメイン任務のスキップが可能になる点が大きな変更点だ。復</div>
+          <div class="d">2026/07/10</div></div>
+      </a>
+      <a class="acard" data-cat="新作" href="articles/20260710-1901-2.html">
+        <div class="th noimg"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span></div>
+          <div class="ttl">活俠傳、9月15日に約1年ぶり大型アプデ 新ルート追加と高難度モード「勇者」実装へ</div>
+          <div class="ex">「ブサイク人生RPG」として異色の人気を保つ『活俠傳 Legend of Mortal』に、約1年ぶりとなる大型アップデートが決定した。9月15日には新ルートと高難度モードが加わる予定で、リリースから時間が経った今も開発が継続している点は評</div>
+          <div class="d">2026/07/10</div></div>
+      </a>
+      <a class="acard" data-cat="新作" href="articles/20260710-1900-1.html">
+        <div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4704690/6c0a47cc2fba1b160901d1553637a764198bdc98/ss_6c0a47cc2fba1b160901d1553637a764198bdc98.1920x1080.jpg?t=1782561846" alt="『めっちゃカメレオン』ヒカキン氏コラボの新マップが本日配信へ、Steam同接3.7万人からの再加速に注目" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『めっちゃカメレオン』ヒカキン氏コラボの新マップが本日配信へ、Steam同接3.7万人からの再加速に注目</div>
+          <div class="ex">個人開発者LEMORION氏が手掛ける『めっちゃカメレオン』に、YouTuberヒカキン氏とのコラボと見られる新マップが本日夜に配信される見込みだ。発売から短期間で1500万本を突破した勢いのあるインディー作が、著名クリエイターとの接点でさ</div>
+          <div class="d">2026/07/10</div></div>
+      </a>
+      <a class="acard" data-cat="データ分析" href="articles/20260710-1501-2.html">
+        <div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1783654507" alt="『パルワールド』正式版1.0リリース、Steam同接が前日比+552%で約23万人に急増 レビュー動向も好調" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">データ分析</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『パルワールド』正式版1.0リリース、Steam同接が前日比+552%で約23万人に急増 レビュー動向も好調</div>
+          <div class="ex">『Palworld / パルワールド』が本日、正式版1.0へ移行した。Steam同接は約23万人に達し、前日比では+552.2%という跳ね上がり方を見せている。直前まで続いていた30%オフのセールと正式版移行のタイミングが重なり、新規勢と復</div>
+          <div class="d">2026/07/10</div></div>
+      </a>
+      <a class="acard" data-cat="デバイス" href="articles/20260710-1500-1.html">
+        <div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/ask-direct/cabinet/item_image_202503_2/4719331763978-1.jpg?_ex=600x600" alt="GIGABYTE、Ryzen AI+RTX 50搭載の16型薄型ゲーミングノート「AERO X16」発売、実売48万円前後で本日より順次展開" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
+          <div class="ttl">GIGABYTE、Ryzen AI+RTX 50搭載の16型薄型ゲーミングノート「AERO X16」発売、実売48万円前後で本日より順次展開</div>
+          <div class="ex">GIGABYTEが7月10日、Ryzen AIとGeForce RTX 50 Laptop GPUを組み合わせた16型薄型ゲーミングノート「AERO X16」シリーズ2モデルの発売を開始した。薄型筐体に最新世代のAI対応CPUと高性能GPU</div>
+          <div class="d">2026/07/10</div></div>
+      </a>
+      <a class="acard" data-cat="新作" href="articles/20260710-1101-2.html">
+        <div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053" alt="『アサシン クリード ブラック フラッグ RE:シンクロ』Steam同接10万人でシリーズ最大記録、発売直後の勢いを読む" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『アサシン クリード ブラック フラッグ RE:シンクロ』Steam同接10万人でシリーズ最大記録、発売直後の勢いを読む</div>
+          <div class="ex">Ubisoftが7月9日に配信した『アサシン クリード ブラック フラッグ RE:シンクロ』が、Steam同時接続約10万人を記録し『アサシン クリード』シリーズ史上最大の盛況となった。最新のAnvilエンジンで作り直された海賊アクションが</div>
+          <div class="d">2026/07/10</div></div>
+      </a>
+      <a class="acard" data-cat="新作" href="articles/20260710-1100-1.html">
+        <div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665" alt="『パルワールド』正式版1.0が本日ローンチ、直前トレイラーでSteam同接3.5万人と堅調な仕上がり" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『パルワールド』正式版1.0が本日ローンチ、直前トレイラーでSteam同接3.5万人と堅調な仕上がり</div>
+          <div class="ex">ポケットペアは7月9日、アーリーアクセス中の『パルワールド』が7月10日にリリースする正式版1.0のローンチトレイラーを公開した。Steamでは同接約3.5万人（前日比+7.5%）を維持したまま正式版突入を迎え、ストアページでは30%オフの</div>
+          <div class="d">2026/07/10</div></div>
+      </a>
+      <a class="acard" data-cat="デバイス" href="articles/20260710-0801-2.html">
+        <div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_gold/dospara-r/img/item/526330.jpg?_ex=600x600" alt="PNY「RTX 5070 Ti Dual-Fan Slim」発売、2スロット厚スリム設計でSFF機に刺さる一枚" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
+          <div class="ttl">PNY「RTX 5070 Ti Dual-Fan Slim」発売、2スロット厚スリム設計でSFF機に刺さる一枚</div>
+          <div class="ex">PNYが2スロット厚のデュアルファン設計を採用した「GeForce RTX 5070 Ti Dual-Fan Slim Overclocked」を発売した。RTX 5070 Ti搭載カードは基本的に大型のトリプルファン仕様が多く、コンパクト</div>
+          <div class="d">2026/07/09</div></div>
+      </a>
+      <a class="acard" data-cat="セール分析" href="articles/20260710-0800-1.html">
+        <div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/auc-toysanta/cabinet/032103/g-5l3p0018hi-001.jpg?_ex=600x600" alt="『パルワールド』正式版1.0が目前、Steamは30%オフで実質最後の値引きセール状態に" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat o">セール分析</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『パルワールド』正式版1.0が目前、Steamは30%オフで実質最後の値引きセール状態に</div>
+          <div class="ex">ポケットペアは7月9日、アーリーアクセス中の『パルワールド』を7月10日に正式版1.0へ移行すると発表し、ローンチトレイラーを公開した。Steamストアでは現在30%オフのセールが実施中で、正式版移行後の価格設定は不明なため、値引きが続くう</div>
+          <div class="d">2026/07/09</div></div>
+      </a>
+      <a class="acard" data-cat="デバイス" href="articles/20260709-2301-2.html">
+        <div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/nanairo-s/cabinet/08014429/gd5090-32gerx3/imgrc0166298671.jpg?_ex=600x600" alt="Sega×Nvidia、30周年イベントを東京で開催 RTX 5090 FE抽選会も実施へ" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
+          <div class="ttl">Sega×Nvidia、30周年イベントを東京で開催 RTX 5090 FE抽選会も実施へ</div>
+          <div class="ex">NvidiaとSegaが提携30周年を記念するイベントを来週、秋葉原で開催するとの情報が入った。GeForce RTX 5090 Founders Editionの抽選会やRTX Sparkのプレゼンテーションが予定されており、往年のゲーマ</div>
+          <div class="d">2026/07/09</div></div>
+      </a>
+      <a class="acard" data-cat="新作" href="articles/20260709-2300-1.html">
+        <div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665" alt="『パルワールド』7月10日12時半に正式版移行、ローンチトレイラー公開で前日比同接+49.8%" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『パルワールド』7月10日12時半に正式版移行、ローンチトレイラー公開で前日比同接+49.8%</div>
+          <div class="ex">Pocketpairは7月10日、『パルワールド』のアーリーアクセスから正式版（v1.0）への移行を予定通り実施すると発表し、公式ローンチトレイラーを公開した。移行タイミングは同日12時半前後とされ、直前のSteam同接はすでに前日比+49</div>
+          <div class="d">2026/07/09</div></div>
+      </a>
+      <a class="acard" data-cat="データ分析" href="articles/20260709-1901-2.html">
+        <div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1973530/2a692ea70cc4226c1b8015c6d29baca30a3fb6b0/ss_2a692ea70cc4226c1b8015c6d29baca30a3fb6b0.1920x1080.jpg?t=1783074489" alt="Steam版『Limbus Company』が過去最多31万人集結、同接記録更新の裏側を読む" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">データ分析</span><span class="pill-break">速報</span></div>
+          <div class="ttl">Steam版『Limbus Company』が過去最多31万人集結、同接記録更新の裏側を読む</div>
+          <div class="ex">『Limbus Company』がリリース4年目にして過去最高の盛り上がりを見せている。ディストピア都市を描くRPG『Limbus Company』のSteam版が最大同接を更新し約16万人に達したとの報道があり、AUTOMATON側の集計</div>
+          <div class="d">2026/07/09</div></div>
+      </a>
+      <a class="acard" data-cat="新作" href="articles/20260709-1900-1.html">
+        <div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3839790/bc04b725e6c5c48327bcea684d70bfae1d725e1f/ss_bc04b725e6c5c48327bcea684d70bfae1d725e1f.1920x1080.jpg?t=1783522815" alt="『GRANBLUE FANTASY: Relink - Endless Ragnarok』本日配信開始、Steam同接は約4万人で好発進" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『GRANBLUE FANTASY: Relink - Endless Ragnarok』本日配信開始、Steam同接は約4万人で好発進</div>
+          <div class="ex">Cygameの3DアクションRPG『GRANBLUE FANTASY: Relink』の大型拡張「Endless Ragnarok」が本日7月9日に配信開始となった。Steamストアの売上ランキング上位を関連アイテムが独占しており、同接も約</div>
+          <div class="d">2026/07/09</div></div>
+      </a>
+      <a class="acard" data-cat="データ分析" href="articles/20260709-1501-2.html">
+        <div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2767030/1c1c765a7655599e3cf15c8934217ff60a1410ed/ss_1c1c765a7655599e3cf15c8934217ff60a1410ed.1920x1080.jpg?t=1781255145" alt="Marvel Rivals、Steam同接が前日比+116%で急伸 シーズン9発表が呼び水に" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">データ分析</span><span class="pill-break">速報</span></div>
+          <div class="ttl">Marvel Rivals、Steam同接が前日比+116%で急伸 シーズン9発表が呼び水に</div>
+          <div class="ex">Steamの同接ランキングでMarvel Rivalsが前日比+115.9%と急伸し、約7.7万人まで伸びた。7月7日に公開されたシーズン9発表ストリームが約117万回視聴を記録しており、新シーズン情報の反響が同接の数字に直結した形だ。数字</div>
+          <div class="d">2026/07/09</div></div>
+      </a>
+      <a class="acard" data-cat="新作" href="articles/20260709-1500-1.html">
+        <div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1336490/ss_c7a8ad6065ddaa4789935d28d99e24c940c2181c.1920x1080.jpg?t=1783396552" alt="『アゲインスト・ザ・ストーム』大型アプデ「Over-Haulers」配信開始、物流システムを刷新した運送人カスタマイズを解説" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『アゲインスト・ザ・ストーム』大型アプデ「Over-Haulers」配信開始、物流システムを刷新した運送人カスタマイズを解説</div>
+          <div class="ex">ローグライト街づくり『アゲインスト・ザ・ストーム』に7月8日、大型アップデート「Over-Haulers」が配信された。今回の中心は運送人システムの刷新で、物流面の自由度が大きく増した。発売から継続して大型アプデを重ねてきた作品であり、既存</div>
+          <div class="d">2026/07/09</div></div>
+      </a>
+      <a class="acard" data-cat="新作" href="articles/20260709-1242-2.html">
+        <div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2436940/ss_6dc776bb4cd7565deba0801e6c51389d008c0e74.1920x1080.jpg?t=1783515618" alt="『セフィリア』7月31日に正式リリース決定、4人マルチ対応のウサギ冒険ローグライトがついにエンディング実装" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『セフィリア』7月31日に正式リリース決定、4人マルチ対応のウサギ冒険ローグライトがついにエンディング実装</div>
+          <div class="ex">TEAM HORAYは7月8日、ローグライトアクション『セフィリア』の正式リリースを7月31日に行うと発表した。正式版アップデートでは物語の結末となるエンディングが新たに実装される見込みで、早期アクセス期間中から追われていたコンテンツ不足の</div>
+          <div class="d">2026/07/09</div></div>
+      </a>
+      <a class="acard" data-cat="新作" href="articles/20260709-1242-1.html">
+        <div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665" alt="『パルワールド』正式版直前、旧Mod削除を公式が異例の注意喚起 27ページ級パッチノートの一部も判明" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『パルワールド』正式版直前、旧Mod削除を公式が異例の注意喚起 27ページ級パッチノートの一部も判明</div>
+          <div class="ex">Pocketpairが7月10日に予定する『パルワールド』の正式版（v1.0）配信を前に、公式が古いModの削除を強く呼びかけている。クラッシュやクエスト進行不能といった不具合を避けるための注意喚起で、あわせて長大なパッチノートの一部も明ら</div>
+          <div class="d">2026/07/09</div></div>
+      </a>
+      <a class="acard" data-cat="新作" href="articles/20260707-2000-1.html">
+        <div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2244210/4e631acbbd04158ff72f0c727ed3ac5b8c030ffc/ss_4e631acbbd04158ff72f0c727ed3ac5b8c030ffc.1920x1080.jpg?t=1781687351" alt="『Echoes of Aincrad』7月10日発売直前、PS公式番組が特集で紹介 バンダイナムコ新作の見どころを整理" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
+          <div class="ttl">『Echoes of Aincrad』7月10日発売直前、PS公式番組が特集で紹介 バンダイナムコ新作の見どころを整理</div>
+          <div class="ex">バンダイナムコエンターテインメントが7月10日にリリースする新作「Echoes of Aincrad」を、ソニー・インタラクティブエンタテインメントのトーク番組「PLAY! PLAY! PLAY!」が特集で紹介した。発売まで残り3日となり、</div>
+          <div class="d">2026/07/07</div></div>
+      </a>
+      <a class="acard" data-cat="デバイス" href="articles/20260707-1600-1.html">
+        <div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/msistore/cabinet/products/laptop/4711377440868/4711377440868_1.jpg?_ex=600x600" alt="RTX 5060搭載MSIゲーミングノート「Cyborg 15」が4万5000円引き、プライムデー先行セールで実質19万円台に" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
+          <div class="ttl">RTX 5060搭載MSIゲーミングノート「Cyborg 15」が4万5000円引き、プライムデー先行セールで実質19万円台に</div>
+          <div class="ex">Amazonのプライムデー先行セールで、GeForce RTX 5060 Laptop GPUを積むMSI「Cyborg 15」が大幅値引き中です。プライムデー本番（7月10〜13日）を待たずに条件が出ているため、購入検討中の人は先に価格と</div>
+          <div class="d">2026/07/07</div></div>
+      </a>
+  </div>
+  <div class="pager"><span class="pg prev disabled">← 前へ</span><span class="pg-nums"><span class="pg-num on">1</span><a class="pg-num" href="archive-2.html">2</a></span><a class="pg next" href="archive-2.html">次へ →</a></div>
+
+  <footer>
+    <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。Amazonのアソシエイトとして、当メディアは適格販売により収入を得ています。</div>
+    <div class="social"><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg> @game_infoman</a></div>
+    <div class="flinks"><a href="about.html">運営者情報</a> ・ <a href="privacy.html">プライバシーポリシー</a></div>
+    (c) 2026 ガジェゲ（Gadget×Game） ／ データで見るゲームトレンド
+  </footer>
+</main>
+</body>
+</html>

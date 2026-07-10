@@ -87,24 +87,36 @@ _CSS = """
     background:rgba(255,106,61,.15);color:var(--sale);border:1px solid rgba(255,106,61,.3);}
   h1{font-size:30px;line-height:1.45;margin:14px 0 12px;font-weight:800;letter-spacing:.005em;}
   .meta{font-size:13px;color:var(--dim);margin-bottom:20px;}
-  .hero{width:100%;height:320px;border-radius:16px;background:var(--bg2) center/cover;
+  .hero{width:100%;height:320px;border-radius:16px;background:var(--bg2) center/cover;overflow:hidden;
     box-shadow:var(--shadow);border:1px solid var(--line-soft);}
+  .hero img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
   .lead{font-size:17px;margin:24px 0;color:#dfe7f1;line-height:1.95;}
   .tldr{background:linear-gradient(135deg,rgba(57,216,255,.08),rgba(138,107,255,.08));
     border:1px solid rgba(57,216,255,.28);border-radius:14px;padding:16px 20px;margin:24px 0;}
   .tldr .lbl{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
     color:var(--accent);}
   .tldr .body{font-size:15.5px;margin-top:6px;color:var(--text);}
+  /* 目次(TOC): tldrボックスと調和する控えめなカード */
+  .toc{background:rgba(255,255,255,.02);border:1px solid var(--line-soft);border-radius:14px;
+    padding:16px 20px;margin:24px 0;}
+  .toc .lbl{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+  .toc ol{margin:10px 0 0;padding-left:22px;}
+  .toc li{margin:7px 0;color:var(--muted);}
+  .toc li::marker{color:var(--accent);font-weight:800;}
+  .toc a{color:var(--text);}
+  .toc a:hover{color:var(--accent);}
   h2.g{font-size:22px;margin:38px 0 8px;padding-top:20px;border-top:1px solid var(--line-soft);
     font-weight:800;letter-spacing:.01em;}
   .gimg{width:100%;height:210px;border-radius:14px;background:var(--bg2) center/cover;margin:14px 0;
-    box-shadow:var(--shadow);border:1px solid var(--line-soft);}
+    overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line-soft);}
+  .gimg img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
   p{margin:14px 0;color:#d7e0ec;}
   .buybox{margin:20px 0;border:1px solid rgba(255,106,61,.28);border-radius:16px;padding:18px;
     background:linear-gradient(135deg,rgba(255,106,61,.08),rgba(255,45,110,.05));box-shadow:var(--shadow);}
   .buybox .bt{display:flex;gap:14px;align-items:center;}
   .buybox .th{width:130px;height:62px;border-radius:10px;background:var(--bg2) center/cover;flex:0 0 auto;
-    border:1px solid var(--line-soft);}
+    overflow:hidden;border:1px solid var(--line-soft);}
+  .buybox .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
   .buybox .name{font-weight:800;font-size:15.5px;}
   .buybox .off{margin-top:5px;font-size:12px;font-weight:800;color:#fff;
     background:linear-gradient(135deg,#ff6a3d,#ff2d6e);padding:3px 10px;border-radius:100px;display:inline-block;}
@@ -141,7 +153,8 @@ _CSS = """
     border-radius:16px;padding:14px;overflow:hidden;transition:transform .22s,border-color .22s,box-shadow .22s,background .22s;}
   .acard:hover{transform:translateY(-4px);background:var(--card-hi);border-color:rgba(57,216,255,.5);
     box-shadow:var(--shadow),0 8px 34px rgba(57,216,255,.16);}
-  .acard .th{width:120px;height:82px;flex:0 0 auto;border-radius:11px;background:var(--bg2) center/cover no-repeat;transition:filter .22s;}
+  .acard .th{width:120px;height:82px;flex:0 0 auto;border-radius:11px;background:var(--bg2) center/cover no-repeat;overflow:hidden;transition:filter .22s;}
+  .acard .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
   .acard:hover .th{filter:brightness(1.08) saturate(1.05);}
   .acard .th.noimg{background:radial-gradient(120px 80px at 70% 20%,rgba(138,107,255,.35),transparent 60%),linear-gradient(135deg,#182236,#10182a);position:relative;}
   .acard .th.noimg::after{content:"GADGET";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:10px;font-weight:800;letter-spacing:.22em;}
@@ -207,7 +220,7 @@ _PAGE = """<!DOCTYPE html>
 <body>
 <header><div class="wrap head">
   <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="28" height="28"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
-  <nav><a href="../index.html">トップ</a><a href="../deals.html">🔥セール・買い時</a>{x_nav}</nav>
+  <nav><a href="../index.html">トップ</a><a href="../archive.html">全記事</a><a href="../deals.html">🔥セール・買い時</a>{x_nav}</nav>
 </div></header>
 
 <main class="wrap">
@@ -215,11 +228,12 @@ _PAGE = """<!DOCTYPE html>
     <div class="crumb"><a href="../index.html">ホーム</a> › {category}</div>
     <span class="cat">{category}</span>
     <h1>{title}</h1>
-    <div class="meta">{date} ・ ガジェゲ編集部</div>
+    <div class="meta">{date} ・ 文: <a href="../about.html">ガジェゲ編集部</a></div>
     <div class="pr-note">※本記事にはアフィリエイト広告（プロモーション）が含まれます。</div>
     {hero}
     <p class="lead">{lead}</p>
     {tldr}
+    {toc}
     {body}
     <a class="back" href="../index.html">← トップに戻る</a>
   </article>
@@ -346,7 +360,8 @@ def _buybox(game: dict) -> str:
         return ""
     links = affiliate_links(name)
     img = game.get("image_url", "")
-    th = f"<div class='th' style=\"background-image:url('{_esc(img)}')\"></div>" if img else "<div class='th'></div>"
+    th = (f"<div class='th'><img src=\"{_esc(img)}\" alt=\"{_esc(name)}\" loading=\"lazy\"></div>"
+          if img else "<div class='th'></div>")
     dp = game.get("discount_percent")
     off = f"<div class='off'>-{int(dp)}% セール中</div>" if dp else ""
     # Steamゲーム(appidあり)は公式ストアへの導線を先頭に付ける（アフィリ制度は無いのでUX目的）
@@ -393,6 +408,27 @@ def _article_jsonld(article: dict, canonical: str, image_url: str, now: datetime
     return f'<script type="application/ld+json">{json.dumps(data, ensure_ascii=False)}</script>'
 
 
+def _breadcrumb_jsonld(category: str, title: str, canonical: str) -> str:
+    """
+    パンくず(ホーム→カテゴリ→記事)のBreadcrumbList JSON-LD。
+    カテゴリがCATEGORY_SLUGSに無い場合はカテゴリ階層を省き、ホーム→記事の2階層にする。
+    base_url(config.SITE_BASE_URL)が無ければURLが組めないため空文字を返す（＝出力しない）。
+    """
+    base = (config.SITE_BASE_URL or "").rstrip("/")
+    if not base:
+        return ""
+    items = [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": f"{base}/"}]
+    slug = CATEGORY_SLUGS.get(category or "", "")
+    pos = 2
+    if slug:
+        items.append({"@type": "ListItem", "position": pos, "name": category,
+                       "item": f"{base}/category/{slug}"})
+        pos += 1
+    items.append({"@type": "ListItem", "position": pos, "name": title, "item": canonical or f"{base}/"})
+    data = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items}
+    return f'<script type="application/ld+json">{json.dumps(data, ensure_ascii=False)}</script>'
+
+
 def render_article(article: dict, related: list[dict] | None = None) -> str:
     """
     article: {
@@ -403,23 +439,42 @@ def render_article(article: dict, related: list[dict] | None = None) -> str:
     related: 他記事のリスト（storage.list_articles）。渡すと末尾に「人気の記事」を出す。
     """
     now = datetime.now()
+    title = article.get("title", "")
     hero_url = article.get("hero_image_url", "")
-    hero = (f"<div class='hero' style=\"background-image:url('{_esc(hero_url)}')\"></div>"
-            if hero_url else "")
+    hero = (f"<div class='hero'><img src=\"{_esc(hero_url)}\" alt=\"{_esc(title)}のメインビジュアル\" "
+            f"fetchpriority=\"high\"></div>" if hero_url else "")
     tldr_txt = (article.get("tldr") or "").strip()
     tldr = (f"<div class='tldr'><div class='lbl'>結論</div>"
             f"<div class='body'>{_esc(tldr_txt)}</div></div>" if tldr_txt else "")
 
-    parts = []
-    for sec in article.get("sections", []):
+    # 目次(TOC)用: セクション見出しに連番アンカー(sec-1, sec-2, ...)を割り当てる。
+    # まとめ見出しは対象外（セクション数のカウントにも含めない）。
+    sections = article.get("sections", []) or []
+    anchor_ids = []  # sections と同じ順番。見出し無しは None
+    toc_entries = []  # [(anchor_id, heading), ...]
+    idx = 0
+    for sec in sections:
         heading = sec.get("heading", "")
         if heading:
-            parts.append(f"<h2 class='g'>{_esc(heading)}</h2>")
+            idx += 1
+            anchor_ids.append(f"sec-{idx}")
+            toc_entries.append((f"sec-{idx}", heading))
+        else:
+            anchor_ids.append(None)
+
+    parts = []
+    for sec, anchor in zip(sections, anchor_ids):
+        heading = sec.get("heading", "")
+        if heading:
+            id_attr = f" id='{anchor}'" if anchor else ""
+            parts.append(f"<h2 class='g'{id_attr}>{_esc(heading)}</h2>")
         buy = sec.get("buy") or {}
         # セクションのバナー画像は使い回しを避けた sec['image_url'] を優先（無ければbuyの画像）
         sec_img = sec.get("image_url") or buy.get("image_url", "")
         if sec_img:
-            parts.append(f"<div class='gimg' style=\"background-image:url('{_esc(sec_img)}')\"></div>")
+            img_alt = heading or title
+            parts.append(f"<div class='gimg'><img src=\"{_esc(sec_img)}\" alt=\"{_esc(img_alt)}\" "
+                         f"loading=\"lazy\"></div>")
         parts.append(_paragraphs(sec.get("body", "")))
         if buy.get("name"):
             parts.append(_buybox(buy))
@@ -429,6 +484,12 @@ def render_article(article: dict, related: list[dict] | None = None) -> str:
         parts.append("<h2 class='g'>まとめ</h2>")
         parts.append(_paragraphs(conclusion))
 
+    # 目次はセクションが3個以上の時だけ表示（2個以下は不要）
+    toc_html = ""
+    if len(toc_entries) >= 3:
+        items = "".join(f'<li><a href="#{aid}">{_esc(h)}</a></li>' for aid, h in toc_entries)
+        toc_html = f"<nav class='toc'><div class='lbl'>目次</div><ol>{items}</ol></nav>"
+
     # OGP用メタ: 説明文はlead(無ければtldr)を160字程度に、画像はhero(無ければサイト共通OG画像)
     base_url = (config.SITE_BASE_URL or "").rstrip("/")
     og_desc = _esc((article.get("lead") or article.get("tldr") or "").strip()[:160])
@@ -436,23 +497,26 @@ def render_article(article: dict, related: list[dict] | None = None) -> str:
     canonical = (article.get("canonical_url") or "").strip()
     canonical_tag = f'<link rel="canonical" href="{_esc(canonical)}">' if canonical else ""
     og_url_tag = f'<meta property="og:url" content="{_esc(canonical)}">' if canonical else ""
-    jsonld = _article_jsonld(article, canonical, hero_url, now)
+    category = article.get("category", "")
+    jsonld = (_article_jsonld(article, canonical, hero_url, now)
+              + _breadcrumb_jsonld(category, title, canonical))
 
     # 記事末尾の「人気の記事」（自分自身は除外）
     cur_slug = ""
     if canonical:
         cur_slug = canonical.rstrip("/").split("/")[-1].removesuffix(".html")
     related_html = related_section(related or [], current_slug=cur_slug)
-    share_html = share_section(canonical, article.get("title", ""))
+    share_html = share_section(canonical, title)
 
     return _PAGE.format(
-        title=_esc(article.get("title", "")),
+        title=_esc(title),
         css=_CSS,
-        category=_esc(article.get("category", "")),
+        category=_esc(category),
         date=now.strftime("%Y/%m/%d"),
         hero=hero,
         lead=_esc(article.get("lead", "")),
         tldr=tldr,
+        toc=toc_html,
         body="\n".join(parts),
         year=now.year,
         og_desc=og_desc,
@@ -484,7 +548,7 @@ def _article_card(a: dict, rank: int | None = None, base: str = "") -> str:
     cls = f"cat {catcls}".strip()
     img = a.get("image_url", "")
     if img:
-        th = f"<div class=\"th\" style=\"background-image:url('{_esc(img)}')\"></div>"
+        th = f"<div class=\"th\"><img src=\"{_esc(img)}\" alt=\"{_esc(a.get('title',''))}\" loading=\"lazy\"></div>"
     else:
         th = "<div class=\"th noimg\"></div>"
     try:
@@ -590,6 +654,334 @@ def inject_articles(index_html: str, articles: list[dict]) -> str:
 
 
 # ============================================
+# 全記事アーカイブ／カテゴリ別ページ
+# ============================================
+# カテゴリ名(日本語) -> URLスラッグ。site/category/<slug>.html のファイル名に使う。
+CATEGORY_SLUGS = {
+    "セール分析": "sale",
+    "注目株": "rising",
+    "新作": "new",
+    "eスポーツ": "esports",
+    "デバイス": "device",
+    "データ分析": "data",
+    "考察": "column",
+    "ガイド": "guide",
+}
+
+_ARCHIVE_PER_PAGE = 20
+
+# アーカイブ/カテゴリ一覧ページ用CSS。カードグリッド(acard)は記事ページ(_CSS)と同じ見た目、
+# ヒーロー/ナビはdeals.html系のレイアウト(max-width 1120)に合わせる。
+_LISTING_CSS = """
+  :root{
+    --bg:#0a0e16; --bg2:#0c1220; --card:#121a29; --card-hi:#172135; --line:#243046; --line-soft:#1a2334;
+    --text:#eef2f8; --muted:#9db0c6; --dim:#647689;
+    --accent:#39d8ff; --accent-2:#8a6bff; --sale:#ff6a3d; --green:#2fd27e; --violet:#a78bfa;
+    --shadow:0 10px 30px rgba(0,0,0,.45);
+    --grad:linear-gradient(135deg,var(--accent),var(--accent-2));
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Noto Sans JP","Segoe UI",system-ui,-apple-system,"Meiryo",sans-serif;
+    line-height:1.75;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:"palt";}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px;}
+  header{position:sticky;top:0;z-index:20;background:rgba(10,14,22,.72);
+    backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--line-soft);}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:12px;height:62px;}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;flex:0 0 auto;text-decoration:none;}
+  .logo-mark{width:30px;height:30px;border-radius:8px;display:block;flex:0 0 auto;box-shadow:0 0 16px rgba(57,216,255,.30);}
+  .logo-name{display:inline-flex;flex-direction:column;line-height:1.04;}
+  .logo-sub{font-size:9.5px;font-weight:700;letter-spacing:.13em;color:var(--accent);font-style:normal;text-transform:uppercase;margin-top:1px;}
+  nav{display:flex;align-items:center;gap:6px;min-width:0;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  nav::-webkit-scrollbar{display:none;}
+  nav a{position:relative;flex:0 0 auto;white-space:nowrap;padding:8px 12px;font-size:13.5px;color:var(--muted);
+    border-radius:9px;transition:color .15s,background .15s;}
+  nav a:hover{color:var(--text);background:rgba(255,255,255,.05);}
+  nav a.on{color:var(--text);background:rgba(57,216,255,.12);}
+  .x-link{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;color:var(--muted);transition:color .15s;}
+  .x-link:hover{color:var(--accent);}
+  .x-link svg{width:16px;height:16px;display:block;}
+  footer .social{margin:0 0 12px;}
+  footer .social .x-link{font-weight:700;color:var(--text);}
+  footer .social .x-link:hover{color:var(--accent);}
+
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line-soft);
+    background:radial-gradient(900px 380px at 12% -20%,rgba(57,216,255,.20),transparent 60%),
+      radial-gradient(760px 360px at 92% 0%,rgba(138,107,255,.18),transparent 55%),
+      linear-gradient(180deg,#0b1120,#0a0e16);}
+  .hero .wrap{padding:44px 22px 36px;}
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.16em;
+    color:var(--accent);text-transform:uppercase;margin-bottom:16px;}
+  .kicker::before{content:"";width:26px;height:2px;background:var(--grad);border-radius:2px;}
+  .hero h1{font-size:32px;line-height:1.3;margin:0 0 12px;font-weight:800;letter-spacing:.005em;max-width:780px;}
+  .hero h1 .c{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero p{margin:0;color:var(--muted);font-size:15px;max-width:640px;line-height:1.85;}
+
+  main{padding:34px 0 10px;}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));}
+  .acard{position:relative;display:flex;gap:15px;background:var(--card);border:1px solid var(--line-soft);
+    border-radius:16px;padding:14px;overflow:hidden;transition:transform .22s,border-color .22s,box-shadow .22s,background .22s;}
+  .acard:hover{transform:translateY(-4px);background:var(--card-hi);border-color:rgba(57,216,255,.5);
+    box-shadow:var(--shadow),0 8px 34px rgba(57,216,255,.16);}
+  .acard .th{width:120px;height:82px;flex:0 0 auto;border-radius:11px;background:var(--bg2) center/cover no-repeat;overflow:hidden;transition:filter .22s;}
+  .acard .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .acard:hover .th{filter:brightness(1.08) saturate(1.05);}
+  .acard .th.noimg{background:radial-gradient(120px 80px at 70% 20%,rgba(138,107,255,.35),transparent 60%),linear-gradient(135deg,#182236,#10182a);position:relative;}
+  .acard .th.noimg::after{content:"GADGET";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:10px;font-weight:800;letter-spacing:.22em;}
+  .acbody{min-width:0;display:flex;flex-direction:column;}
+  .acmeta{display:flex;align-items:center;gap:7px;margin-bottom:7px;flex-wrap:wrap;}
+  .cat{display:inline-block;font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:100px;letter-spacing:.02em;
+    background:rgba(57,216,255,.14);color:var(--accent);border:1px solid rgba(57,216,255,.25);}
+  .cat.o{background:rgba(255,106,61,.15);color:var(--sale);border-color:rgba(255,106,61,.3);}
+  .cat.g{background:rgba(47,210,126,.15);color:var(--green);border-color:rgba(47,210,126,.3);}
+  .cat.p{background:rgba(167,139,250,.16);color:var(--violet);border-color:rgba(167,139,250,.3);}
+  .pill-break{font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 9px;border-radius:100px;color:#fff;
+    background:linear-gradient(135deg,#ff6a3d,#ff2d6e);box-shadow:0 0 14px rgba(255,45,110,.45);}
+  .acard .ttl{font-size:15px;font-weight:700;margin:0 0 6px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard:hover .ttl{color:#fff;}
+  .acard .ex{font-size:12px;color:var(--muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard .d{font-size:11px;color:var(--dim);margin-top:auto;padding-top:8px;}
+  .rank{position:absolute;top:8px;left:8px;z-index:2;min-width:26px;height:26px;padding:0 6px;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:14px;color:#07101c;background:var(--grad);border-radius:8px;box-shadow:0 4px 14px rgba(57,216,255,.4);}
+
+  .empty{grid-column:1/-1;color:var(--muted);font-size:13.5px;padding:26px 18px;text-align:center;
+    background:var(--card);border:1px dashed var(--line);border-radius:14px;}
+
+  .pager{display:flex;align-items:center;justify-content:center;gap:14px;margin:34px 0 6px;flex-wrap:wrap;}
+  .pager .pg{font-size:13px;font-weight:700;color:var(--muted);padding:8px 14px;border-radius:10px;
+    border:1px solid var(--line);transition:color .15s,border-color .15s;}
+  .pager a.pg:hover{color:var(--text);border-color:var(--accent);}
+  .pager .pg.disabled{opacity:.35;pointer-events:none;}
+  .pager .pg-nums{display:flex;gap:6px;}
+  .pager .pg-num{font-size:13px;font-weight:700;color:var(--muted);width:32px;height:32px;display:inline-flex;
+    align-items:center;justify-content:center;border-radius:9px;border:1px solid var(--line);}
+  .pager a.pg-num:hover{color:var(--text);border-color:var(--accent);}
+  .pager .pg-num.on{background:var(--grad);color:#07101c;border-color:transparent;}
+
+  footer{margin-top:44px;border-top:1px solid var(--line-soft);padding:26px 0 46px;color:var(--dim);font-size:12px;
+    background:linear-gradient(180deg,transparent,rgba(138,107,255,.04));}
+  footer .disc{background:var(--card);border:1px solid var(--line-soft);border-radius:12px;padding:14px 16px;
+    margin-bottom:16px;color:var(--muted);line-height:1.75;}
+  footer .flinks{font-size:11.5px;color:var(--dim);margin-bottom:12px;}
+  footer .flinks a{color:var(--dim);text-decoration:underline;text-underline-offset:2px;}
+  footer .flinks a:hover{color:var(--accent);}
+
+  @media(max-width:680px){
+    .head{height:56px;}
+    .hero .wrap{padding:34px 22px 28px;}
+    .hero h1{font-size:24px;}
+    nav{gap:2px;-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent);}
+    nav a{padding:8px 10px;font-size:13px;}
+    .grid{grid-template-columns:1fr;gap:13px;}
+    .acard .th{width:110px;height:74px;}
+  }
+"""
+
+_LISTING_PAGE = """<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if(location.hostname.endsWith('.pages.dev')){{location.replace('https://gadgegame.com'+location.pathname+location.search+location.hash);}}</script>
+<title>{title}</title>
+<meta name="description" content="{desc}">
+{canonical_tag}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ガジェゲ（Gadget×Game）">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{desc}">
+{og_url_tag}
+<meta property="og:image" content="{og_image}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title}">
+<meta name="twitter:description" content="{desc}">
+<meta name="twitter:image" content="{og_image}">
+<script type="application/ld+json">{jsonld}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="alternate icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<style>{css}</style>
+</head>
+<body>
+<header><div class="wrap head">
+  <a class="logo" href="{base}index.html"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="30" height="30"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
+  <nav>
+    {nav}
+  </nav>
+</div></header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="kicker">{kicker}</div>
+    <h1>{h1}</h1>
+    <p>{lead}</p>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="grid">
+{cards}
+  </div>
+{pagination}
+
+  <footer>
+    <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。Amazonのアソシエイトとして、当メディアは適格販売により収入を得ています。</div>
+    <div class="social">{x_footer}</div>
+    <div class="flinks"><a href="{base}about.html">運営者情報</a> ・ <a href="{base}privacy.html">プライバシーポリシー</a></div>
+    (c) {year} ガジェゲ（Gadget×Game） ／ データで見るゲームトレンド
+  </footer>
+</main>
+</body>
+</html>
+"""
+
+
+def _listing_nav(base: str, active: str = "") -> str:
+    """アーカイブ/カテゴリページ共通のヘッダーnav。base='' (site直下) or '../' (category/配下)。"""
+    def cls(name: str) -> str:
+        return ' class="on"' if name == active else ""
+
+    items = [
+        f'<a href="{base}index.html#trending">いま読まれている</a>',
+        f'<a href="{base}index.html#games">ゲーム</a>',
+        f'<a href="{base}index.html#devices">デバイス</a>',
+        f'<a{cls("archive")} href="{base}archive.html">全記事</a>',
+        f'<a href="{base}deals.html">🔥セール・買い時</a>',
+    ]
+    x = x_link_html(show_handle=False)
+    if x:
+        items.append(x)
+    return "\n    ".join(items)
+
+
+def _archive_filename(page: int) -> str:
+    return "archive.html" if page == 1 else f"archive-{page}.html"
+
+
+def _pagination_html(page: int, total_pages: int) -> str:
+    """前へ/次へ＋ページ番号ナビ。1ページしかなければ空文字。"""
+    if total_pages <= 1:
+        return ""
+    parts = []
+    if page > 1:
+        parts.append(f'<a class="pg prev" href="{_archive_filename(page - 1)}">← 前へ</a>')
+    else:
+        parts.append('<span class="pg prev disabled">← 前へ</span>')
+    nums = []
+    for p in range(1, total_pages + 1):
+        if p == page:
+            nums.append(f'<span class="pg-num on">{p}</span>')
+        else:
+            nums.append(f'<a class="pg-num" href="{_archive_filename(p)}">{p}</a>')
+    parts.append('<span class="pg-nums">' + "".join(nums) + "</span>")
+    if page < total_pages:
+        parts.append(f'<a class="pg next" href="{_archive_filename(page + 1)}">次へ →</a>')
+    else:
+        parts.append('<span class="pg next disabled">次へ →</span>')
+    return '  <div class="pager">' + "".join(parts) + "</div>"
+
+
+def _listing_page_html(*, title: str, description: str, canonical_path: str, kicker: str,
+                       h1: str, lead: str, cards_html: str, nav_html: str, base_url: str,
+                       base: str = "", pagination_html: str = "") -> str:
+    """アーカイブ/カテゴリページ共通のHTML組み立て。h1はマークアップ込みでそのまま埋め込む。"""
+    b = (base_url or "").rstrip("/")
+    canonical = f"{b}{canonical_path}" if b else ""
+    og_image = f"{b}/ogp.png" if b else ""
+    canonical_tag = f'<link rel="canonical" href="{_esc(canonical)}">' if canonical else ""
+    og_url_tag = f'<meta property="og:url" content="{_esc(canonical)}">' if canonical else ""
+    jsonld_data = {
+        "@context": "https://schema.org", "@type": "CollectionPage",
+        "name": title, "description": description,
+    }
+    if canonical:
+        jsonld_data["url"] = canonical
+    jsonld = f'<script type="application/ld+json">{json.dumps(jsonld_data, ensure_ascii=False)}</script>'
+    now = datetime.now()
+    return _LISTING_PAGE.format(
+        title=_esc(title), desc=_esc(description), canonical_tag=canonical_tag,
+        og_url_tag=og_url_tag, og_image=_esc(og_image), jsonld=jsonld, css=_LISTING_CSS,
+        base=base, nav=nav_html, kicker=_esc(kicker), h1=h1, lead=_esc(lead),
+        cards=cards_html, pagination=pagination_html,
+        x_footer=x_link_html(show_handle=True), year=now.year,
+    )
+
+
+def render_archive_pages(articles: list[dict], site_dir: str, base_url: str) -> list[str]:
+    """
+    全記事アーカイブ(新しい順・20件/ページ)を site/archive.html, archive-2.html... に書き出す。
+    戻り値: 生成したファイル名のリスト（例: ["archive.html", "archive-2.html"]）。
+    """
+    ordered = sorted(articles, key=lambda a: a.get("created_at") or "", reverse=True)
+    total = len(ordered)
+    total_pages = max(1, (total + _ARCHIVE_PER_PAGE - 1) // _ARCHIVE_PER_PAGE)
+    written = []
+    for page in range(1, total_pages + 1):
+        chunk = ordered[(page - 1) * _ARCHIVE_PER_PAGE: page * _ARCHIVE_PER_PAGE]
+        cards = ("\n".join(_article_card(a, base="") for a in chunk) if chunk
+                 else _empty_note("記事がまだありません。"))
+        pagination = _pagination_html(page, total_pages)
+        h1 = "全記事アーカイブ" if page == 1 else f"全記事アーカイブ（{page}ページ目）"
+        if page == 1:
+            lead = f"公開済み全{total}記事を新しい順に掲載。"
+        else:
+            start = (page - 1) * _ARCHIVE_PER_PAGE + 1
+            end = min(page * _ARCHIVE_PER_PAGE, total)
+            lead = f"全{total}記事のうち{start}〜{end}件目。"
+        title = "記事一覧｜ガジェゲ" if page == 1 else f"記事一覧（{page}ページ目）｜ガジェゲ"
+        description = f"ガジェゲの公開済み全{total}記事を新しい順に掲載する記事一覧アーカイブ。"
+        filename = _archive_filename(page)
+        canonical_path = "/archive" if page == 1 else f"/archive-{page}"
+        html_out = _listing_page_html(
+            title=title, description=description, canonical_path=canonical_path,
+            kicker="Article Archive", h1=h1, lead=lead, cards_html=cards,
+            nav_html=_listing_nav("", active="archive"), pagination_html=pagination,
+            base="", base_url=base_url,
+        )
+        out_path = os.path.join(site_dir, filename)
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write(html_out)
+        written.append(filename)
+    return written
+
+
+def render_category_pages(articles: list[dict], site_dir: str, base_url: str) -> list[str]:
+    """
+    カテゴリ別記事一覧を site/category/<slug>.html に全カテゴリ分書き出す(ページネーションなし)。
+    記事0件のカテゴリも「まだ記事がありません」の空状態ページとして生成する。
+    戻り値: 生成した相対パスのリスト（例: ["category/sale.html", ...]）。
+    """
+    cat_dir = os.path.join(site_dir, "category")
+    os.makedirs(cat_dir, exist_ok=True)
+    written = []
+    for cat_name, slug in CATEGORY_SLUGS.items():
+        matched = sorted(
+            [a for a in articles if a.get("category") == cat_name],
+            key=lambda a: a.get("created_at") or "", reverse=True,
+        )
+        cards = ("\n".join(_article_card(a, base="../") for a in matched) if matched
+                 else _empty_note("まだ記事がありません。毎日自動更新中。"))
+        title = f"{cat_name}の記事一覧｜ガジェゲ"
+        description = f"ガジェゲの「{cat_name}」カテゴリの記事一覧（{len(matched)}件）。"
+        h1 = f'{_esc(cat_name)}<span class="c">の記事</span>'
+        lead = f"「{cat_name}」カテゴリの記事を新しい順に掲載（{len(matched)}件）。"
+        html_out = _listing_page_html(
+            title=title, description=description, canonical_path=f"/category/{slug}",
+            kicker="Category", h1=h1, lead=lead, cards_html=cards,
+            nav_html=_listing_nav("../", active=""), base="../", base_url=base_url,
+        )
+        out_path = os.path.join(cat_dir, f"{slug}.html")
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write(html_out)
+        written.append(f"category/{slug}.html")
+    return written
+
+
+# ============================================
 # sitemap.xml / robots.txt の自動生成
 # ============================================
 def write_sitemap(site_dir: str, base_url: str) -> None:
@@ -614,6 +1006,29 @@ def write_sitemap(site_dir: str, base_url: str) -> None:
             lastmod = datetime.fromtimestamp(os.path.getmtime(path)).strftime("%Y-%m-%d")
             slug = name.removesuffix(".html")
             entries.append((f"{base}/{slug}", lastmod))
+
+    # 全記事アーカイブ（archive.html, archive-2.html, ...）。存在する連番だけ拾う。
+    page = 1
+    while True:
+        name = "archive.html" if page == 1 else f"archive-{page}.html"
+        path = os.path.join(site_dir, name)
+        if not os.path.isfile(path):
+            break
+        lastmod = datetime.fromtimestamp(os.path.getmtime(path)).strftime("%Y-%m-%d")
+        slug = name.removesuffix(".html")
+        entries.append((f"{base}/{slug}", lastmod))
+        page += 1
+
+    # カテゴリ別ページ（category/*.html）
+    category_dir = os.path.join(site_dir, "category")
+    if os.path.isdir(category_dir):
+        for name in sorted(os.listdir(category_dir)):
+            if not name.endswith(".html"):
+                continue
+            path = os.path.join(category_dir, name)
+            lastmod = datetime.fromtimestamp(os.path.getmtime(path)).strftime("%Y-%m-%d")
+            slug = name.removesuffix(".html")
+            entries.append((f"{base}/category/{slug}", lastmod))
 
     articles_dir = os.path.join(site_dir, config.ARTICLES_SUBDIR)
     if os.path.isdir(articles_dir):

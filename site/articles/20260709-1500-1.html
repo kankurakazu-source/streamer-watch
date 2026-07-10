@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="『アゲインスト・ザ・ストーム』大型アプデ「Over-Haulers」配信開始、物流システムを刷新した運送人カスタマイズを解説">
 <meta name="twitter:description" content="ローグライト街づくり『アゲインスト・ザ・ストーム』に7月8日、大型アップデート「Over-Haulers」が配信された。今回の中心は運送人システムの刷新で、物流面の自由度が大きく増した。発売から継続して大型アプデを重ねてきた作品であり、既存プレイヤーはもちろん未購入層も動向を追う価値がある。">
 <meta name="twitter:image" content="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1336490/ss_c7a8ad6065ddaa4789935d28d99e24c940c2181c.1920x1080.jpg?t=1783396552">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "『アゲインスト・ザ・ストーム』大型アプデ「Over-Haulers」配信開始、物流システムを刷新した運送人カスタマイズを解説", "description": "ローグライト街づくり『アゲインスト・ザ・ストーム』に7月8日、大型アップデート「Over-Haulers」が配信された。今回の中心は運送人システムの刷新で、物流面の自由度が大きく増した。発売から継続して大型アプデを重ねてきた作品であり、既存プレイヤーはもちろん未購入層も動向を追う価値がある。", "datePublished": "2026-07-09T15:00:00+09:00", "dateModified": "2026-07-09T15:00:00+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1336490/ss_c7a8ad6065ddaa4789935d28d99e24c940c2181c.1920x1080.jpg?t=1783396552", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260709-1500-1"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "『アゲインスト・ザ・ストーム』大型アプデ「Over-Haulers」配信開始、物流システムを刷新した運送人カスタマイズを解説", "description": "ローグライト街づくり『アゲインスト・ザ・ストーム』に7月8日、大型アップデート「Over-Haulers」が配信された。今回の中心は運送人システムの刷新で、物流面の自由度が大きく増した。発売から継続して大型アプデを重ねてきた作品であり、既存プレイヤーはもちろん未購入層も動向を追う価値がある。", "datePublished": "2026-07-09T15:00:00+09:00", "dateModified": "2026-07-09T15:00:00+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1336490/ss_c7a8ad6065ddaa4789935d28d99e24c940c2181c.1920x1080.jpg?t=1783396552", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260709-1500-1"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://gadgegame.com/"}, {"@type": "ListItem", "position": 2, "name": "新作", "item": "https://gadgegame.com/category/new"}, {"@type": "ListItem", "position": 3, "name": "『アゲインスト・ザ・ストーム』大型アプデ「Over-Haulers」配信開始、物流システムを刷新した運送人カスタマイズを解説", "item": "https://gadgegame.com/articles/20260709-1500-1"}]}</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="alternate icon" href="/favicon.ico">
@@ -145,12 +145,30 @@
   .sbtn.hb{background:#00A4DE;font-size:19px;}
   @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
     .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}}
+
+  /* ===== バックフィル: 目次(TOC) + img化に伴う overflow/object-fit ===== */
+  .toc{background:rgba(255,255,255,.02);border:1px solid var(--line-soft);border-radius:14px;
+    padding:16px 20px;margin:24px 0;}
+  .toc .lbl{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+  .toc ol{margin:10px 0 0;padding-left:22px;}
+  .toc li{margin:7px 0;color:var(--muted);}
+  .toc li::marker{color:var(--accent);font-weight:800;}
+  .toc a{color:var(--text);}
+  .toc a:hover{color:var(--accent);}
+  .hero{overflow:hidden;}
+  .hero img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .gimg{overflow:hidden;}
+  .gimg img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .buybox .th{overflow:hidden;}
+  .buybox .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .acard .th{overflow:hidden;}
+  .acard .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
 </style>
 </head>
 <body>
 <header><div class="wrap head">
   <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="28" height="28"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
-  <nav><a href="../index.html">トップ</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
+  <nav><a href="../index.html">トップ</a><a href="../archive.html">全記事</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
 </div></header>
 
 <main class="wrap">
@@ -158,16 +176,17 @@
     <div class="crumb"><a href="../index.html">ホーム</a> › 新作</div>
     <span class="cat">新作</span>
     <h1>『アゲインスト・ザ・ストーム』大型アプデ「Over-Haulers」配信開始、物流システムを刷新した運送人カスタマイズを解説</h1>
-    <div class="meta">2026/07/09 ・ ガジェゲ編集部</div>
+    <div class="meta">2026/07/09 ・ 文: <a href="../about.html">ガジェゲ編集部</a></div>
     <div class="pr-note">※本記事にはアフィリエイト広告（プロモーション）が含まれます。</div>
-    <div class='hero' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1336490/ss_c7a8ad6065ddaa4789935d28d99e24c940c2181c.1920x1080.jpg?t=1783396552')"></div>
+    <div class='hero'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1336490/ss_c7a8ad6065ddaa4789935d28d99e24c940c2181c.1920x1080.jpg?t=1783396552" alt="『アゲインスト・ザ・ストーム』大型アプデ「Over-Haulers」配信開始、物流システムを刷新した運送人カスタマイズを解説のメインビジュアル" fetchpriority="high"></div>
     <p class="lead">ローグライト街づくり『アゲインスト・ザ・ストーム』に7月8日、大型アップデート「Over-Haulers」が配信された。今回の中心は運送人システムの刷新で、物流面の自由度が大きく増した。発売から継続して大型アプデを重ねてきた作品であり、既存プレイヤーはもちろん未購入層も動向を追う価値がある。</p>
     <div class='tldr'><div class='lbl'>結論</div><div class='body'>物流のカスタマイズ性が増した今回のアプデは、既存プレイヤーの復帰タイミングとして狙い目だ。</div></div>
-    <h2 class='g'>「運送人システム」刷新の内容</h2>
-<div class='gimg' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1336490/ss_c5e7f55444d87f26921736f2d228c092f4dda5f2.1920x1080.jpg?t=1783396552')"></div>
+    <nav class='toc'><div class='lbl'>目次</div><ol><li><a href="#sec-1">「運送人システム」刷新の内容</a></li><li><a href="#sec-2">継続的な大型アプデが支持される理由</a></li><li><a href="#sec-3">既存プレイヤーが確認すべきポイント</a></li><li><a href="#sec-4">未プレイ層への導線</a></li></ol></nav>
+    <h2 class='g' id='sec-1'>「運送人システム」刷新の内容</h2>
+<div class='gimg'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1336490/ss_c5e7f55444d87f26921736f2d228c092f4dda5f2.1920x1080.jpg?t=1783396552" alt="「運送人システム」刷新の内容" loading="lazy"></div>
 <p>Ver.1.10「Over-Haulers」では、資源を各施設間で運ぶ運送人の役割が見直され、物流経路や優先順位をプレイヤー側で調整できるようになった。従来は自動処理に依存していた輸送のボトルネックが、今回の刷新で解消しやすくなっている。街づくりの効率化を突き詰めたいコア層にとって影響の大きい変更だ。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1336490/header.jpg')"></div>
+      <div class="bt"><div class='th'><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1336490/header.jpg" alt="Against the Storm" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">Against the Storm</div>
         </div>
@@ -180,15 +199,15 @@
       </div>
       <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
     </div>
-<h2 class='g'>継続的な大型アプデが支持される理由</h2>
+<h2 class='g' id='sec-2'>継続的な大型アプデが支持される理由</h2>
 <p>本作は開発元Eremite Gamesが発売後も継続してメジャーアップデートを投入しており、今回の「Over-Haulers」もその一環となる。ローグライトと街づくりを融合したジャンルは息切れしやすいが、システム面への手入れが続くことでリプレイ性が保たれている点が評価につながっている。</p>
-<h2 class='g'>既存プレイヤーが確認すべきポイント</h2>
+<h2 class='g' id='sec-3'>既存プレイヤーが確認すべきポイント</h2>
 <p>物流カスタマイズの追加により、これまで詰まりやすかった資源循環の見直しが可能になった。特に高難易度シーズンをプレイしていたユーザーは、運送人の配置を再設計することで攻略効率が変わる可能性が高く、まずは自分の拠点で運送ルートを再確認するのが効率的だ。</p>
-<h2 class='g'>未プレイ層への導線</h2>
-<div class='gimg' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1336490/ss_1acb8473698a8801a83d5830c1dab3fde13dd781.1920x1080.jpg?t=1783396552')"></div>
+<h2 class='g' id='sec-4'>未プレイ層への導線</h2>
+<div class='gimg'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1336490/ss_1acb8473698a8801a83d5830c1dab3fde13dd781.1920x1080.jpg?t=1783396552" alt="未プレイ層への導線" loading="lazy"></div>
 <p>今回のアップデートはゲームの根幹である資源管理の完成度を高めるものであり、新規参入のタイミングとしても悪くない。Steamでの評価が安定している点も含め、ローグライト街づくり系に関心がある読者は購入を検討する価値がある。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1336490/header.jpg')"></div>
+      <div class="bt"><div class='th'><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1336490/header.jpg" alt="Against the Storm" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">Against the Storm</div>
         </div>
@@ -221,28 +240,28 @@
     </div>
     <div class="grid">
       <a class="acard ranked" data-cat="新作" href="/articles/20260709-1242-2.html">
-        <span class="rank">1</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2436940/ss_6dc776bb4cd7565deba0801e6c51389d008c0e74.1920x1080.jpg?t=1783515618')"></div>
+        <span class="rank">1</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2436940/ss_6dc776bb4cd7565deba0801e6c51389d008c0e74.1920x1080.jpg?t=1783515618" alt="『セフィリア』7月31日に正式リリース決定、4人マルチ対応のウサギ冒険ローグライトがついにエンディング実装" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『セフィリア』7月31日に正式リリース決定、4人マルチ対応のウサギ冒険ローグライトがついにエンディング実装</div>
           <div class="ex">TEAM HORAYは7月8日、ローグライトアクション『セフィリア』の正式リリースを7月31日に行うと発表した。正式版アップデートでは物語の結末となるエンディングが新たに実装される見込みで、早期アクセス期間中から追われていたコンテンツ不足の</div>
           <div class="d">2026/07/09</div></div>
       </a>
       <a class="acard ranked" data-cat="新作" href="/articles/20260709-1242-1.html">
-        <span class="rank">2</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665')"></div>
+        <span class="rank">2</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665" alt="『パルワールド』正式版直前、旧Mod削除を公式が異例の注意喚起 27ページ級パッチノートの一部も判明" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『パルワールド』正式版直前、旧Mod削除を公式が異例の注意喚起 27ページ級パッチノートの一部も判明</div>
           <div class="ex">Pocketpairが7月10日に予定する『パルワールド』の正式版（v1.0）配信を前に、公式が古いModの削除を強く呼びかけている。クラッシュやクエスト進行不能といった不具合を避けるための注意喚起で、あわせて長大なパッチノートの一部も明ら</div>
           <div class="d">2026/07/09</div></div>
       </a>
       <a class="acard ranked" data-cat="新作" href="/articles/20260707-2000-1.html">
-        <span class="rank">3</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2244210/4e631acbbd04158ff72f0c727ed3ac5b8c030ffc/ss_4e631acbbd04158ff72f0c727ed3ac5b8c030ffc.1920x1080.jpg?t=1781687351')"></div>
+        <span class="rank">3</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2244210/4e631acbbd04158ff72f0c727ed3ac5b8c030ffc/ss_4e631acbbd04158ff72f0c727ed3ac5b8c030ffc.1920x1080.jpg?t=1781687351" alt="『Echoes of Aincrad』7月10日発売直前、PS公式番組が特集で紹介 バンダイナムコ新作の見どころを整理" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『Echoes of Aincrad』7月10日発売直前、PS公式番組が特集で紹介 バンダイナムコ新作の見どころを整理</div>
           <div class="ex">バンダイナムコエンターテインメントが7月10日にリリースする新作「Echoes of Aincrad」を、ソニー・インタラクティブエンタテインメントのトーク番組「PLAY! PLAY! PLAY!」が特集で紹介した。発売まで残り3日となり、</div>
           <div class="d">2026/07/07</div></div>
       </a>
       <a class="acard ranked" data-cat="デバイス" href="/articles/20260707-1600-1.html">
-        <span class="rank">4</span><div class="th" style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/msistore/cabinet/products/laptop/4711377440868/4711377440868_1.jpg?_ex=600x600')"></div>
+        <span class="rank">4</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/msistore/cabinet/products/laptop/4711377440868/4711377440868_1.jpg?_ex=600x600" alt="RTX 5060搭載MSIゲーミングノート「Cyborg 15」が4万5000円引き、プライムデー先行セールで実質19万円台に" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
           <div class="ttl">RTX 5060搭載MSIゲーミングノート「Cyborg 15」が4万5000円引き、プライムデー先行セールで実質19万円台に</div>
           <div class="ex">Amazonのプライムデー先行セールで、GeForce RTX 5060 Laptop GPUを積むMSI「Cyborg 15」が大幅値引き中です。プライムデー本番（7月10〜13日）を待たずに条件が出ているため、購入検討中の人は先に価格と</div>

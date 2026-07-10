@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="『パルワールド』正式版1.0が本日ローンチ、直前トレイラーでSteam同接3.5万人と堅調な仕上がり">
 <meta name="twitter:description" content="ポケットペアは7月9日、アーリーアクセス中の『パルワールド』が7月10日にリリースする正式版1.0のローンチトレイラーを公開した。Steamでは同接約3.5万人（前日比+7.5%）を維持したまま正式版突入を迎え、ストアページでは30%オフのセールが継続中だ。アーリーアクセスから約1年半を経てついに完成版へ移行する節目で">
 <meta name="twitter:image" content="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "『パルワールド』正式版1.0が本日ローンチ、直前トレイラーでSteam同接3.5万人と堅調な仕上がり", "description": "ポケットペアは7月9日、アーリーアクセス中の『パルワールド』が7月10日にリリースする正式版1.0のローンチトレイラーを公開した。Steamでは同接約3.5万人（前日比+7.5%）を維持したまま正式版突入を迎え、ストアページでは30%オフのセールが継続中だ。アーリーアクセスから約1年半を経てついに完成版へ移行する節目で", "datePublished": "2026-07-10T11:00:00+09:00", "dateModified": "2026-07-10T11:00:00+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260710-1100-1"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "『パルワールド』正式版1.0が本日ローンチ、直前トレイラーでSteam同接3.5万人と堅調な仕上がり", "description": "ポケットペアは7月9日、アーリーアクセス中の『パルワールド』が7月10日にリリースする正式版1.0のローンチトレイラーを公開した。Steamでは同接約3.5万人（前日比+7.5%）を維持したまま正式版突入を迎え、ストアページでは30%オフのセールが継続中だ。アーリーアクセスから約1年半を経てついに完成版へ移行する節目で", "datePublished": "2026-07-10T11:00:00+09:00", "dateModified": "2026-07-10T11:00:00+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260710-1100-1"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://gadgegame.com/"}, {"@type": "ListItem", "position": 2, "name": "新作", "item": "https://gadgegame.com/category/new"}, {"@type": "ListItem", "position": 3, "name": "『パルワールド』正式版1.0が本日ローンチ、直前トレイラーでSteam同接3.5万人と堅調な仕上がり", "item": "https://gadgegame.com/articles/20260710-1100-1"}]}</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="alternate icon" href="/favicon.ico">
@@ -145,12 +145,30 @@
   .sbtn.hb{background:#00A4DE;font-size:19px;}
   @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
     .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}}
+
+  /* ===== バックフィル: 目次(TOC) + img化に伴う overflow/object-fit ===== */
+  .toc{background:rgba(255,255,255,.02);border:1px solid var(--line-soft);border-radius:14px;
+    padding:16px 20px;margin:24px 0;}
+  .toc .lbl{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+  .toc ol{margin:10px 0 0;padding-left:22px;}
+  .toc li{margin:7px 0;color:var(--muted);}
+  .toc li::marker{color:var(--accent);font-weight:800;}
+  .toc a{color:var(--text);}
+  .toc a:hover{color:var(--accent);}
+  .hero{overflow:hidden;}
+  .hero img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .gimg{overflow:hidden;}
+  .gimg img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .buybox .th{overflow:hidden;}
+  .buybox .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .acard .th{overflow:hidden;}
+  .acard .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
 </style>
 </head>
 <body>
 <header><div class="wrap head">
   <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="28" height="28"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
-  <nav><a href="../index.html">トップ</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
+  <nav><a href="../index.html">トップ</a><a href="../archive.html">全記事</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
 </div></header>
 
 <main class="wrap">
@@ -158,16 +176,17 @@
     <div class="crumb"><a href="../index.html">ホーム</a> › 新作</div>
     <span class="cat">新作</span>
     <h1>『パルワールド』正式版1.0が本日ローンチ、直前トレイラーでSteam同接3.5万人と堅調な仕上がり</h1>
-    <div class="meta">2026/07/10 ・ ガジェゲ編集部</div>
+    <div class="meta">2026/07/10 ・ 文: <a href="../about.html">ガジェゲ編集部</a></div>
     <div class="pr-note">※本記事にはアフィリエイト広告（プロモーション）が含まれます。</div>
-    <div class='hero' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665')"></div>
+    <div class='hero'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665" alt="『パルワールド』正式版1.0が本日ローンチ、直前トレイラーでSteam同接3.5万人と堅調な仕上がりのメインビジュアル" fetchpriority="high"></div>
     <p class="lead">ポケットペアは7月9日、アーリーアクセス中の『パルワールド』が7月10日にリリースする正式版1.0のローンチトレイラーを公開した。Steamでは同接約3.5万人（前日比+7.5%）を維持したまま正式版突入を迎え、ストアページでは30%オフのセールが継続中だ。アーリーアクセスから約1年半を経てついに完成版へ移行する節目であり、今日という発売日そのものが最大の検索需要になっている。</p>
     <div class='tldr'><div class='lbl'>結論</div><div class='body'>正式版1.0の配信開始が本日。買うなら30%オフのセール中に決めるのが得策で、旧Modは事前削除が必須。</div></div>
-    <h2 class='g'>Steam同接は3.5万人台、伸びは緩やかだが底堅い</h2>
-<div class='gimg' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_a9fa84f0c21bc536f00925ab4586e8c4f587c2b7.1920x1080.jpg?t=1782406665')"></div>
+    <nav class='toc'><div class='lbl'>目次</div><ol><li><a href="#sec-1">Steam同接は3.5万人台、伸びは緩やかだが底堅い</a></li><li><a href="#sec-2">ローンチトレイラーが公開、Mod周りの仕様変更も明言</a></li><li><a href="#sec-3">セールは30%オフ、購入タイミングとしては今が分かりやすい</a></li><li><a href="#sec-4">Steamトップセラーにも継続ランクイン</a></li></ol></nav>
+    <h2 class='g' id='sec-1'>Steam同接は3.5万人台、伸びは緩やかだが底堅い</h2>
+<div class='gimg'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_a9fa84f0c21bc536f00925ab4586e8c4f587c2b7.1920x1080.jpg?t=1782406665" alt="Steam同接は3.5万人台、伸びは緩やかだが底堅い" loading="lazy"></div>
 <p>直近のSteam同時接続数は約3.5万人で、前日比+7.5%という数字が出ている。派手な急伸ではないが、アーリーアクセス末期のタイトルとしては底堅い数字で、正式版移行を待つユーザーが一定数残っていたことがうかがえる。今後の1.0配信直後にどこまで積み上がるかが最初の注目ポイントになる。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1623730/header.jpg')"></div>
+      <div class="bt"><div class='th'><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1623730/header.jpg" alt="Palworld / パルワールド" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">Palworld / パルワールド</div><div class='off'>-30% セール中</div>
         </div>
@@ -180,13 +199,13 @@
       </div>
       <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
     </div>
-<h2 class='g'>ローンチトレイラーが公開、Mod周りの仕様変更も明言</h2>
+<h2 class='g' id='sec-2'>ローンチトレイラーが公開、Mod周りの仕様変更も明言</h2>
 <p>公開されたトレイラーでは1.0アップデートの全体像とともに、Mod関連の挙動についても言及があった。開発元は旧Modの無効化だけでは不十分とし、事前の削除を推奨する注意喚起を行っている。長期プレイヤーほど影響が大きいため、更新前の準備は必須といえる。</p>
-<h2 class='g'>セールは30%オフ、購入タイミングとしては今が分かりやすい</h2>
-<div class='gimg' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_b3cea7c9f04a67d784d4c6a0c157a11d6268b189.1920x1080.jpg?t=1782406665')"></div>
+<h2 class='g' id='sec-3'>セールは30%オフ、購入タイミングとしては今が分かりやすい</h2>
+<div class='gimg'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_b3cea7c9f04a67d784d4c6a0c157a11d6268b189.1920x1080.jpg?t=1782406665" alt="セールは30%オフ、購入タイミングとしては今が分かりやすい" loading="lazy"></div>
 <p>Steamストアページでは discount_percent 30%のセールが継続中で、正式版移行の節目と割引が重なっている状況だ。今後セールが縮小・終了する可能性もあるため、購入を検討している読者にとっては判断しやすいタイミングといえる。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/1623730/header.jpg')"></div>
+      <div class="bt"><div class='th'><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1623730/header.jpg" alt="Palworld / パルワールド" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">Palworld / パルワールド</div><div class='off'>-30% セール中</div>
         </div>
@@ -199,7 +218,7 @@
       </div>
       <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
     </div>
-<h2 class='g'>Steamトップセラーにも継続ランクイン</h2>
+<h2 class='g' id='sec-4'>Steamトップセラーにも継続ランクイン</h2>
 <p>Steamの本日のトップセラーリストにも『パルワールド』の名前が入っており、正式版移行のニュースが購買行動に直結していることがうかがえる。新規購入者だけでなく、長期プレイヤーの復帰も同接の下支えになっている可能性がある。</p>
 <h2 class='g'>まとめ</h2>
 <p>『パルワールド』は今日、アーリーアクセスから正式版1.0へと大きな一歩を進める。セールと発売の節目が重なる今のタイミングは、購入を迷っていた読者にとって分かりやすい判断材料になるはずだ。</p>
@@ -221,28 +240,28 @@
     </div>
     <div class="grid">
       <a class="acard ranked" data-cat="デバイス" href="/articles/20260710-0801-2.html">
-        <span class="rank">1</span><div class="th" style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_gold/dospara-r/img/item/526330.jpg?_ex=600x600')"></div>
+        <span class="rank">1</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_gold/dospara-r/img/item/526330.jpg?_ex=600x600" alt="PNY「RTX 5070 Ti Dual-Fan Slim」発売、2スロット厚スリム設計でSFF機に刺さる一枚" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
           <div class="ttl">PNY「RTX 5070 Ti Dual-Fan Slim」発売、2スロット厚スリム設計でSFF機に刺さる一枚</div>
           <div class="ex">PNYが2スロット厚のデュアルファン設計を採用した「GeForce RTX 5070 Ti Dual-Fan Slim Overclocked」を発売した。RTX 5070 Ti搭載カードは基本的に大型のトリプルファン仕様が多く、コンパクト</div>
           <div class="d">2026/07/09</div></div>
       </a>
       <a class="acard ranked" data-cat="セール分析" href="/articles/20260710-0800-1.html">
-        <span class="rank">2</span><div class="th" style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/auc-toysanta/cabinet/032103/g-5l3p0018hi-001.jpg?_ex=600x600')"></div>
+        <span class="rank">2</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/auc-toysanta/cabinet/032103/g-5l3p0018hi-001.jpg?_ex=600x600" alt="『パルワールド』正式版1.0が目前、Steamは30%オフで実質最後の値引きセール状態に" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat o">セール分析</span><span class="pill-break">速報</span></div>
           <div class="ttl">『パルワールド』正式版1.0が目前、Steamは30%オフで実質最後の値引きセール状態に</div>
           <div class="ex">ポケットペアは7月9日、アーリーアクセス中の『パルワールド』を7月10日に正式版1.0へ移行すると発表し、ローンチトレイラーを公開した。Steamストアでは現在30%オフのセールが実施中で、正式版移行後の価格設定は不明なため、値引きが続くう</div>
           <div class="d">2026/07/09</div></div>
       </a>
       <a class="acard ranked" data-cat="デバイス" href="/articles/20260709-2301-2.html">
-        <span class="rank">3</span><div class="th" style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/nanairo-s/cabinet/08014429/gd5090-32gerx3/imgrc0166298671.jpg?_ex=600x600')"></div>
+        <span class="rank">3</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/nanairo-s/cabinet/08014429/gd5090-32gerx3/imgrc0166298671.jpg?_ex=600x600" alt="Sega×Nvidia、30周年イベントを東京で開催 RTX 5090 FE抽選会も実施へ" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
           <div class="ttl">Sega×Nvidia、30周年イベントを東京で開催 RTX 5090 FE抽選会も実施へ</div>
           <div class="ex">NvidiaとSegaが提携30周年を記念するイベントを来週、秋葉原で開催するとの情報が入った。GeForce RTX 5090 Founders Editionの抽選会やRTX Sparkのプレゼンテーションが予定されており、往年のゲーマ</div>
           <div class="d">2026/07/09</div></div>
       </a>
       <a class="acard ranked" data-cat="新作" href="/articles/20260709-2300-1.html">
-        <span class="rank">4</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665')"></div>
+        <span class="rank">4</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665" alt="『パルワールド』7月10日12時半に正式版移行、ローンチトレイラー公開で前日比同接+49.8%" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『パルワールド』7月10日12時半に正式版移行、ローンチトレイラー公開で前日比同接+49.8%</div>
           <div class="ex">Pocketpairは7月10日、『パルワールド』のアーリーアクセスから正式版（v1.0）への移行を予定通り実施すると発表し、公式ローンチトレイラーを公開した。移行タイミングは同日12時半前後とされ、直前のSteam同接はすでに前日比+49</div>

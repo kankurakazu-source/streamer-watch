@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="『アークナイツ：エンドフィールド』新バージョン「向淵行」7月16日配信、メイン任務スキップで復帰・新規のハードルを大幅緩和">
 <meta name="twitter:description" content="『アークナイツ：エンドフィールド』の新バージョン「向淵行」が7月16日に配信予定であることが公式番組で明らかになった。新オペレーターや新エリアに加え、常時開放イベント「先行解放：武陵」でメイン任務のスキップが可能になる点が大きな変更点だ。復帰勢・新規勢の両方に効く調整であり、配信直前の今が最も情報価値が高いタイミングと">
 <meta name="twitter:image" content="https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "『アークナイツ：エンドフィールド』新バージョン「向淵行」7月16日配信、メイン任務スキップで復帰・新規のハードルを大幅緩和", "description": "『アークナイツ：エンドフィールド』の新バージョン「向淵行」が7月16日に配信予定であることが公式番組で明らかになった。新オペレーターや新エリアに加え、常時開放イベント「先行解放：武陵」でメイン任務のスキップが可能になる点が大きな変更点だ。復帰勢・新規勢の両方に効く調整であり、配信直前の今が最も情報価値が高いタイミングといえる。", "datePublished": "2026-07-10T23:01:16+09:00", "dateModified": "2026-07-10T23:01:16+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260710-2301-1"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "『アークナイツ：エンドフィールド』新バージョン「向淵行」7月16日配信、メイン任務スキップで復帰・新規のハードルを大幅緩和", "description": "『アークナイツ：エンドフィールド』の新バージョン「向淵行」が7月16日に配信予定であることが公式番組で明らかになった。新オペレーターや新エリアに加え、常時開放イベント「先行解放：武陵」でメイン任務のスキップが可能になる点が大きな変更点だ。復帰勢・新規勢の両方に効く調整であり、配信直前の今が最も情報価値が高いタイミングといえる。", "datePublished": "2026-07-10T23:01:16+09:00", "dateModified": "2026-07-10T23:01:16+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260710-2301-1"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://gadgegame.com/"}, {"@type": "ListItem", "position": 2, "name": "新作", "item": "https://gadgegame.com/category/new"}, {"@type": "ListItem", "position": 3, "name": "『アークナイツ：エンドフィールド』新バージョン「向淵行」7月16日配信、メイン任務スキップで復帰・新規のハードルを大幅緩和", "item": "https://gadgegame.com/articles/20260710-2301-1"}]}</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="alternate icon" href="/favicon.ico">
@@ -150,12 +150,30 @@
   .sbtn.hb{background:#00A4DE;font-size:19px;}
   @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
     .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}}
+
+  /* ===== バックフィル: 目次(TOC) + img化に伴う overflow/object-fit ===== */
+  .toc{background:rgba(255,255,255,.02);border:1px solid var(--line-soft);border-radius:14px;
+    padding:16px 20px;margin:24px 0;}
+  .toc .lbl{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+  .toc ol{margin:10px 0 0;padding-left:22px;}
+  .toc li{margin:7px 0;color:var(--muted);}
+  .toc li::marker{color:var(--accent);font-weight:800;}
+  .toc a{color:var(--text);}
+  .toc a:hover{color:var(--accent);}
+  .hero{overflow:hidden;}
+  .hero img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .gimg{overflow:hidden;}
+  .gimg img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .buybox .th{overflow:hidden;}
+  .buybox .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .acard .th{overflow:hidden;}
+  .acard .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
 </style>
 </head>
 <body>
 <header><div class="wrap head">
   <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="28" height="28"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
-  <nav><a href="../index.html">トップ</a><a href="../deals.html">🔥セール・買い時</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
+  <nav><a href="../index.html">トップ</a><a href="../archive.html">全記事</a><a href="../deals.html">🔥セール・買い時</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
 </div></header>
 
 <main class="wrap">
@@ -163,16 +181,17 @@
     <div class="crumb"><a href="../index.html">ホーム</a> › 新作</div>
     <span class="cat">新作</span>
     <h1>『アークナイツ：エンドフィールド』新バージョン「向淵行」7月16日配信、メイン任務スキップで復帰・新規のハードルを大幅緩和</h1>
-    <div class="meta">2026/07/10 ・ ガジェゲ編集部</div>
+    <div class="meta">2026/07/10 ・ 文: <a href="../about.html">ガジェゲ編集部</a></div>
     <div class="pr-note">※本記事にはアフィリエイト広告（プロモーション）が含まれます。</div>
-    <div class='hero' style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600')"></div>
+    <div class='hero'><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600" alt="『アークナイツ：エンドフィールド』新バージョン「向淵行」7月16日配信、メイン任務スキップで復帰・新規のハードルを大幅緩和のメインビジュアル" fetchpriority="high"></div>
     <p class="lead">『アークナイツ：エンドフィールド』の新バージョン「向淵行」が7月16日に配信予定であることが公式番組で明らかになった。新オペレーターや新エリアに加え、常時開放イベント「先行解放：武陵」でメイン任務のスキップが可能になる点が大きな変更点だ。復帰勢・新規勢の両方に効く調整であり、配信直前の今が最も情報価値が高いタイミングといえる。</p>
     <div class='tldr'><div class='lbl'>結論</div><div class='body'>7月16日配信の新バージョンでは進行スキップと装備製造の緩和が同時に来るため、離脱していたプレイヤーは今のうちに復帰の下調べをしておきたい。</div></div>
-    <h2 class='g'>「武陵」までのメイン任務スキップが復帰組の壁を取り除く</h2>
-<div class='gimg' style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600')"></div>
+    <nav class='toc'><div class='lbl'>目次</div><ol><li><a href="#sec-1">「武陵」までのメイン任務スキップが復帰組の壁を取り除く</a></li><li><a href="#sec-2">新オペレーター「オクギ」「リーノ」など新要素が大量投入</a></li><li><a href="#sec-3">装備品製造の緩和で上位装備の入手難度が下がる</a></li></ol></nav>
+    <h2 class='g' id='sec-1'>「武陵」までのメイン任務スキップが復帰組の壁を取り除く</h2>
+<div class='gimg'><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600" alt="「武陵」までのメイン任務スキップが復帰組の壁を取り除く" loading="lazy"></div>
 <p>HypergryphとGRYPHLINEは7月10日の予告特別番組で、新バージョン「向淵行」における常時開放イベント「先行解放：武陵」の実装を告知した。これにより、ある程度ストーリーを進めたプレイヤーは一気に第二章まで進行できるようになる。長期運営タイトルにおいて最大の離脱要因になりがちな「積みストーリー」を直接減らす調整であり、復帰組への訴求として分かりやすい。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600')"></div>
+      <div class="bt"><div class='th'><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600" alt="アークナイツ：エンドフィールド" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">アークナイツ：エンドフィールド</div>
         </div>
@@ -184,11 +203,11 @@
       </div>
       <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
     </div>
-<h2 class='g'>新オペレーター「オクギ」「リーノ」など新要素が大量投入</h2>
-<div class='gimg' style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600')"></div>
+<h2 class='g' id='sec-2'>新オペレーター「オクギ」「リーノ」など新要素が大量投入</h2>
+<div class='gimg'><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600" alt="新オペレーター「オクギ」「リーノ」など新要素が大量投入" loading="lazy"></div>
 <p>新バージョンでは新オペレーターや新エリアが多数追加される予定で、コンテンツ量としても7月16日は節目のタイミングになる。あわせて集成工業に「ガス」が新要素として登場し、生産ラインの大幅簡略化にもつながるという。周年級ではないものの、進行・生産・戦力強化が同時に更新される回だ。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600')"></div>
+      <div class="bt"><div class='th'><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600" alt="アークナイツ：エンドフィールド" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">アークナイツ：エンドフィールド</div>
         </div>
@@ -200,11 +219,11 @@
       </div>
       <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
     </div>
-<h2 class='g'>装備品製造の緩和で上位装備の入手難度が下がる</h2>
-<div class='gimg' style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600')"></div>
+<h2 class='g' id='sec-3'>装備品製造の緩和で上位装備の入手難度が下がる</h2>
+<div class='gimg'><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600" alt="装備品製造の緩和で上位装備の入手難度が下がる" loading="lazy"></div>
 <p>上位装備の製造条件についても緩和が告知され、装備部品を「1種類だけ」集めれば全ての上位装備を作れるようになるという。これまで複数素材を並行して集める必要があった煩雑さが解消される形で、育成の見通しが立てやすくなる調整だ。育成コストの高さを理由に足踏みしていた層には後押しになる。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600')"></div>
+      <div class="bt"><div class='th'><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/bookfan/cabinet/01195/bk4758098980.jpg?_ex=600x600" alt="アークナイツ：エンドフィールド" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">アークナイツ：エンドフィールド</div>
         </div>
@@ -236,28 +255,28 @@
     </div>
     <div class="grid">
       <a class="acard ranked" data-cat="新作" href="/articles/20260710-1900-1.html">
-        <span class="rank">1</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4704690/6c0a47cc2fba1b160901d1553637a764198bdc98/ss_6c0a47cc2fba1b160901d1553637a764198bdc98.1920x1080.jpg?t=1782561846')"></div>
+        <span class="rank">1</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4704690/6c0a47cc2fba1b160901d1553637a764198bdc98/ss_6c0a47cc2fba1b160901d1553637a764198bdc98.1920x1080.jpg?t=1782561846" alt="『めっちゃカメレオン』ヒカキン氏コラボの新マップが本日配信へ、Steam同接3.7万人からの再加速に注目" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『めっちゃカメレオン』ヒカキン氏コラボの新マップが本日配信へ、Steam同接3.7万人からの再加速に注目</div>
           <div class="ex">個人開発者LEMORION氏が手掛ける『めっちゃカメレオン』に、YouTuberヒカキン氏とのコラボと見られる新マップが本日夜に配信される見込みだ。発売から短期間で1500万本を突破した勢いのあるインディー作が、著名クリエイターとの接点でさ</div>
           <div class="d">2026/07/10</div></div>
       </a>
       <a class="acard ranked" data-cat="データ分析" href="/articles/20260710-1501-2.html">
-        <span class="rank">2</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1783654507')"></div>
+        <span class="rank">2</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1783654507" alt="『パルワールド』正式版1.0リリース、Steam同接が前日比+552%で約23万人に急増 レビュー動向も好調" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">データ分析</span><span class="pill-break">速報</span></div>
           <div class="ttl">『パルワールド』正式版1.0リリース、Steam同接が前日比+552%で約23万人に急増 レビュー動向も好調</div>
           <div class="ex">『Palworld / パルワールド』が本日、正式版1.0へ移行した。Steam同接は約23万人に達し、前日比では+552.2%という跳ね上がり方を見せている。直前まで続いていた30%オフのセールと正式版移行のタイミングが重なり、新規勢と復</div>
           <div class="d">2026/07/10</div></div>
       </a>
       <a class="acard ranked" data-cat="デバイス" href="/articles/20260710-1500-1.html">
-        <span class="rank">3</span><div class="th" style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/ask-direct/cabinet/item_image_202503_2/4719331763978-1.jpg?_ex=600x600')"></div>
+        <span class="rank">3</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/ask-direct/cabinet/item_image_202503_2/4719331763978-1.jpg?_ex=600x600" alt="GIGABYTE、Ryzen AI+RTX 50搭載の16型薄型ゲーミングノート「AERO X16」発売、実売48万円前後で本日より順次展開" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
           <div class="ttl">GIGABYTE、Ryzen AI+RTX 50搭載の16型薄型ゲーミングノート「AERO X16」発売、実売48万円前後で本日より順次展開</div>
           <div class="ex">GIGABYTEが7月10日、Ryzen AIとGeForce RTX 50 Laptop GPUを組み合わせた16型薄型ゲーミングノート「AERO X16」シリーズ2モデルの発売を開始した。薄型筐体に最新世代のAI対応CPUと高性能GPU</div>
           <div class="d">2026/07/10</div></div>
       </a>
       <a class="acard ranked" data-cat="新作" href="/articles/20260710-1101-2.html">
-        <span class="rank">4</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053')"></div>
+        <span class="rank">4</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053" alt="『アサシン クリード ブラック フラッグ RE:シンクロ』Steam同接10万人でシリーズ最大記録、発売直後の勢いを読む" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『アサシン クリード ブラック フラッグ RE:シンクロ』Steam同接10万人でシリーズ最大記録、発売直後の勢いを読む</div>
           <div class="ex">Ubisoftが7月9日に配信した『アサシン クリード ブラック フラッグ RE:シンクロ』が、Steam同時接続約10万人を記録し『アサシン クリード』シリーズ史上最大の盛況となった。最新のAnvilエンジンで作り直された海賊アクションが</div>

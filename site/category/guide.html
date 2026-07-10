@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>if(location.hostname.endsWith('.pages.dev')){location.replace('https://gadgegame.com'+location.pathname+location.search+location.hash);}</script>
-<title>運営者情報｜ガジェゲ</title>
-<meta name="description" content="ガジェゲ（Gadget×Game）の運営者情報。サイトの目的、コンテンツ制作方針、データソース、収益化の方法についてご案内します。">
-<link rel="canonical" href="https://gadgegame.com/about">
+<title>ガイドの記事一覧｜ガジェゲ</title>
+<meta name="description" content="ガジェゲの「ガイド」カテゴリの記事一覧（0件）。">
+<link rel="canonical" href="https://gadgegame.com/category/guide">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ガジェゲ（Gadget×Game）">
-<meta property="og:title" content="運営者情報｜ガジェゲ">
-<meta property="og:description" content="ガジェゲ（Gadget×Game）の運営者情報。サイトの目的、コンテンツ制作方針、データソース、収益化の方法についてご案内します。">
-<meta property="og:url" content="https://gadgegame.com/about">
+<meta property="og:title" content="ガイドの記事一覧｜ガジェゲ">
+<meta property="og:description" content="ガジェゲの「ガイド」カテゴリの記事一覧（0件）。">
+<meta property="og:url" content="https://gadgegame.com/category/guide">
 <meta property="og:image" content="https://gadgegame.com/ogp.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="運営者情報｜ガジェゲ">
-<meta name="twitter:description" content="ガジェゲ（Gadget×Game）の運営者情報。サイトの目的、コンテンツ制作方針、データソース、収益化の方法についてご案内します。">
+<meta name="twitter:title" content="ガイドの記事一覧｜ガジェゲ">
+<meta name="twitter:description" content="ガジェゲの「ガイド」カテゴリの記事一覧（0件）。">
 <meta name="twitter:image" content="https://gadgegame.com/ogp.png">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "運営者情報｜ガジェゲ", "description": "ガジェゲ（Gadget×Game）の運営者情報。サイトの目的、コンテンツ制作方針、データソース、収益化の方法についてご案内します。", "url": "https://gadgegame.com/about"}</script>
+<script type="application/ld+json"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "ガイドの記事一覧｜ガジェゲ", "description": "ガジェゲの「ガイド」カテゴリの記事一覧（0件）。", "url": "https://gadgegame.com/category/guide"}</script></script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="alternate icon" href="/favicon.ico">
@@ -26,7 +26,7 @@
   :root{
     --bg:#0a0e16; --bg2:#0c1220; --card:#121a29; --card-hi:#172135; --line:#243046; --line-soft:#1a2334;
     --text:#eef2f8; --muted:#9db0c6; --dim:#647689;
-    --accent:#39d8ff; --accent-2:#8a6bff; --sale:#ff6a3d; --green:#2fd27e; --violet:#a78bfa; --blue:#5aa8ff;
+    --accent:#39d8ff; --accent-2:#8a6bff; --sale:#ff6a3d; --green:#2fd27e; --violet:#a78bfa;
     --shadow:0 10px 30px rgba(0,0,0,.45);
     --grad:linear-gradient(135deg,var(--accent),var(--accent-2));
   }
@@ -70,13 +70,46 @@
   .hero h1 .c{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
   .hero p{margin:0;color:var(--muted);font-size:15px;max-width:640px;line-height:1.85;}
 
-  main{padding:36px 0 10px;}
-  .content{max-width:760px;margin:0 auto 10px;}
-  .content h2{font-size:19px;margin:34px 0 12px;padding-top:22px;border-top:1px solid var(--line-soft);
-    font-weight:800;letter-spacing:.01em;}
-  .content h2:first-of-type{border-top:none;padding-top:0;margin-top:0;}
-  .content p{margin:12px 0;color:#d7e0ec;font-size:14.5px;line-height:1.95;}
-  .content .updated{font-size:12px;color:var(--dim);margin:0 0 8px;}
+  main{padding:34px 0 10px;}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));}
+  .acard{position:relative;display:flex;gap:15px;background:var(--card);border:1px solid var(--line-soft);
+    border-radius:16px;padding:14px;overflow:hidden;transition:transform .22s,border-color .22s,box-shadow .22s,background .22s;}
+  .acard:hover{transform:translateY(-4px);background:var(--card-hi);border-color:rgba(57,216,255,.5);
+    box-shadow:var(--shadow),0 8px 34px rgba(57,216,255,.16);}
+  .acard .th{width:120px;height:82px;flex:0 0 auto;border-radius:11px;background:var(--bg2) center/cover no-repeat;overflow:hidden;transition:filter .22s;}
+  .acard .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .acard:hover .th{filter:brightness(1.08) saturate(1.05);}
+  .acard .th.noimg{background:radial-gradient(120px 80px at 70% 20%,rgba(138,107,255,.35),transparent 60%),linear-gradient(135deg,#182236,#10182a);position:relative;}
+  .acard .th.noimg::after{content:"GADGET";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:10px;font-weight:800;letter-spacing:.22em;}
+  .acbody{min-width:0;display:flex;flex-direction:column;}
+  .acmeta{display:flex;align-items:center;gap:7px;margin-bottom:7px;flex-wrap:wrap;}
+  .cat{display:inline-block;font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:100px;letter-spacing:.02em;
+    background:rgba(57,216,255,.14);color:var(--accent);border:1px solid rgba(57,216,255,.25);}
+  .cat.o{background:rgba(255,106,61,.15);color:var(--sale);border-color:rgba(255,106,61,.3);}
+  .cat.g{background:rgba(47,210,126,.15);color:var(--green);border-color:rgba(47,210,126,.3);}
+  .cat.p{background:rgba(167,139,250,.16);color:var(--violet);border-color:rgba(167,139,250,.3);}
+  .pill-break{font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 9px;border-radius:100px;color:#fff;
+    background:linear-gradient(135deg,#ff6a3d,#ff2d6e);box-shadow:0 0 14px rgba(255,45,110,.45);}
+  .acard .ttl{font-size:15px;font-weight:700;margin:0 0 6px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard:hover .ttl{color:#fff;}
+  .acard .ex{font-size:12px;color:var(--muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard .d{font-size:11px;color:var(--dim);margin-top:auto;padding-top:8px;}
+  .rank{position:absolute;top:8px;left:8px;z-index:2;min-width:26px;height:26px;padding:0 6px;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:14px;color:#07101c;background:var(--grad);border-radius:8px;box-shadow:0 4px 14px rgba(57,216,255,.4);}
+
+  .empty{grid-column:1/-1;color:var(--muted);font-size:13.5px;padding:26px 18px;text-align:center;
+    background:var(--card);border:1px dashed var(--line);border-radius:14px;}
+
+  .pager{display:flex;align-items:center;justify-content:center;gap:14px;margin:34px 0 6px;flex-wrap:wrap;}
+  .pager .pg{font-size:13px;font-weight:700;color:var(--muted);padding:8px 14px;border-radius:10px;
+    border:1px solid var(--line);transition:color .15s,border-color .15s;}
+  .pager a.pg:hover{color:var(--text);border-color:var(--accent);}
+  .pager .pg.disabled{opacity:.35;pointer-events:none;}
+  .pager .pg-nums{display:flex;gap:6px;}
+  .pager .pg-num{font-size:13px;font-weight:700;color:var(--muted);width:32px;height:32px;display:inline-flex;
+    align-items:center;justify-content:center;border-radius:9px;border:1px solid var(--line);}
+  .pager a.pg-num:hover{color:var(--text);border-color:var(--accent);}
+  .pager .pg-num.on{background:var(--grad);color:#07101c;border-color:transparent;}
 
   footer{margin-top:44px;border-top:1px solid var(--line-soft);padding:26px 0 46px;color:var(--dim);font-size:12px;
     background:linear-gradient(180deg,transparent,rgba(138,107,255,.04));}
@@ -92,57 +125,42 @@
     .hero h1{font-size:24px;}
     nav{gap:2px;-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent);}
     nav a{padding:8px 10px;font-size:13px;}
+    .grid{grid-template-columns:1fr;gap:13px;}
+    .acard .th{width:110px;height:74px;}
   }
 </style>
 </head>
 <body>
 <header><div class="wrap head">
-  <a class="logo" href="index.html"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="30" height="30"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
+  <a class="logo" href="../index.html"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="30" height="30"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
   <nav>
-    <a href="index.html#trending">いま読まれている</a>
-    <a href="index.html#games">ゲーム</a>
-    <a href="index.html#devices">デバイス</a>
-    <a href="archive.html">全記事</a>
-    <a href="deals.html">🔥セール・買い時</a>
-    <a class="on" href="about.html">運営者情報</a>
-    <a href="privacy.html">プライバシーポリシー</a>
+    <a href="../index.html#trending">いま読まれている</a>
+    <a href="../index.html#games">ゲーム</a>
+    <a href="../index.html#devices">デバイス</a>
+    <a href="../archive.html">全記事</a>
+    <a href="../deals.html">🔥セール・買い時</a>
     <a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a>
   </nav>
 </div></header>
 
 <section class="hero">
   <div class="wrap">
-    <div class="kicker">About Us</div>
-    <h1>運営者<span class="c">情報</span></h1>
-    <p>ガジェゲ（Gadget×Game）の運営体制と、記事づくりに対する考え方をご案内します。</p>
+    <div class="kicker">Category</div>
+    <h1>ガイド<span class="c">の記事</span></h1>
+    <p>「ガイド」カテゴリの記事を新しい順に掲載（0件）。</p>
   </div>
 </section>
 
 <main class="wrap">
-  <div class="content">
-    <h2>サイト概要</h2>
-    <p>「ガジェゲ（Gadget×Game）」は、ゲームとゲーミングデバイスの情報をデータドリブンに発信するメディアです。2026年に開設し、「ガジェゲ編集部」が個人で運営しています。</p>
-
-    <h2>サイトの目的</h2>
-    <p>Steam・Twitch・YouTubeなどの公開データと、国内外のゲームメディアのニュースをもとに、話題のゲームタイトルやゲーミングデバイスの動向を毎日ピックアップしてお届けすることを目的としています。</p>
-
-    <h2>コンテンツ制作方針</h2>
-    <p>掲載する記事は、公開されているデータやニュースを基にした事実ベースの内容作成を心がけています。記事中でご紹介する価格・割引率は、あくまで掲載時点の参考値です。実際の価格・在庫状況・セール内容は変動しますので、最新の情報は必ず各ストアの公式ページでご確認ください。</p>
-
-    <h2>データソース</h2>
-    <p>Steam公式API、Twitch、YouTube、国内外の主要ゲームメディアのRSSフィードなど、公開されている情報を情報源としています。</p>
-
-    <h2>収益について</h2>
-    <p>当サイトは、Amazonアソシエイト・楽天アフィリエイト・DMMアフィリエイトなどのアフィリエイトプログラムを利用しており、記事内で紹介する商品・サービスの成約を通じて収益を得ることがあります。広告を含む記事には、その旨を記事内に表示しています。なお、Amazonのアソシエイトとして、当メディアは適格販売により収入を得ています。</p>
-
-    <h2>お問い合わせ</h2>
-    <p>サイトに関するお問い合わせは、X（<a href="https://x.com/game_infoman" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;">@game_infoman</a>）のDMまでお願いいたします。</p>
+  <div class="grid">
+      <div class="empty">まだ記事がありません。毎日自動更新中。</div>
   </div>
+
 
   <footer>
     <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。Amazonのアソシエイトとして、当メディアは適格販売により収入を得ています。</div>
     <div class="social"><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg> @game_infoman</a></div>
-    <div class="flinks"><a href="about.html">運営者情報</a> ・ <a href="privacy.html">プライバシーポリシー</a></div>
+    <div class="flinks"><a href="../about.html">運営者情報</a> ・ <a href="../privacy.html">プライバシーポリシー</a></div>
     (c) 2026 ガジェゲ（Gadget×Game） ／ データで見るゲームトレンド
   </footer>
 </main>

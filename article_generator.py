@@ -407,7 +407,15 @@ def publish(article: dict, hero_url: str, seq: int = 1) -> dict:
     except FileNotFoundError:
         print("[WARN] site/index.html が見つからず、一覧更新はスキップしました。")
 
-    # sitemap.xml / robots.txt を最新の記事一覧で更新
+    # 全記事アーカイブ／カテゴリ別ページを最新の記事一覧で再生成（失敗しても記事公開は止めない）
+    try:
+        all_arts = storage.list_articles(config.HISTORY_DB, limit=10000)
+        article_render.render_archive_pages(all_arts, config.SITE_DIR, config.SITE_BASE_URL)
+        article_render.render_category_pages(all_arts, config.SITE_DIR, config.SITE_BASE_URL)
+    except Exception as e:
+        print(f"[WARN] アーカイブ/カテゴリページの生成に失敗: {e}")
+
+    # sitemap.xml / robots.txt を最新の記事一覧・アーカイブ/カテゴリページで更新
     try:
         article_render.write_sitemap(config.SITE_DIR, config.SITE_BASE_URL)
     except Exception as e:
@@ -591,7 +599,20 @@ def main():
         deals_tracker.render_deals_page(deals_data, os.path.join(config.SITE_DIR, "deals.html"))
         print(f"=== セール・買い時トラッカー更新: {len(deals_data)}件 ===")
     except Exception as e:
+        deals_data = []
         print(f"[WARN] セール・買い時トラッカーの更新に失敗: {e}")
+
+    # トップページの「いま買い時」ストリップをdeals_dataで更新
+    try:
+        index_path = os.path.join(config.SITE_DIR, "index.html")
+        with open(index_path, "r", encoding="utf-8") as f:
+            index_html = f.read()
+        new_index = deals_tracker.inject_deals_strip(index_html, deals_data)
+        if new_index != index_html:
+            with open(index_path, "w", encoding="utf-8") as f:
+                f.write(new_index)
+    except Exception as e:
+        print(f"[WARN] いま買い時ストリップの更新に失敗: {e}")
 
     if not game_watch.has_signal(collected):
         print("収集データが無かったため、記事生成を中止しました。")

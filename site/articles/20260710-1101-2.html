@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="『アサシン クリード ブラック フラッグ RE:シンクロ』Steam同接10万人でシリーズ最大記録、発売直後の勢いを読む">
 <meta name="twitter:description" content="Ubisoftが7月9日に配信した『アサシン クリード ブラック フラッグ RE:シンクロ』が、Steam同時接続約10万人を記録し『アサシン クリード』シリーズ史上最大の盛況となった。最新のAnvilエンジンで作り直された海賊アクションが、発売直後から高い関心を集めている。今日読めば、なぜこのリメイクが数字で結果を出">
 <meta name="twitter:image" content="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "『アサシン クリード ブラック フラッグ RE:シンクロ』Steam同接10万人でシリーズ最大記録、発売直後の勢いを読む", "description": "Ubisoftが7月9日に配信した『アサシン クリード ブラック フラッグ RE:シンクロ』が、Steam同時接続約10万人を記録し『アサシン クリード』シリーズ史上最大の盛況となった。最新のAnvilエンジンで作り直された海賊アクションが、発売直後から高い関心を集めている。今日読めば、なぜこのリメイクが数字で結果を出", "datePublished": "2026-07-10T11:01:00+09:00", "dateModified": "2026-07-10T11:01:00+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260710-1101-2"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "『アサシン クリード ブラック フラッグ RE:シンクロ』Steam同接10万人でシリーズ最大記録、発売直後の勢いを読む", "description": "Ubisoftが7月9日に配信した『アサシン クリード ブラック フラッグ RE:シンクロ』が、Steam同時接続約10万人を記録し『アサシン クリード』シリーズ史上最大の盛況となった。最新のAnvilエンジンで作り直された海賊アクションが、発売直後から高い関心を集めている。今日読めば、なぜこのリメイクが数字で結果を出", "datePublished": "2026-07-10T11:01:00+09:00", "dateModified": "2026-07-10T11:01:00+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260710-1101-2"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://gadgegame.com/"}, {"@type": "ListItem", "position": 2, "name": "新作", "item": "https://gadgegame.com/category/new"}, {"@type": "ListItem", "position": 3, "name": "『アサシン クリード ブラック フラッグ RE:シンクロ』Steam同接10万人でシリーズ最大記録、発売直後の勢いを読む", "item": "https://gadgegame.com/articles/20260710-1101-2"}]}</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="alternate icon" href="/favicon.ico">
@@ -145,12 +145,30 @@
   .sbtn.hb{background:#00A4DE;font-size:19px;}
   @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
     .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}}
+
+  /* ===== バックフィル: 目次(TOC) + img化に伴う overflow/object-fit ===== */
+  .toc{background:rgba(255,255,255,.02);border:1px solid var(--line-soft);border-radius:14px;
+    padding:16px 20px;margin:24px 0;}
+  .toc .lbl{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+  .toc ol{margin:10px 0 0;padding-left:22px;}
+  .toc li{margin:7px 0;color:var(--muted);}
+  .toc li::marker{color:var(--accent);font-weight:800;}
+  .toc a{color:var(--text);}
+  .toc a:hover{color:var(--accent);}
+  .hero{overflow:hidden;}
+  .hero img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .gimg{overflow:hidden;}
+  .gimg img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .buybox .th{overflow:hidden;}
+  .buybox .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .acard .th{overflow:hidden;}
+  .acard .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
 </style>
 </head>
 <body>
 <header><div class="wrap head">
   <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="28" height="28"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
-  <nav><a href="../index.html">トップ</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
+  <nav><a href="../index.html">トップ</a><a href="../archive.html">全記事</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
 </div></header>
 
 <main class="wrap">
@@ -158,16 +176,17 @@
     <div class="crumb"><a href="../index.html">ホーム</a> › 新作</div>
     <span class="cat">新作</span>
     <h1>『アサシン クリード ブラック フラッグ RE:シンクロ』Steam同接10万人でシリーズ最大記録、発売直後の勢いを読む</h1>
-    <div class="meta">2026/07/10 ・ ガジェゲ編集部</div>
+    <div class="meta">2026/07/10 ・ 文: <a href="../about.html">ガジェゲ編集部</a></div>
     <div class="pr-note">※本記事にはアフィリエイト広告（プロモーション）が含まれます。</div>
-    <div class='hero' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053')"></div>
+    <div class='hero'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/5de8c44752bdbc724b905b76bc5023bbff57547f/ss_5de8c44752bdbc724b905b76bc5023bbff57547f.1920x1080.jpg?t=1783617053" alt="『アサシン クリード ブラック フラッグ RE:シンクロ』Steam同接10万人でシリーズ最大記録、発売直後の勢いを読むのメインビジュアル" fetchpriority="high"></div>
     <p class="lead">Ubisoftが7月9日に配信した『アサシン クリード ブラック フラッグ RE:シンクロ』が、Steam同時接続約10万人を記録し『アサシン クリード』シリーズ史上最大の盛況となった。最新のAnvilエンジンで作り直された海賊アクションが、発売直後から高い関心を集めている。今日読めば、なぜこのリメイクが数字で結果を出しているのかが分かる。</p>
     <div class='tldr'><div class='lbl'>結論</div><div class='body'>『アサクリ4』世代のファンから新規層まで巻き込み、シリーズ最大の同接を記録した注目のリメイク。今が最も話題性の高いタイミングだ。</div></div>
-    <h2 class='g'>リリース1時間で同接約10万人という異例のスタート</h2>
-<div class='gimg' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/f084448247301f9b445e92ceb202eaa591cf65d1/ss_f084448247301f9b445e92ceb202eaa591cf65d1.1920x1080.jpg?t=1783617053')"></div>
+    <nav class='toc'><div class='lbl'>目次</div><ol><li><a href="#sec-1">リリース1時間で同接約10万人という異例のスタート</a></li><li><a href="#sec-2">Twitchでも視聴数が急伸、前日比+439%を記録</a></li><li><a href="#sec-3">好調な発売の裏でユービーアイソフト バルセロナのレイオフも報じられる</a></li><li><a href="#sec-4">Steamストアの動きと購入を検討する読者へ</a></li></ol></nav>
+    <h2 class='g' id='sec-1'>リリース1時間で同接約10万人という異例のスタート</h2>
+<div class='gimg'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/f084448247301f9b445e92ceb202eaa591cf65d1/ss_f084448247301f9b445e92ceb202eaa591cf65d1.1920x1080.jpg?t=1783617053" alt="リリース1時間で同接約10万人という異例のスタート" loading="lazy"></div>
 <p>Steamでの同時接続プレイヤー数は配信からわずか1時間で約10万人に達したという。Steamプレイヤー数データでも6万人超を記録しており、シリーズ過去作を上回る出足の良さがうかがえる。オリジナル版『アサシン クリード4 ブラック フラッグ』が長く愛されてきた作品であることに加え、最新のAnvilエンジンで再構築された点が支持を集めた要因といえる。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/3751950/header.jpg')"></div>
+      <div class="bt"><div class='th'><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/3751950/header.jpg" alt="アサシン クリード ブラック フラッグ RE:シンクロ" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">アサシン クリード ブラック フラッグ RE:シンクロ</div>
         </div>
@@ -180,11 +199,11 @@
       </div>
       <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
     </div>
-<h2 class='g'>Twitchでも視聴数が急伸、前日比+439%を記録</h2>
-<div class='gimg' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/a79f6dada7c7ca555c1be440793ee46813acf9ca/ss_a79f6dada7c7ca555c1be440793ee46813acf9ca.1920x1080.jpg?t=1783617053')"></div>
+<h2 class='g' id='sec-2'>Twitchでも視聴数が急伸、前日比+439%を記録</h2>
+<div class='gimg'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/a79f6dada7c7ca555c1be440793ee46813acf9ca/ss_a79f6dada7c7ca555c1be440793ee46813acf9ca.1920x1080.jpg?t=1783617053" alt="Twitchでも視聴数が急伸、前日比+439%を記録" loading="lazy"></div>
 <p>Twitchの人気ゲームランキングでも『Assassin&#x27;s Creed Black Flag Resynced』カテゴリが約4.8万人の視聴者を集め、前日比で+439.4%という急伸を見せている。配信数自体は6件にとどまるが、1配信あたりの視聴者数が非常に高く、注目度の集中がうかがえる数字だ。発売直後特有の一時的な盛り上がりである可能性はあるが、初動としては強いシグナルだ。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/3751950/header.jpg')"></div>
+      <div class="bt"><div class='th'><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/3751950/header.jpg" alt="アサシン クリード ブラック フラッグ RE:シンクロ" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">アサシン クリード ブラック フラッグ RE:シンクロ</div>
         </div>
@@ -197,13 +216,13 @@
       </div>
       <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
     </div>
-<h2 class='g'>好調な発売の裏でユービーアイソフト バルセロナのレイオフも報じられる</h2>
+<h2 class='g' id='sec-3'>好調な発売の裏でユービーアイソフト バルセロナのレイオフも報じられる</h2>
 <p>一方で、本作のローンチ成功と同時に、ユービーアイソフト バルセロナのスタジオで51名のレイオフが行われたとの報道もある。「成功しても安全ではない」という声も伝えられており、好調な販売成績と組織再編が同時に進む業界の構造的な課題を映す事例といえる。この点は今後の展開を見る上で押さえておきたい情報だ。</p>
-<h2 class='g'>Steamストアの動きと購入を検討する読者へ</h2>
-<div class='gimg' style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/2fc01441720a7f301b3f0abced79b7d9159cb105/ss_2fc01441720a7f301b3f0abced79b7d9159cb105.1920x1080.jpg?t=1783617053')"></div>
+<h2 class='g' id='sec-4'>Steamストアの動きと購入を検討する読者へ</h2>
+<div class='gimg'><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3751950/2fc01441720a7f301b3f0abced79b7d9159cb105/ss_2fc01441720a7f301b3f0abced79b7d9159cb105.1920x1080.jpg?t=1783617053" alt="Steamストアの動きと購入を検討する読者へ" loading="lazy"></div>
 <p>現時点で本作に割引は付いておらず、Steamの売れ筋ランキング上位に定価のまま入っている。話題性の高い今のタイミングで購入を検討する読者は多いと見られるが、セールを待つか今すぐ体験するかは、シリーズファンかどうかで判断が分かれるところだろう。</p>
 <div class="buybox">
-      <div class="bt"><div class='th' style="background-image:url('https://cdn.cloudflare.steamstatic.com/steam/apps/3751950/header.jpg')"></div>
+      <div class="bt"><div class='th'><img src="https://cdn.cloudflare.steamstatic.com/steam/apps/3751950/header.jpg" alt="アサシン クリード ブラック フラッグ RE:シンクロ" loading="lazy"></div>
         <div style="flex:1">
           <div class="name">アサシン クリード ブラック フラッグ RE:シンクロ</div>
         </div>
@@ -236,28 +255,28 @@
     </div>
     <div class="grid">
       <a class="acard ranked" data-cat="新作" href="/articles/20260710-1100-1.html">
-        <span class="rank">1</span><div class="th" style="background-image:url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665')"></div>
+        <span class="rank">1</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/ss_f81b7c4f20be3b99f76a1415c4cdb9b444c99b97.1920x1080.jpg?t=1782406665" alt="『パルワールド』正式版1.0が本日ローンチ、直前トレイラーでSteam同接3.5万人と堅調な仕上がり" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
           <div class="ttl">『パルワールド』正式版1.0が本日ローンチ、直前トレイラーでSteam同接3.5万人と堅調な仕上がり</div>
           <div class="ex">ポケットペアは7月9日、アーリーアクセス中の『パルワールド』が7月10日にリリースする正式版1.0のローンチトレイラーを公開した。Steamでは同接約3.5万人（前日比+7.5%）を維持したまま正式版突入を迎え、ストアページでは30%オフの</div>
           <div class="d">2026/07/10</div></div>
       </a>
       <a class="acard ranked" data-cat="デバイス" href="/articles/20260710-0801-2.html">
-        <span class="rank">2</span><div class="th" style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_gold/dospara-r/img/item/526330.jpg?_ex=600x600')"></div>
+        <span class="rank">2</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_gold/dospara-r/img/item/526330.jpg?_ex=600x600" alt="PNY「RTX 5070 Ti Dual-Fan Slim」発売、2スロット厚スリム設計でSFF機に刺さる一枚" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
           <div class="ttl">PNY「RTX 5070 Ti Dual-Fan Slim」発売、2スロット厚スリム設計でSFF機に刺さる一枚</div>
           <div class="ex">PNYが2スロット厚のデュアルファン設計を採用した「GeForce RTX 5070 Ti Dual-Fan Slim Overclocked」を発売した。RTX 5070 Ti搭載カードは基本的に大型のトリプルファン仕様が多く、コンパクト</div>
           <div class="d">2026/07/09</div></div>
       </a>
       <a class="acard ranked" data-cat="セール分析" href="/articles/20260710-0800-1.html">
-        <span class="rank">3</span><div class="th" style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/auc-toysanta/cabinet/032103/g-5l3p0018hi-001.jpg?_ex=600x600')"></div>
+        <span class="rank">3</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/auc-toysanta/cabinet/032103/g-5l3p0018hi-001.jpg?_ex=600x600" alt="『パルワールド』正式版1.0が目前、Steamは30%オフで実質最後の値引きセール状態に" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat o">セール分析</span><span class="pill-break">速報</span></div>
           <div class="ttl">『パルワールド』正式版1.0が目前、Steamは30%オフで実質最後の値引きセール状態に</div>
           <div class="ex">ポケットペアは7月9日、アーリーアクセス中の『パルワールド』を7月10日に正式版1.0へ移行すると発表し、ローンチトレイラーを公開した。Steamストアでは現在30%オフのセールが実施中で、正式版移行後の価格設定は不明なため、値引きが続くう</div>
           <div class="d">2026/07/09</div></div>
       </a>
       <a class="acard ranked" data-cat="デバイス" href="/articles/20260709-2301-2.html">
-        <span class="rank">4</span><div class="th" style="background-image:url('https://thumbnail.image.rakuten.co.jp/@0_mall/nanairo-s/cabinet/08014429/gd5090-32gerx3/imgrc0166298671.jpg?_ex=600x600')"></div>
+        <span class="rank">4</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/nanairo-s/cabinet/08014429/gd5090-32gerx3/imgrc0166298671.jpg?_ex=600x600" alt="Sega×Nvidia、30周年イベントを東京で開催 RTX 5090 FE抽選会も実施へ" loading="lazy"></div>
         <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
           <div class="ttl">Sega×Nvidia、30周年イベントを東京で開催 RTX 5090 FE抽選会も実施へ</div>
           <div class="ex">NvidiaとSegaが提携30周年を記念するイベントを来週、秋葉原で開催するとの情報が入った。GeForce RTX 5090 Founders Editionの抽選会やRTX Sparkのプレゼンテーションが予定されており、往年のゲーマ</div>
