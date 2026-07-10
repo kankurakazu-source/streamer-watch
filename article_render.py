@@ -182,6 +182,7 @@ _PAGE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if(location.hostname.endsWith('.pages.dev')){{location.replace('https://gadgegame.com'+location.pathname+location.search+location.hash);}}</script>
 <title>{title} ｜ガジェゲ</title>
 <meta name="description" content="{og_desc}">
 {canonical_tag}

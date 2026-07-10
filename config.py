@@ -183,9 +183,10 @@ HISTORY_DB = f"{DATA_DIR}/history.sqlite3"
 SITE_DIR = "site"                      # 静的サイトのルート
 ARTICLES_SUBDIR = "articles"           # 記事HTMLの置き場所（site配下）
 # 記事のX投稿に付ける公開URLのベース。末尾スラッシュ有無どちらでも可。
-# Cloudflare Pages で公開中（汎用URL・個人名なし）。
-# 環境変数 SITE_BASE_URL があればそれを優先する（独自ドメイン移行時に上書き可能）。
-SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "") or "https://game-watch.pages.dev"
+# Cloudflare Pages で公開中（汎用URL・個人名なし）。独自ドメイン(gadgegame.com)に移行済み。
+# pages.dev URL(https://game-watch.pages.dev)も引き続き同内容を配信するが、正規URLは新ドメインに統一する。
+# 環境変数 SITE_BASE_URL があればそれを優先する（再移行時等に上書き可能）。
+SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "") or "https://gadgegame.com"
 
 # 記事のカテゴリ候補（AIはこの中から選ぶ）
 # 「ガイド」= エバーグリーン記事（比較・ランキング・選び方等の資産型記事）用カテゴリ。
@@ -233,6 +234,9 @@ RAKUTEN_AFFILIATE_ID = os.environ.get("RAKUTEN_AFFILIATE_ID", "") or "558dd68a.a
 # アプリの「Allowed websites」に RAKUTEN_REFERRER のドメインを登録しておくこと。
 RAKUTEN_APP_ID = os.environ.get("RAKUTEN_APP_ID", "") or ""            # アプリケーションID(UUID形式)
 RAKUTEN_ACCESS_KEY = os.environ.get("RAKUTEN_ACCESS_KEY", "") or ""    # アクセスキー(pk_...)
-# API呼び出し時に送る Origin/Referer。未設定なら SITE_BASE_URL を使う（登録ドメインと一致させる）。
-RAKUTEN_REFERRER = os.environ.get("RAKUTEN_REFERRER", "") or SITE_BASE_URL
+# API呼び出し時に送る Origin/Referer。未設定時の既定は SITE_BASE_URL に追従させず、
+# 楽天アプリのAllowed websitesに登録済みの旧ドメイン(pages.dev)に固定する。
+# SITE_BASE_URLは独自ドメイン移行後gadgegame.comになったが、楽天側の登録ドメインは
+# 変更していないため、ここは意図的に旧ドメインのまま固定する（.envのRAKUTEN_REFERRERで上書き可）。
+RAKUTEN_REFERRER = os.environ.get("RAKUTEN_REFERRER", "") or "https://game-watch.pages.dev"
 DMM_AFFILIATE_ID = os.environ.get("DMM_AFFILIATE_ID", "") or "gameinfoman-001"  # DMMアフィリエイトID(af_id)

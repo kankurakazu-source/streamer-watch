@@ -374,6 +374,7 @@ def render_deals_page(deals: list[dict], out_path: str) -> None:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if(location.hostname.endsWith('.pages.dev')){{location.replace('https://gadgegame.com'+location.pathname+location.search+location.hash);}}</script>
 <title>{_esc(title)}</title>
 <meta name="description" content="{_esc(description)}">
 {canonical_tag}
