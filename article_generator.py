@@ -446,11 +446,13 @@ def build_post_image(article: dict, slug: str) -> str | None:
 
 
 def build_public_url(slug: str) -> str:
-    """公開URL（SITE_BASE_URLがあれば）。無ければ空（未公開＝Xにはまだ載せられない）。"""
+    """公開URL（SITE_BASE_URLがあれば）。無ければ空（未公開＝Xにはまだ載せられない）。
+    Cloudflare Pagesが.html付きURLを拡張子なしに308リダイレクトするため、拡張子なしの正規URLを返す。
+    """
     base = (config.SITE_BASE_URL or "").strip()
     if not base:
         return ""
-    return f"{base.rstrip('/')}/{config.ARTICLES_SUBDIR}/{slug}.html"
+    return f"{base.rstrip('/')}/{config.ARTICLES_SUBDIR}/{slug}"
 
 
 # --- 実行成功マーカー（1時間後リトライの二重生成防止に使う） ---

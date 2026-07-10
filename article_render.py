@@ -599,11 +599,13 @@ def write_sitemap(site_dir: str, base_url: str) -> None:
         entries.append((f"{base}/", lastmod))
 
     # site直下の特定ページ（テンプレ類は含めない明示リスト方式）
+    # Cloudflare Pagesが.html付きURLを拡張子なしに308リダイレクトするため、locは拡張子なしで登録する。
     for name in ("deals.html",):
         path = os.path.join(site_dir, name)
         if os.path.isfile(path):
             lastmod = datetime.fromtimestamp(os.path.getmtime(path)).strftime("%Y-%m-%d")
-            entries.append((f"{base}/{name}", lastmod))
+            slug = name.removesuffix(".html")
+            entries.append((f"{base}/{slug}", lastmod))
 
     articles_dir = os.path.join(site_dir, config.ARTICLES_SUBDIR)
     if os.path.isdir(articles_dir):
@@ -612,7 +614,8 @@ def write_sitemap(site_dir: str, base_url: str) -> None:
                 continue
             path = os.path.join(articles_dir, name)
             lastmod = datetime.fromtimestamp(os.path.getmtime(path)).strftime("%Y-%m-%d")
-            entries.append((f"{base}/{config.ARTICLES_SUBDIR}/{name}", lastmod))
+            slug = name.removesuffix(".html")
+            entries.append((f"{base}/{config.ARTICLES_SUBDIR}/{slug}", lastmod))
 
     urls_xml = "\n".join(
         f"  <url>\n    <loc>{_esc(u)}</loc>\n    <lastmod>{lm}</lastmod>\n  </url>"

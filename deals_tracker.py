@@ -341,7 +341,8 @@ def render_deals_page(deals: list[dict], out_path: str) -> None:
     """deals（build_deals_dataの戻り値）から site/deals.html を書き出す。"""
     now_jst = datetime.now(JST)
     base = (config.SITE_BASE_URL or "").rstrip("/")
-    canonical = f"{base}/deals.html" if base else ""
+    # Cloudflare Pagesが.html付きURLを拡張子なしに308リダイレクトするため、拡張子なしの正規URLにする。
+    canonical = f"{base}/deals" if base else ""
     og_image = f"{base}/ogp.png" if base else ""
     title = "Steamセール・買い時トラッカー｜ガジェゲ"
     description = ("主要タイトルの割引率を毎日自動記録し、過去の割引実績から"
