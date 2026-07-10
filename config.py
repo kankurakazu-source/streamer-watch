@@ -224,7 +224,7 @@ X_LINKLESS_MODE = _env_bool("X_LINKLESS_MODE", True)
 # アフィリエイト設定（取得後に各購入リンクへ付与する。未設定なら通常の検索リンク）
 # これらは公開リンクに埋め込まれる非秘匿情報。env が無ければ下の既定値（直書き）を使う。
 # 直書きしておくとローカルでもGitHub Actionsでも設定なしで機能する。
-AMAZON_ASSOC_TAG = os.environ.get("AMAZON_ASSOC_TAG", "") or ""        # Amazonアソシエイトのタグ(例: yourtag-22)
+AMAZON_ASSOC_TAG = os.environ.get("AMAZON_ASSOC_TAG", "") or "gadgegame-22"  # Amazonアソシエイトのタグ
 RAKUTEN_AFFILIATE_ID = os.environ.get("RAKUTEN_AFFILIATE_ID", "") or "558dd68a.a8710327.558dd68b.2fef3e9e"  # 楽天アフィリエイトID(hb.afl用)
 
 # 楽天 新プラットフォーム(Rakuten Developers)の認証情報。商品検索API＝デバイス等の
