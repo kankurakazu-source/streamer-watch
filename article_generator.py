@@ -22,7 +22,8 @@ import json
 import os
 import re
 import sys
-from datetime import datetime
+import time
+from datetime import datetime, timedelta
 
 try:
     sys.stdout.reconfigure(encoding="utf-8")
@@ -110,12 +111,16 @@ USER_STABLE = """\
     ※デバイス記事(event_type=デバイス)では、この欄はSteam画像検索専用なので基本は空でよい（製品はSteamに無いため）。
 - lead: リード文（2〜3文。何が起きていて、なぜ今読む価値があるか）
 - tldr: 結論を一言で（迷ったら何を見る/買うべきか）
-- sections: 3〜5個。各 {{heading, body, game_name}}。
+- sections: 3〜5個。各 {{heading, body, game_name, spec_table}}。
     heading: 小見出し（タイトル名を含めてよい）
     body: 2〜4文の本文（数字や根拠を入れる。段落は改行で区切ってよい）
     game_name: そのセクションで購入導線(buy)を出す対象の正式名称。ゲームならタイトル名、
     デバイス記事なら製品名（例: Lamzu Atlantis / RTX 5080 / 〇〇ゲーミングモニター）を入れてよい。
     購入導線が不要なら空文字。※デバイスはSteam画像が付かないが、Amazon/楽天の検索リンクは製品名から生成される。
+    spec_table: 基本は空配列 []。動作環境・製品スペックのような「項目名: 値」型の仕様情報を
+    整理するセクションでのみ、提供データにある値を {{label, value}} の行配列で表にする
+    （例: label=推奨GPU, value=GeForce RTX 3060）。同接数・割引率・視聴者数など本文で述べる
+    数字を表に重複させない。値の捏造は厳禁。
 - conclusion: まとめ（2〜3文）
 - x_main: 【親ポスト】記事リンクを貼らないX投稿本文。ここでインプレッションを稼ぐフック。
     「思わず手が止まる最新情報・数字・比較の要点」をテキストだけで完結させる（画像は別途こちらが添付）。
@@ -125,13 +130,19 @@ USER_STABLE = """\
     例「詳しいスペック比較はこちらの記事にまとめています👇」。URLは書かない（こちらで付ける）。20〜40字。
 - hashtags: 0〜2個（#は付けず語だけ。トレンドに乗る語を選ぶ。例: VALORANT / Steamセール）
 - topic_key: 重複検知用のキー。主役ゲーム名 or トピックを短い日本語で（例「Steamサマーセール」）
+- faq: 読者が検索しそうな質問と回答を2〜3個。qは疑問文、aは1〜3文で、本文・提供データにある
+    事実の範囲で答える（だ・である調）。
 """
 
 # 可変部分（記事ごとに変わる＝重複回避リストと avoid_note）。安定部分の後ろに連結する（キャッシュ非対象）。
 USER_VOLATILE = """\
 
 直近に公開済みの記事タイトル（これらと重複しないトピックを選ぶこと。同一トピックは避ける）:
-{recent_titles}{avoid_line}"""
+{recent_titles}{avoid_line}
+
+※同一ゲームの扱い: 上記リストで同じゲームが直近2回以上主役になっている場合、そのゲームの
+「続報だけの記事」（同接数値の更新のみ等）は書かない。発売・大型アップデート・歴代記録更新級の
+明確な新イベントがある場合のみ再び主役にしてよい。それ以外は別のトピックを選ぶこと。"""
 
 # エバーグリーン記事（資産型）指示。USER_STABLE（プロンプトキャッシュ対象）は変更したくないため、
 # volatile側（avoid_noteと同じ経路）に連結する。週2回・2本目のみに付与する運用（main()参照）。
@@ -155,6 +166,83 @@ EVERGREEN_NOTE = """\
     後で読み返したくなる見出し）。速報感を出す煽り文句は避ける。
 """
 
+# スペック解説記事（資産型）指示。EVERGREEN_NOTEと同じ経路（volatile側）で連結する。
+SPEC_NOTE = """\
+
+【重要: 今回は速報ではなく『推奨スペック・必要動作環境』解説記事（資産型）を書くこと】
+今回は「今まさに検索されているイベント」の速報ではなく、Steam公式のPC動作環境データを
+根拠にした『推奨スペック・必要動作環境』解説記事を書く。半年後に読まれても価値が失われない
+保存版の記事にする。
+
+以下の候補データ（Steam公式のPC動作環境。minimum=最低、recommended=推奨）から
+1タイトルだけ選ぶこと:
+{requirements_json}
+
+- title:「◯◯の推奨スペック・必要動作環境まとめ」系。検索されやすい語（推奨スペック/
+    必要スペック/快適に遊ぶ）を自然に含める。
+- category:「ガイド」を選ぶ。event_type:「通常」を選ぶ。is_breaking: false にする。
+- main_game: 選んだタイトルの正式名称。topic_key:「スペック:タイトル名」の形にする。
+- sections: 4〜6個で構成する。
+    ①最低動作環境の解説 ②推奨環境の解説（①か②のいずれかのsectionのspec_tableに、提供された
+    動作環境の項目を {{label, value}} 行で必ず整理する。値は提供データにあるものだけ）
+    ③GPU/CPUクラス別の快適度の目安（提供requirementsに書かれた型番を基準に「◯◯以上なら
+    推奨環境を満たす」といった言い方にする。データに無いベンチ数値・fps・スコアを作らない）
+    ④おすすめのGPU・ゲーミングPCの選び方（game_nameにGPU名等を入れて購入導線を付ける。
+    例: RTX 4060 / RTX 5070） ⑤まとめ的なQ&A的整理など。
+- 提供requirementsに無いスペック値・数値は絶対に書かない。requirementsが英語表記なら
+    そのまま型番は英語でよい。
+- 価格（円）は書かない。データに無い数字を作らない。文体は既存の制約通り、だ・である調で統一する。
+"""
+
+# セール買い時解説記事（資産型）指示。EVERGREEN_NOTEと同じ経路（volatile側）で連結する。
+SALE_NOTE = """\
+
+【重要: 今回は速報ではなく『セール買い時』解説記事（資産型）を書くこと】
+今回は「今まさに検索されているイベント」の速報ではなく、当サイトが毎日自動記録している
+割引実績データを根拠にした『セール買い時』解説記事を書く。半年後に読まれても価値が
+失われない保存版の記事にする。
+
+以下は当サイトが毎日自動記録している主要タイトルの割引実績データ（current_discount=現在割引%、
+max_discount=計測期間内の最大割引%、last_sale_date=直近セール日、tracked_days=計測日数、
+verdict=当サイトの買い時判定）:
+{deals_json}
+
+- この中から記事価値が最も高い1タイトルを主役に選ぶ（優先: verdictが「買い時」→「セール中」→
+    max_discount>0でtracked_daysが長いもの。直近公開済みタイトル一覧に同タイトルの買い時記事が
+    あるものは選ばない）。
+- title:「◯◯のセールはいつ?過去の割引実績から見る買い時」系。category:「セール分析」を選ぶ。
+    is_breaking: 現在セール中ならtrueでもよい。main_game: 選んだタイトル。
+    topic_key:「買い時:タイトル名」の形にする。
+- sections: 現在のセール状況→計測データから見る割引傾向→買い時判定の根拠→今買うべきか
+    待つべきか、等で構成する。主役タイトルを扱うsectionにgame_nameを入れて購入導線を付ける。
+- 割引%と日付は提供データの値のみ使う。計測期間が短い場合（tracked_daysが小さい）は
+    「計測開始からN日のデータに基づく」と正直に書く。円価格・セール終了日の断定は書かない。
+- データに無い数字を作らない。文体は既存の制約通り、だ・である調で統一する。
+"""
+
+# 週間定点レポート（Steam同接ランキング）指示。EVERGREEN_NOTEと同じ経路（volatile側）で連結する。
+WEEKLY_NOTE = """\
+
+【重要: 今回は週間定点レポート『Steam同接ランキング』を書くこと（毎週日曜の連載）】
+今回は「今まさに検索されているイベント」の速報ではなく、当サイト実測の週間同接データを
+根拠にした定点観測レポートを書く。毎週日曜に公開する連載企画である。
+
+集計期間: {week_range}
+
+以下は当サイト実測の週間同接データ（latest=最新同接、peak=週間ピーク、week_ago=約1週間前、
+growth_pct=週間増減%、peak降順）:
+{weekly_json}
+
+- title:「【週間】Steam同接ランキングTOP◯」＋期間がわかる表現にする。category:「データ分析」を
+    選ぶ。event_type:「通常」を選ぶ。is_breaking: false にする。
+    main_game: ランキング1位のタイトル。topic_key:「週間同接:{week_range}」の形にする。
+- sections: TOP3の動向解説 → 伸び率が大きい注目株 → 下がったタイトルとその背景（データで
+    言える範囲）→ 来週の注目ポイント、等で構成する。セクションの主役タイトルにgame_nameを
+    入れて購入導線を付ける。
+- 数字は提供データのみ使う。データに無い順位変動理由を断定しない（「〜が要因とみられる」
+    程度のヘッジにとどめる）。価格（円）は書かない。文体は既存の制約通り、だ・である調で統一する。
+"""
+
 ARTICLE_SCHEMA = {
     "type": "object",
     "properties": {
@@ -173,8 +261,20 @@ ARTICLE_SCHEMA = {
                     "heading": {"type": "string"},
                     "body": {"type": "string"},
                     "game_name": {"type": "string"},
+                    "spec_table": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "label": {"type": "string"},
+                                "value": {"type": "string"},
+                            },
+                            "required": ["label", "value"],
+                            "additionalProperties": False,
+                        },
+                    },
                 },
-                "required": ["heading", "body", "game_name"],
+                "required": ["heading", "body", "game_name", "spec_table"],
                 "additionalProperties": False,
             },
         },
@@ -183,9 +283,21 @@ ARTICLE_SCHEMA = {
         "x_reply": {"type": "string"},
         "hashtags": {"type": "array", "items": {"type": "string"}},
         "topic_key": {"type": "string"},
+        "faq": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "q": {"type": "string"},
+                    "a": {"type": "string"},
+                },
+                "required": ["q", "a"],
+                "additionalProperties": False,
+            },
+        },
     },
     "required": ["title", "category", "event_type", "is_breaking", "main_game", "lead", "tldr",
-                 "sections", "conclusion", "x_main", "x_reply", "hashtags", "topic_key"],
+                 "sections", "conclusion", "x_main", "x_reply", "hashtags", "topic_key", "faq"],
     "additionalProperties": False,
 }
 
@@ -224,13 +336,16 @@ def _resolve_game(name: str, name_to_appid: dict, appid_discount: dict) -> dict:
     return out
 
 
-def _enrich(article: dict, collected: dict) -> tuple[str, list[str]]:
+def _enrich(article: dict, collected: dict, deals_data: list[dict] | None = None) -> tuple[str, list[str]]:
     """
     記事にSteam画像/割引を付与。hero と各セクションのバナー画像には、同じ画像の使い回しを
     避けるため「まだ使っていない別の画像（スクリーンショット等）」を順に割り当てる。
+    deals_data があれば、各セクションの購入導線(buy)に買い時トラッカーの判定情報も付与する
+    （描画側との契約。キー名厳守）。
     戻り値: (hero画像URL, 割引付きゲーム名の一覧ログ)。
     """
     name_to_appid, appid_discount = _build_steam_maps(collected)
+    deal_by_appid = {d["appid"]: d for d in (deals_data or []) if d.get("appid")}
     log = []
 
     pools: dict[int, list[str]] = {}   # appid -> 画像URL群（キャッシュ）
@@ -302,6 +417,15 @@ def _enrich(article: dict, collected: dict) -> tuple[str, list[str]]:
             g["image_url"] = img   # 購入ボックスのサムネにも楽天画像を反映
         sec["buy"] = g
         sec["image_url"] = img
+        deal = deal_by_appid.get(g.get("appid"))
+        if deal:
+            sec["buy"]["deal"] = {
+                "current_discount": deal.get("current_discount"),
+                "max_discount": deal.get("max_discount"),
+                "last_sale_date": deal.get("last_sale_date"),
+                "verdict": deal.get("verdict"),
+                "tracked_days": deal.get("tracked_days"),
+            }
         if g.get("discount_percent"):
             log.append(f"{gname} -{g['discount_percent']}%")
     return hero_url, log
@@ -309,15 +433,16 @@ def _enrich(article: dict, collected: dict) -> tuple[str, list[str]]:
 
 def generate_article(collected: dict, recent: list[dict], api_key: str,
                      hot_events_text: str = "", model: str = "claude-sonnet-5",
-                     avoid_note: str = "", evergreen: bool = False) -> dict:
+                     avoid_note: str = "", extra_note: str = "") -> dict:
     """Claudeに1本の記事を書かせる。structured outputsでJSON構造を強制。
     avoid_note: 同一実行で複数本書く際、既出カテゴリ/トピックを避けさせる追加指示。
-    evergreen: True なら EVERGREEN_NOTE を volatile 側に連結し、資産型記事を書かせる。
+    extra_note: 特殊記事スロット（エバーグリーン/スペック/セール/週間レポート）用の追加指示。
+    空文字なら通常記事のまま。_build_special_note() で組み立てたNOTEを渡す想定。
 
     プロンプトキャッシュ: 安定部分(system＋収集データ＋イベント＋構成指示)を cache_control で
-    キャッシュし、可変部分(重複回避リスト・avoid_note・EVERGREEN_NOTE)を後ろに置く。1回の実行で
+    キャッシュし、可変部分(重複回避リスト・avoid_note・extra_note)を後ろに置く。1回の実行で
     2本目以降は巨大な入力(収集データ)がキャッシュ読み出しになり入力コストが大幅に下がる。出力は不変。
-    EVERGREEN_NOTE は USER_STABLE ではなく volatile 側に付けることでキャッシュを壊さない。"""
+    extra_note は USER_STABLE ではなく volatile 側に付けることでキャッシュを壊さない。"""
     recent_titles = "\n".join(f"- {r['title']}" for r in recent) or "(まだありません)"
     stable_text = USER_STABLE.format(
         data_json=json.dumps(collected, ensure_ascii=False, indent=2),
@@ -328,8 +453,8 @@ def generate_article(collected: dict, recent: list[dict], api_key: str,
         recent_titles=recent_titles,
         avoid_line=("\n" + avoid_note if avoid_note else ""),
     )
-    if evergreen:
-        volatile_text += EVERGREEN_NOTE
+    if extra_note:
+        volatile_text += extra_note
     headers = {
         "Content-Type": "application/json",
         "x-api-key": api_key,
@@ -513,9 +638,27 @@ def _recent_success(minutes: int = 70) -> bool:
         return False
 
 
-def _publish_and_notify(article: dict, collected: dict, seq: int) -> None:
-    """1本の記事を公開し、Xポスト文面を表示、メール通知する。"""
-    hero_url, disc_log = _enrich(article, collected)
+def _publish_and_notify(article: dict, collected: dict, seq: int,
+                        deals_data: list[dict] | None = None) -> None:
+    """1本の記事を公開し、Xポスト文面を表示、メール通知する。
+    deals_data: セール・買い時トラッカーの集計結果（buyの買い時情報付与用）。"""
+    hero_url, disc_log = _enrich(article, collected, deals_data=deals_data)
+
+    # 同接推移グラフ用データ付与（描画側との契約。キー構造厳守）
+    appid = article.get("main_appid")
+    if appid:
+        try:
+            pts = storage.get_metric_history(config.HISTORY_DB, "steam", str(appid),
+                                              "player_count", days=14)
+            dates = {p[0][:10] for p in pts}
+            if len(pts) >= 5 and len(dates) >= 3:
+                article["player_chart"] = {
+                    "name": article.get("main_game", ""),
+                    "points": [{"t": t, "v": int(v)} for t, v in pts],
+                }
+        except Exception as e:
+            print(f"[WARN] 同接推移データの取得に失敗: {e}")
+
     meta = publish(article, hero_url, seq=seq)
     public_url = build_public_url(meta["slug"])
     linkless = getattr(config, "X_LINKLESS_MODE", False)
@@ -560,14 +703,127 @@ def _publish_and_notify(article: dict, collected: dict, seq: int) -> None:
         print("[INFO] メール未設定（.envにGMAIL_ADDRESS/GMAIL_APP_PASSWORDを入れると送信します）")
 
 
-def _is_evergreen_slot(now: datetime | None = None) -> bool:
-    """自動でエバーグリーン記事を混ぜる時間帯かどうか。
-    発動条件: JST（マシンのローカル時刻）の火曜・金曜、かつ実行時刻が14〜17時台。
-    これは primary(15:00) とその1時間後retry(16:00)の両方をカバーするための範囲。
-    週2回・該当実行の2本目の記事だけをエバーグリーンにする運用（main()側で判定）。"""
+def _special_slot(now: datetime | None = None) -> str | None:
+    """自動で特殊記事を混ぜる時間帯かどうかを判定し、種別を返す（無ければNone）。
+    週2回・該当実行の2本目の記事だけを特殊記事にする運用（main()側で判定）。
+
+    各スロットの狙い:
+    - "evergreen"（火・金 14〜17時台。primary15:00/retry16:00をカバー）:
+        比較・ランキング・選び方・買い時ガイド型の資産記事で検索流入を積む（従来通り）。
+    - "spec"（月・木 18〜21時台。primary19:00/retry20:00をカバー）:
+        推奨スペック・必要動作環境の解説記事。「推奨スペック」等の検索語を狙う資産記事。
+    - "sale"（水・土 10〜13時台。primary11:00/retry12:00をカバー）:
+        当サイトのセール・買い時トラッカーの実績データを根拠にした買い時解説の資産記事。
+    - "weekly"（日 14〜17時台）:
+        毎週日曜の連載企画「Steam同接ランキング」週間定点レポート。
+    """
     now = now or datetime.now()
     # Python の weekday(): 月=0, 火=1, 水=2, 木=3, 金=4, 土=5, 日=6
-    return now.weekday() in (1, 4) and 14 <= now.hour <= 17
+    weekday, hour = now.weekday(), now.hour
+    if weekday in (1, 4) and 14 <= hour <= 17:
+        return "evergreen"
+    if weekday in (0, 3) and 18 <= hour <= 21:
+        return "spec"
+    if weekday in (2, 5) and 10 <= hour <= 13:
+        return "sale"
+    if weekday == 6 and 14 <= hour <= 17:
+        return "weekly"
+    return None
+
+
+def _build_special_note(kind: str | None, collected: dict, deals_data: list[dict],
+                        recent: list[dict]) -> str:
+    """特殊記事スロット用の追加指示(NOTE)を組み立てる。
+    kind: "evergreen" / "spec" / "sale" / "weekly" / None(通常記事)。
+    データが足りず組み立てられない場合は空文字を返し、呼び出し側で通常記事にフォールバックさせる。
+    特殊記事の失敗で通常記事生成そのものを止めないよう、例外はすべて握りつぶす。"""
+    if not kind:
+        return ""
+    try:
+        if kind == "evergreen":
+            return EVERGREEN_NOTE
+
+        if kind == "sale":
+            if not deals_data:
+                print("[WARN] 買い時記事用のdeals_dataが空のため通常記事にフォールバックします。")
+                return ""
+            picks = [
+                {
+                    "appid": d.get("appid"),
+                    "name": d.get("name"),
+                    "current_discount": d.get("current_discount"),
+                    "max_discount": d.get("max_discount"),
+                    "last_sale_date": d.get("last_sale_date"),
+                    "tracked_days": d.get("tracked_days"),
+                    "verdict": d.get("verdict"),
+                }
+                for d in deals_data
+            ]
+            return SALE_NOTE.format(deals_json=json.dumps(picks, ensure_ascii=False))
+
+        if kind == "weekly":
+            weekly = storage.weekly_player_summary(config.HISTORY_DB)
+            if not weekly:
+                print("[WARN] 週間レポート用のデータが無いため通常記事にフォールバックします。")
+                return ""
+            now_jst = datetime.now()
+            week_range = (f"{(now_jst - timedelta(days=7)).strftime('%Y-%m-%d')}"
+                          f"〜{now_jst.strftime('%Y-%m-%d')}")
+            return WEEKLY_NOTE.format(
+                week_range=week_range,
+                weekly_json=json.dumps(weekly, ensure_ascii=False),
+            )
+
+        if kind == "spec":
+            candidates = []
+            seen_appids = set()
+            for r in (collected.get("steam_players") or [])[:5]:
+                if r.get("appid") and r["appid"] not in seen_appids:
+                    seen_appids.add(r["appid"])
+                    candidates.append({"appid": r["appid"], "name": r.get("name", "")})
+            new_releases = (collected.get("steam_featured") or {}).get("new_releases", []) or []
+            for it in new_releases[:5]:
+                if it.get("appid") and it["appid"] not in seen_appids:
+                    seen_appids.add(it["appid"])
+                    candidates.append({"appid": it["appid"], "name": it.get("name", "")})
+
+            # 直近にスペック記事化済みのタイトルは除外する
+            def _already_spec_covered(name: str) -> bool:
+                key = (name or "")[:10]
+                if not key:
+                    return False
+                for r in recent or []:
+                    text = f"{r.get('title', '')} {r.get('topic_key', '')}"
+                    if key in text and "スペック" in text:
+                        return True
+                return False
+
+            picked = []
+            for c in candidates:
+                if _already_spec_covered(c["name"]):
+                    continue
+                try:
+                    reqs = steam_collector.fetch_requirements(c["appid"])
+                except Exception:
+                    reqs = {"minimum": "", "recommended": ""}
+                time.sleep(0.5)
+                if reqs.get("minimum") or reqs.get("recommended"):
+                    picked.append({
+                        "name": c["name"], "appid": c["appid"],
+                        "minimum": reqs.get("minimum", ""),
+                        "recommended": reqs.get("recommended", ""),
+                    })
+                if len(picked) >= 3:
+                    break
+
+            if not picked:
+                print("[WARN] スペック記事用の動作環境データが取得できず通常記事にフォールバックします。")
+                return ""
+            return SPEC_NOTE.format(requirements_json=json.dumps(picked, ensure_ascii=False))
+    except Exception as e:
+        print(f"[WARN] 特殊記事({kind})の準備に失敗したため通常記事にフォールバックします: {e}")
+        return ""
+    return ""
 
 
 def main():
@@ -576,7 +832,9 @@ def main():
     ap.add_argument("--mode", choices=["primary", "retry"], default="primary",
                     help="retry は直近70分以内に成功していればスキップ（1時間後リトライ用）")
     ap.add_argument("--evergreen", action="store_true",
-                    help="指定時はこの実行の全記事をエバーグリーン記事にする（手動テスト・強制用）")
+                    help="指定時はこの実行の全記事をエバーグリーン記事にする（手動テスト・強制用、--special evergreen と同義）")
+    ap.add_argument("--special", choices=["evergreen", "spec", "sale", "weekly"], default=None,
+                    help="この実行の全記事を指定タイプにする（手動テスト・強制用）")
     args = ap.parse_args()
     count = max(1, args.count)
 
@@ -636,22 +894,26 @@ def main():
             done = "／".join(f"{c}「{t[:20]}」" for c, t in produced)
             avoid_note = (f"※重要: 今回の実行では既に次の記事を作成済み: {done}。"
                           "今回は必ず別カテゴリ・別トピックを選び、内容が重複しないようにすること。")
-        # エバーグリーン判定:
-        #   --evergreen 指定時はこの実行の全記事をエバーグリーンにする（手動テスト・強制用）。
-        #   自動ルール: 火・金の14〜17時台（primary 15:00 / retry 16:00）は、2本目の記事だけ
+        # 特殊記事スロット判定:
+        #   --special / --evergreen 指定時はこの実行の全記事を指定タイプにする（手動テスト・強制用）。
+        #   自動ルール: 曜日・時間帯ごとの特殊スロット（_special_slot参照）は、2本目の記事だけ
         #   （1本目は通常ニュースのまま速報性を維持しつつ、2本目で検索資産を積む）。
-        evergreen = args.evergreen or (i == 1 and _is_evergreen_slot())
+        special = args.special or ("evergreen" if args.evergreen else None) or \
+            (_special_slot() if i == 1 else None)
+        extra_note = _build_special_note(special, collected, deals_data, recent)
+        if special and not extra_note:
+            special = None  # データ不足時は通常記事にフォールバック
         print(f"\n=== Claudeで記事を執筆中 ({i + 1}/{count}) ===")
-        if evergreen:
-            print("[エバーグリーン記事モード] 比較・ランキング・選び方ガイド型の記事を生成します。")
+        if special:
+            print(f"[特殊記事モード: {special}] 該当スロット用の資産記事を生成します。")
         try:
             article = generate_article(collected, recent, config.ANTHROPIC_API_KEY,
                                        hot_events_text=hot_text, avoid_note=avoid_note,
-                                       evergreen=evergreen)
+                                       extra_note=extra_note)
         except Exception as e:
             print(f"[ERROR] 記事生成に失敗しました: {e}")
             break
-        _publish_and_notify(article, collected, seq=i + 1)
+        _publish_and_notify(article, collected, seq=i + 1, deals_data=deals_data)
         title = article.get("title", "")
         produced.append((article.get("category", ""), title))
         recent = recent + [{"title": title, "topic_key": article.get("topic_key", "")}]

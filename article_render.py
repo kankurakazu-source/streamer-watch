@@ -19,13 +19,21 @@ import os
 import random
 import re
 import urllib.parse
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 import config
 from game_analyzer import weighted_len
 
 STEAM_CDN = "https://cdn.cloudflare.steamstatic.com/steam/apps/{appid}/header.jpg"
 _URL_RE = re.compile(r"https?://\S+")
+_JST = timezone(timedelta(hours=9))
+
+# 買い時判定(verdict)→バッジ色クラス。deals_tracker.py の _VERDICT_CLASS と同じ対応
+# （ここでは他モジュールをimportせず、レンダリング専用の小さなdictとして持つ）。
+_DEAL_VERDICT_CLASS = {
+    "買い時": "buy", "セール中": "sale",
+    "セール中・計測中": "watch", "計測中": "watch", "待ち": "wait",
+}
 
 # 親ポストに入れる「リプ(2つ目)へ誘導」する一文。毎回ランダムで表現を変える。
 _REPLY_GUIDES = [
@@ -130,6 +138,31 @@ _CSS = """
   .buy.dmm{background:var(--dmm);}
   .buy.steam{background:var(--steam);}
   .pnote{font-size:11px;color:var(--dim);margin-top:10px;line-height:1.7;}
+  /* 割引履歴（買い時データ） */
+  .dealhist{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:14px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.09);font-size:12px;color:var(--muted);}
+  .dealhist .k{color:var(--dim);margin-right:4px;}
+  .dh-badge{font-size:11px;font-weight:800;padding:2px 10px;border-radius:100px;}
+  .dh-badge.buy{background:rgba(47,210,126,.16);color:var(--green);border:1px solid rgba(47,210,126,.35);}
+  .dh-badge.sale{background:rgba(255,106,61,.16);color:var(--sale);border:1px solid rgba(255,106,61,.35);}
+  .dh-badge.watch{background:rgba(90,168,255,.16);color:#5aa8ff;border:1px solid rgba(90,168,255,.35);}
+  .dh-badge.wait{background:rgba(255,255,255,.06);color:var(--dim);border:1px solid var(--line);}
+  .dh-link{font-size:11.5px;font-weight:700;color:var(--accent);}
+  /* 同接推移グラフ */
+  .chart{margin:24px 0;margin-left:0;margin-right:0;}
+  .chart svg{display:block;width:100%;height:auto;background:var(--bg2);border:1px solid var(--line-soft);border-radius:14px;}
+  .chart figcaption{font-size:11.5px;color:var(--dim);margin-top:8px;text-align:center;}
+  /* セクションのスペック表 */
+  .spec{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px;background:var(--card);border:1px solid var(--line-soft);border-radius:12px;overflow:hidden;}
+  .spec th{width:34%;text-align:left;font-weight:700;color:var(--muted);background:rgba(255,255,255,.03);padding:10px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top;}
+  .spec td{padding:10px 14px;border-bottom:1px solid var(--line-soft);color:#d7e0ec;}
+  .spec tr:last-child th,.spec tr:last-child td{border-bottom:none;}
+  /* FAQ */
+  .faq{display:flex;flex-direction:column;gap:12px;margin:16px 0;}
+  .faq .qa{background:var(--card);border:1px solid var(--line-soft);border-radius:12px;padding:14px 18px;}
+  .faq .q{font-weight:800;font-size:14.5px;color:var(--text);}
+  .faq .q::before{content:"Q. ";color:var(--accent);}
+  .faq .a{margin-top:6px;font-size:13.5px;color:var(--muted);line-height:1.85;}
+  .faq .a::before{content:"A. ";color:var(--sale);font-weight:800;}
   .pr-note{font-size:11.5px;color:var(--dim);margin:0 0 20px;padding:8px 12px;
     border:1px solid var(--line-soft);border-radius:8px;background:rgba(255,255,255,.02);line-height:1.7;}
   .back{display:inline-flex;align-items:center;gap:6px;margin:30px 0 0;font-size:14px;font-weight:700;color:var(--accent);}
@@ -187,7 +220,8 @@ _CSS = """
   .sbtn.line{background:#06C755;font-size:13px;}
   .sbtn.hb{background:#00A4DE;font-size:19px;}
   @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
-    .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}}
+    .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}
+    .spec{font-size:12.5px;}.spec th{width:40%;padding:8px 10px;}.spec td{padding:8px 10px;}}
 """
 
 _PAGE = """<!DOCTYPE html>
@@ -347,14 +381,151 @@ def affiliate_links(name: str) -> dict:
     return {"amazon": amazon, "rakuten": rakuten, "dmm": dmm}
 
 
+def _fmt_count(v: int) -> str:
+    """人数表記: 1万以上は「12.3万」形式、未満は3桁カンマ区切り。"""
+    if v >= 10000:
+        return f"{v / 10000:.1f}万"
+    return f"{v:,}"
+
+
+def _to_jst(dt: datetime) -> datetime:
+    """tzなし(UTC想定)/tzありのdatetimeをJSTに変換する。"""
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(_JST)
+
+
+def _player_chart_svg(chart: dict) -> str:
+    """
+    同接推移の折れ線グラフ(インラインSVG)を組み立てる。
+    chart: {"name": str, "points": [{"t": ISO8601文字列(UTC想定), "v": int}, ...]}
+    有効点(t,vが両方解釈できるもの)を"t"昇順にソートし、2点未満なら空文字を返す。
+    """
+    chart = chart or {}
+    name = chart.get("name", "")
+    pts = []
+    for p in (chart.get("points") or []):
+        t = (p or {}).get("t")
+        v = (p or {}).get("v")
+        if t is None or v is None:
+            continue
+        try:
+            dt = datetime.fromisoformat(str(t).replace("Z", "+00:00"))
+            v = int(v)
+        except (ValueError, TypeError):
+            continue
+        pts.append((dt, v))
+    pts.sort(key=lambda x: x[0])
+    if len(pts) < 2:
+        return ""
+
+    w, h = 640, 240
+    ml, mr, mt, mb = 56, 14, 14, 30
+    plot_w = w - ml - mr
+    plot_h = h - mt - mb
+    y_bottom = mt + plot_h
+
+    vmax = max(v for _, v in pts) * 1.08
+    if vmax <= 0:
+        vmax = 1
+
+    n = len(pts)
+
+    def x_at(i: int) -> float:
+        return ml + (plot_w * i / (n - 1) if n > 1 else 0)
+
+    def y_at(v: float) -> float:
+        return mt + plot_h - (plot_h * v / vmax)
+
+    # 横グリッド線3本(0/中間/最大)
+    grid_parts = []
+    for frac in (0.0, 0.5, 1.0):
+        gy = mt + plot_h - (plot_h * frac)
+        grid_parts.append(
+            f'<line x1="{ml}" y1="{gy:.1f}" x2="{w - mr}" y2="{gy:.1f}" '
+            f'stroke="#243046" stroke-width="1"/>'
+        )
+        grid_parts.append(
+            f'<text x="{ml - 8}" y="{gy:.1f}" text-anchor="end" dominant-baseline="middle" '
+            f'font-size="11" fill="var(--dim)">{_fmt_count(round(vmax * frac))}</text>'
+        )
+
+    # x軸ラベル(最初・中間・最後の3点)
+    mid_i = (n - 1) // 2
+    label_specs = [(0, "start"), (mid_i, "middle"), (n - 1, "end")]
+    x_labels = []
+    seen_i = set()
+    for i, anchor in label_specs:
+        if i in seen_i:
+            continue
+        seen_i.add(i)
+        jst = _to_jst(pts[i][0])
+        x_labels.append(
+            f'<text x="{x_at(i):.1f}" y="{h - 8}" text-anchor="{anchor}" '
+            f'font-size="11" fill="var(--dim)">{jst.month}/{jst.day}</text>'
+        )
+
+    line_pts = " ".join(f"{x_at(i):.1f},{y_at(v):.1f}" for i, (_, v) in enumerate(pts))
+    area_pts = f"{line_pts} {x_at(n - 1):.1f},{y_bottom:.1f} {x_at(0):.1f},{y_bottom:.1f}"
+    last_x, last_v = x_at(n - 1), pts[-1][1]
+
+    svg = (
+        f'<svg viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg">'
+        + "".join(grid_parts)
+        + "".join(x_labels)
+        + f'<polygon points="{area_pts}" fill="rgba(57,216,255,.08)"/>'
+        + f'<polyline points="{line_pts}" fill="none" stroke="var(--accent)" '
+          f'stroke-width="2.5" stroke-linejoin="round"/>'
+        + f'<circle cx="{last_x:.1f}" cy="{y_at(last_v):.1f}" r="4" fill="var(--accent)"/>'
+        + "</svg>"
+    )
+    return (
+        '<figure class="chart">'
+        + svg
+        + f'<figcaption>「{_esc(name)}」のSteam同接推移（直近14日・当サイト計測）</figcaption>'
+        + "</figure>"
+    )
+
+
 def _paragraphs(body: str) -> str:
     """本文文字列を段落<p>に変換（空行 or 改行で分割）。"""
     chunks = [c.strip() for c in re.split(r"\n\s*\n|\n", body or "") if c.strip()]
     return "".join(f"<p>{_esc(c)}</p>" for c in chunks)
 
 
+def _dealhist_html(deal: dict) -> str:
+    """
+    購入ボックスに添える割引履歴(買い時データ)。deal:
+    {current_discount, max_discount, last_sale_date, verdict, tracked_days}。
+    価格(円)は出さず、割引率と日付のみ表示する。deal未指定なら空文字。
+    """
+    if not deal:
+        return ""
+    cur = int(deal.get("current_discount") or 0)
+    mx = int(deal.get("max_discount") or 0)
+    last = deal.get("last_sale_date")
+    verdict = deal.get("verdict", "")
+    tracked = int(deal.get("tracked_days") or 0)
+
+    spans = []
+    if cur > 0:
+        spans.append(f'<span><span class="k">現在</span>-{cur}%</span>')
+    else:
+        spans.append('<span><span class="k">現在</span>セールなし</span>')
+    if mx > 0:
+        spans.append(f'<span><span class="k">過去最大</span>-{mx}%（計測{tracked}日）</span>')
+    else:
+        spans.append('<span><span class="k">過去最大</span>計測期間内セールなし</span>')
+    if last:
+        spans.append(f'<span><span class="k">直近セール</span>{_esc(last)}</span>')
+    cls = _DEAL_VERDICT_CLASS.get(verdict, "wait")
+    spans.append(f'<span class="dh-badge {cls}">{_esc(verdict)}</span>')
+    spans.append('<a class="dh-link" href="/deals.html">買い時トラッカー →</a>')
+    return '<div class="dealhist">' + "".join(spans) + "</div>"
+
+
 def _buybox(game: dict) -> str:
-    """1タイトル分の購入ボックス。game: {name, image_url, discount_percent?}。"""
+    """1タイトル分の購入ボックス。game: {name, image_url, discount_percent?, deal?}。"""
     name = game.get("name", "")
     if not name:
         return ""
@@ -369,12 +540,14 @@ def _buybox(game: dict) -> str:
     steam_btn = (f"<a class=\"buy steam\" href=\"https://store.steampowered.com/app/{int(appid)}/\" "
                  f"target=\"_blank\" rel=\"nofollow noopener\">Steamで見る</a>\n        "
                  if appid else "")
+    dealhist_html = _dealhist_html(game.get("deal") or {})
     return f"""<div class="buybox">
       <div class="bt">{th}
         <div style="flex:1">
           <div class="name">{_esc(name)}</div>{off}
         </div>
       </div>
+      {dealhist_html}
       <div class="buys">
         {steam_btn}<a class="buy amazon" href="{_esc(links['amazon'])}" target="_blank" rel="nofollow noopener">Amazonで見る</a>
         <a class="buy rakuten" href="{_esc(links['rakuten'])}" target="_blank" rel="nofollow noopener">楽天</a>
@@ -429,6 +602,63 @@ def _breadcrumb_jsonld(category: str, title: str, canonical: str) -> str:
     return f'<script type="application/ld+json">{json.dumps(data, ensure_ascii=False)}</script>'
 
 
+def _spec_table(rows: list) -> str:
+    """
+    セクションのスペック表。rows: [{"label": str, "value": str}, ...]。
+    label・valueが両方非空の行だけ採用する。有効行が0件なら空文字。
+    """
+    trs = []
+    for r in rows or []:
+        label = str((r or {}).get("label", "")).strip()
+        value = str((r or {}).get("value", "")).strip()
+        if not label or not value:
+            continue
+        trs.append(f"<tr><th>{_esc(label)}</th><td>{_esc(value)}</td></tr>")
+    if not trs:
+        return ""
+    return '<table class="spec"><tbody>' + "".join(trs) + "</tbody></table>"
+
+
+def _filter_faq(faq: list) -> list[tuple[str, str]]:
+    """faqリストのうちq・aが両方非空の項目だけを(q, a)タプルで返す。"""
+    out = []
+    for item in faq or []:
+        q = str((item or {}).get("q", "")).strip()
+        a = str((item or {}).get("a", "")).strip()
+        if q and a:
+            out.append((q, a))
+    return out
+
+
+def _faq_html(faq: list) -> str:
+    """よくある質問セクション。有効項目が0件なら空文字。"""
+    items = _filter_faq(faq)
+    if not items:
+        return ""
+    qa = "".join(
+        f"<div class='qa'><div class='q'>{_esc(q)}</div><div class='a'>{_esc(a)}</div></div>"
+        for q, a in items
+    )
+    return f"<h2 class='g'>よくある質問</h2>\n<div class='faq'>{qa}</div>"
+
+
+def _faq_jsonld(faq: list) -> str:
+    """FAQのFAQPage構造化データ(JSON-LD)。有効項目が0件なら空文字。"""
+    items = _filter_faq(faq)
+    if not items:
+        return ""
+    data = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {"@type": "Question", "name": q,
+             "acceptedAnswer": {"@type": "Answer", "text": a}}
+            for q, a in items
+        ],
+    }
+    return f'<script type="application/ld+json">{json.dumps(data, ensure_ascii=False)}</script>'
+
+
 def render_article(article: dict, related: list[dict] | None = None) -> str:
     """
     article: {
@@ -463,6 +693,9 @@ def render_article(article: dict, related: list[dict] | None = None) -> str:
             anchor_ids.append(None)
 
     parts = []
+    chart_html = _player_chart_svg(article.get("player_chart") or {})
+    if chart_html:
+        parts.append(chart_html)
     for sec, anchor in zip(sections, anchor_ids):
         heading = sec.get("heading", "")
         if heading:
@@ -476,6 +709,9 @@ def render_article(article: dict, related: list[dict] | None = None) -> str:
             parts.append(f"<div class='gimg'><img src=\"{_esc(sec_img)}\" alt=\"{_esc(img_alt)}\" "
                          f"loading=\"lazy\"></div>")
         parts.append(_paragraphs(sec.get("body", "")))
+        spec_html = _spec_table(sec.get("spec_table") or [])
+        if spec_html:
+            parts.append(spec_html)
         if buy.get("name"):
             parts.append(_buybox(buy))
 
@@ -483,6 +719,10 @@ def render_article(article: dict, related: list[dict] | None = None) -> str:
     if conclusion:
         parts.append("<h2 class='g'>まとめ</h2>")
         parts.append(_paragraphs(conclusion))
+
+    faq_html = _faq_html(article.get("faq") or [])
+    if faq_html:
+        parts.append(faq_html)
 
     # 目次はセクションが3個以上の時だけ表示（2個以下は不要）
     toc_html = ""
@@ -499,7 +739,8 @@ def render_article(article: dict, related: list[dict] | None = None) -> str:
     og_url_tag = f'<meta property="og:url" content="{_esc(canonical)}">' if canonical else ""
     category = article.get("category", "")
     jsonld = (_article_jsonld(article, canonical, hero_url, now)
-              + _breadcrumb_jsonld(category, title, canonical))
+              + _breadcrumb_jsonld(category, title, canonical)
+              + _faq_jsonld(article.get("faq") or []))
 
     # 記事末尾の「人気の記事」（自分自身は除外）
     cur_slug = ""

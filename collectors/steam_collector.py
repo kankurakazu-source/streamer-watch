@@ -8,6 +8,8 @@ Steamの公開エンドポイント（APIキー不要）から、硬い数字ネ
 同接は storage の game_snapshots に保存して前回比の急増検知に使う想定。
 """
 
+import html
+import re
 import time
 
 import requests
@@ -155,6 +157,48 @@ def fetch_discounts(appids: list[int], cc: str = "jp") -> dict[int, int]:
             discount = 0
         out[aid] = discount
         time.sleep(0.5)  # 連続アクセスによるレート制限回避
+    return out
+
+
+def _clean_requirements_html(raw: str) -> str:
+    """pc_requirements内のHTML文字列を読める平文に整形する。"""
+    text = raw.replace("<br>", "\n").replace("<br/>", "\n").replace("<br />", "\n")
+    text = re.sub(r"<[^>]+>", "", text)
+    text = html.unescape(text)
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n\s*\n+", "\n", text)
+    return text.strip()[:800]
+
+
+def fetch_requirements(appid: int, cc: str = "jp", lang: str = "japanese") -> dict:
+    """
+    1タイトルのPC動作環境（Steam公式）を取得する。
+    戻り値: {"minimum": str, "recommended": str}（HTMLタグ除去済みの平文）。
+    取得不可/データ無しの場合は空文字を入れて返す（1件失敗しても続行）。
+    """
+    out = {"minimum": "", "recommended": ""}
+    try:
+        # filters="pc_requirements" を付けると data が空リストになって取得できないため、
+        # 他の取得関数(fetch_image_urls等)と同様にfilters無しで全体を取得する。
+        resp = requests.get(
+            STEAM_APPDETAILS_URL,
+            params={"appids": appid, "l": lang, "cc": cc},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        entry = resp.json().get(str(appid), {})
+        if not entry.get("success"):
+            return out
+        data = entry.get("data", {})
+        reqs = data.get("pc_requirements")
+        if not isinstance(reqs, dict):
+            return out
+        if reqs.get("minimum"):
+            out["minimum"] = _clean_requirements_html(reqs["minimum"])
+        if reqs.get("recommended"):
+            out["recommended"] = _clean_requirements_html(reqs["recommended"])
+    except (requests.exceptions.RequestException, ValueError, AttributeError):
+        return {"minimum": "", "recommended": ""}
     return out
 
 

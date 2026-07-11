@@ -269,3 +269,76 @@ def recent_article_topics(db_path: str, days: int = 21) -> list[dict]:
             (cutoff,),
         )
         return [{"title": r[0], "topic_key": r[1]} for r in cur.fetchall()]
+
+
+# ============================================
+# ゲーム方針用: game_snapshots の期間集計（推移グラフ・週間レポート用）
+# ============================================
+def get_metric_history(db_path: str, source: str, game_key: str, metric: str,
+                       days: int = 14) -> list[tuple[str, int]]:
+    """
+    指定 (source, game_key, metric) の直近days日分のスナップショットを
+    recorded_at昇順で返す（同接推移グラフ用）。value がNULLの行は除外。
+    戻り値: [(recorded_at_iso, value), ...]
+    """
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
+    with get_connection(db_path) as conn:
+        cur = conn.execute(
+            """
+            SELECT recorded_at, value FROM game_snapshots
+            WHERE source = ? AND game_key = ? AND metric = ?
+              AND recorded_at >= ? AND value IS NOT NULL
+            ORDER BY recorded_at ASC
+            """,
+            (source, str(game_key), metric, cutoff),
+        )
+        return [(r[0], r[1]) for r in cur.fetchall()]
+
+
+def weekly_player_summary(db_path: str, days: int = 7, limit: int = 10) -> list[dict]:
+    """
+    直近days日分のSteam同接(player_count)をgame_keyごとに集計し、
+    週間の動向（最新・週間ピーク・約1週間前・増減率）をまとめて返す（週間レポート記事用）。
+    データ点数が2未満のタイトルは除外し、peak降順でlimit件返す。
+    """
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
+    with get_connection(db_path) as conn:
+        cur = conn.execute(
+            """
+            SELECT game_key, game_name, value, recorded_at FROM game_snapshots
+            WHERE source = 'steam' AND metric = 'player_count'
+              AND recorded_at >= ? AND value IS NOT NULL
+            ORDER BY game_key, recorded_at ASC
+            """,
+            (cutoff,),
+        )
+        rows = cur.fetchall()
+
+    by_key: dict[str, list[tuple]] = {}
+    for game_key, game_name, value, recorded_at in rows:
+        by_key.setdefault(game_key, []).append((game_name, value, recorded_at))
+
+    out: list[dict] = []
+    for game_key, records in by_key.items():
+        try:
+            appid = int(game_key)
+        except (TypeError, ValueError):
+            continue
+        if len(records) < 2:
+            continue
+        name = records[-1][0] or str(appid)
+        latest = records[-1][1]
+        week_ago = records[0][1]
+        peak = max(v for _, v, _ in records)
+        out.append({
+            "appid": appid,
+            "name": name,
+            "latest": latest,
+            "peak": peak,
+            "week_ago": week_ago,
+            "growth_pct": calc_growth_rate(latest, week_ago),
+            "samples": len(records),
+        })
+
+    out.sort(key=lambda d: d["peak"], reverse=True)
+    return out[:limit]
