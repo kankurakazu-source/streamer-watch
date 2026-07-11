@@ -342,3 +342,47 @@ def weekly_player_summary(db_path: str, days: int = 7, limit: int = 10) -> list[
 
     out.sort(key=lambda d: d["peak"], reverse=True)
     return out[:limit]
+
+
+def weekly_twitch_summary(db_path: str, days: int = 7, limit: int = 10) -> list[dict]:
+    """
+    直近days日分のTwitch視聴者数(viewers)をgame_keyごとに集計し、
+    週間の動向（最新・週間ピーク・約1週間前・増減率）をまとめて返す（週間レポート記事用）。
+    データ点数が2未満のタイトルは除外し、peak降順でlimit件返す。
+    """
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
+    with get_connection(db_path) as conn:
+        cur = conn.execute(
+            """
+            SELECT game_key, game_name, value, recorded_at FROM game_snapshots
+            WHERE source = 'twitch' AND metric = 'viewers'
+              AND recorded_at >= ? AND value IS NOT NULL
+            ORDER BY game_key, recorded_at ASC
+            """,
+            (cutoff,),
+        )
+        rows = cur.fetchall()
+
+    by_key: dict[str, list[tuple]] = {}
+    for game_key, game_name, value, recorded_at in rows:
+        by_key.setdefault(game_key, []).append((game_name, value, recorded_at))
+
+    out: list[dict] = []
+    for game_key, records in by_key.items():
+        if len(records) < 2:
+            continue
+        name = records[-1][0] or game_key
+        latest = records[-1][1]
+        week_ago = records[0][1]
+        peak = max(v for _, v, _ in records)
+        out.append({
+            "name": name,
+            "latest": latest,
+            "peak": peak,
+            "week_ago": week_ago,
+            "growth_pct": calc_growth_rate(latest, week_ago),
+            "samples": len(records),
+        })
+
+    out.sort(key=lambda d: d["peak"], reverse=True)
+    return out[:limit]

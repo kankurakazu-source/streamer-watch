@@ -243,6 +243,39 @@ growth_pct=週間増減%、peak降順）:
     程度のヘッジにとどめる）。価格（円）は書かない。文体は既存の制約通り、だ・である調で統一する。
 """
 
+# 週間定点レポート（配信で人気のゲームランキング）指示。WEEKLY_NOTEと同じ経路（volatile側）で連結する。
+STREAM_NOTE = """\
+
+【重要: 今回は週間定点レポート『配信で人気のゲームランキング』を書くこと（毎週月曜の連載）】
+速報ではなく、当サイト実測のTwitch配信データを根拠にした定点観測レポートを書く。
+
+集計期間: {week_range}
+
+以下は当サイト実測の週間配信データ（latest=最新値、peak=週間ピーク、week_ago=約1週間前、
+growth_pct=週間増減%、peak降順）。※この数字は「Twitchの上位配信に含まれる合計視聴者数」を
+当サイトが定点集計したもので、Twitch全体の視聴者総数ではない:
+{stream_json}
+
+- title:「【週間】配信で人気のゲームランキングTOP◯」＋期間がわかる表現にする。category:
+    「データ分析」を選ぶ。event_type:「通常」を選ぶ。is_breaking: false にする。
+    main_game: ランキング1位のタイトル。topic_key:「週間配信:{week_range}」の形にする。
+- 記事冒頭〜早い段階で、数字の意味（上位配信の合計視聴者数の定点集計であり全体総数ではない）を
+    1文で正確に説明すること。
+- sections: TOP3の配信動向 → 伸び率が大きい急上昇タイトル → 「見て楽しむゲームか、自分で遊ぶ
+    ゲームか」（提供データ内にSteam同接があるタイトルは配信視聴と実プレイの比較で考察） →
+    来週の注目、等で構成する。セクションの主役タイトルにgame_nameを入れて購入導線を付ける。
+- 数字は提供データのみ使う。配信者個人の名前・動向は書かない（データに無いため）。データに
+    無い順位変動理由を断定しない（「〜とみられる」程度のヘッジにとどめる）。価格（円）は
+    書かない。文体は既存の制約通り、だ・である調で統一する。
+"""
+
+# Twitchの上位カテゴリに入る非ゲーム枠。「配信で人気のゲーム」ランキングから除外する。
+_NON_GAME_TWITCH = {
+    "Just Chatting", "IRL", "Music", "Sports", "Special Events", "Slots",
+    "Casino", "Virtual Casino", "ASMR", "Talk Shows & Podcasts", "Art",
+    "Pools, Hot Tubs, and Beach", "Animals, Aquariums, and Zoos", "Watch Parties",
+}
+
 ARTICLE_SCHEMA = {
     "type": "object",
     "properties": {
@@ -716,6 +749,9 @@ def _special_slot(now: datetime | None = None) -> str | None:
         当サイトのセール・買い時トラッカーの実績データを根拠にした買い時解説の資産記事。
     - "weekly"（日 14〜17時台）:
         毎週日曜の連載企画「Steam同接ランキング」週間定点レポート。
+    - "stream"（月 10〜13時台。primary11:00/retry12:00をカバー）:
+        週末の配信データが溜まった月曜午前に出す連載企画「配信で人気のゲームランキング」
+        週間定点レポート。日曜のSteam同接ランキングと対になる。
     """
     now = now or datetime.now()
     # Python の weekday(): 月=0, 火=1, 水=2, 木=3, 金=4, 土=5, 日=6
@@ -728,13 +764,15 @@ def _special_slot(now: datetime | None = None) -> str | None:
         return "sale"
     if weekday == 6 and 14 <= hour <= 17:
         return "weekly"
+    if weekday == 0 and 10 <= hour <= 13:
+        return "stream"
     return None
 
 
 def _build_special_note(kind: str | None, collected: dict, deals_data: list[dict],
                         recent: list[dict]) -> str:
     """特殊記事スロット用の追加指示(NOTE)を組み立てる。
-    kind: "evergreen" / "spec" / "sale" / "weekly" / None(通常記事)。
+    kind: "evergreen" / "spec" / "sale" / "weekly" / "stream" / None(通常記事)。
     データが足りず組み立てられない場合は空文字を返し、呼び出し側で通常記事にフォールバックさせる。
     特殊記事の失敗で通常記事生成そのものを止めないよう、例外はすべて握りつぶす。"""
     if not kind:
@@ -772,6 +810,21 @@ def _build_special_note(kind: str | None, collected: dict, deals_data: list[dict
             return WEEKLY_NOTE.format(
                 week_range=week_range,
                 weekly_json=json.dumps(weekly, ensure_ascii=False),
+            )
+
+        if kind == "stream":
+            # Just Chatting等の非ゲームカテゴリはランキングから除外する（余分に取って絞る）
+            raw = storage.weekly_twitch_summary(config.HISTORY_DB, limit=16)
+            stream = [r for r in raw if r.get("name") not in _NON_GAME_TWITCH][:10]
+            if not stream:
+                print("[WARN] 週間配信レポート用のデータが無いため通常記事にフォールバックします。")
+                return ""
+            now_jst = datetime.now()
+            week_range = (f"{(now_jst - timedelta(days=7)).strftime('%Y-%m-%d')}"
+                          f"〜{now_jst.strftime('%Y-%m-%d')}")
+            return STREAM_NOTE.format(
+                week_range=week_range,
+                stream_json=json.dumps(stream, ensure_ascii=False),
             )
 
         if kind == "spec":
@@ -833,7 +886,7 @@ def main():
                     help="retry は直近70分以内に成功していればスキップ（1時間後リトライ用）")
     ap.add_argument("--evergreen", action="store_true",
                     help="指定時はこの実行の全記事をエバーグリーン記事にする（手動テスト・強制用、--special evergreen と同義）")
-    ap.add_argument("--special", choices=["evergreen", "spec", "sale", "weekly"], default=None,
+    ap.add_argument("--special", choices=["evergreen", "spec", "sale", "weekly", "stream"], default=None,
                     help="この実行の全記事を指定タイプにする（手動テスト・強制用）")
     args = ap.parse_args()
     count = max(1, args.count)
