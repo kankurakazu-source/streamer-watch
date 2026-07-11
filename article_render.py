@@ -274,7 +274,7 @@ _PAGE = """<!DOCTYPE html>
 {share}
 {related}
   <footer>
-    <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。Amazonのアソシエイトとして、当メディアは適格販売により収入を得ています。</div>
+    <div class="disc">記事内のリンクにはアフィリエイト広告を含みます。価格・割引は公開情報を基にした掲載時点の参考値のため、最新の情報は各ストアでご確認ください。Amazonのアソシエイトとして、当メディアは適格販売により収入を得ています。</div>
     <div class="social">{x_footer}</div>
     <div class="flinks"><a href="../about.html">運営者情報</a> ・ <a href="../privacy.html">プライバシーポリシー</a></div>
     (c) {year} ガジェゲ（Gadget×Game） ／ データで見るゲームトレンド
@@ -553,7 +553,7 @@ def _buybox(game: dict) -> str:
         <a class="buy rakuten" href="{_esc(links['rakuten'])}" target="_blank" rel="nofollow noopener">楽天</a>
         <a class="buy dmm" href="{_esc(links['dmm'])}" target="_blank" rel="nofollow noopener">DMM</a>
       </div>
-      <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。当サイトはアフィリエイトリンクを使用しています。</div>
+      <div class="pnote">※価格・割引は掲載時点の参考値です。最新の価格は各ストアでご確認ください。</div>
     </div>"""
 
 
@@ -1070,7 +1070,7 @@ _LISTING_PAGE = """<!DOCTYPE html>
 {pagination}
 
   <footer>
-    <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。Amazonのアソシエイトとして、当メディアは適格販売により収入を得ています。</div>
+    <div class="disc">記事内のリンクにはアフィリエイト広告を含みます。価格・割引は公開情報を基にした掲載時点の参考値のため、最新の情報は各ストアでご確認ください。Amazonのアソシエイトとして、当メディアは適格販売により収入を得ています。</div>
     <div class="social">{x_footer}</div>
     <div class="flinks"><a href="{base}about.html">運営者情報</a> ・ <a href="{base}privacy.html">プライバシーポリシー</a></div>
     (c) {year} ガジェゲ（Gadget×Game） ／ データで見るゲームトレンド

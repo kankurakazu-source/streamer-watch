@@ -484,7 +484,7 @@ def render_deals_page(deals: list[dict], out_path: str) -> None:
   </div>
 
   <footer>
-    <div class="disc">当サイトはアフィリエイトプログラム（Amazonアソシエイト等）を利用し、商品の紹介で収益を得ることがあります。価格・割引はSteam等の公開情報を基にした参考値です。掲載時点の情報のため、最新の価格は各ストアでご確認ください。Amazonのアソシエイトとして、当メディアは適格販売により収入を得ています。</div>
+    <div class="disc">記事内のリンクにはアフィリエイト広告を含みます。価格・割引は公開情報を基にした掲載時点の参考値のため、最新の情報は各ストアでご確認ください。Amazonのアソシエイトとして、当メディアは適格販売により収入を得ています。</div>
     <div class="social">{_x_link_html(True)}</div>
     (c) {now_jst.year} ガジェゲ（Gadget×Game） ／ データで見るゲームトレンド
   </footer>
