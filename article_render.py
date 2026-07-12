@@ -156,6 +156,22 @@ _CSS = """
   .spec th{width:34%;text-align:left;font-weight:700;color:var(--muted);background:rgba(255,255,255,.03);padding:10px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top;}
   .spec td{padding:10px 14px;border-bottom:1px solid var(--line-soft);color:#d7e0ec;}
   .spec tr:last-child th,.spec tr:last-child td{border-bottom:none;}
+  /* ランキング表 */
+  .rank-wrap{overflow-x:auto;margin:16px 0;}
+  .ranking{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card);border:1px solid var(--line-soft);border-radius:12px;overflow:hidden;min-width:420px;}
+  .ranking th{text-align:left;font-weight:700;color:var(--muted);background:rgba(255,255,255,.03);padding:9px 12px;border-bottom:1px solid var(--line-soft);font-size:12px;letter-spacing:.03em;}
+  .ranking td{padding:9px 12px;border-bottom:1px solid var(--line-soft);color:#d7e0ec;}
+  .ranking tr:last-child td{border-bottom:none;}
+  .ranking td.rk{font-weight:800;color:var(--accent);width:36px;}
+  .ranking td.nm{font-weight:700;}
+  .ranking td.chg.up{color:var(--green);font-weight:700;}
+  .ranking td.chg.down{color:var(--sale);font-weight:700;}
+  .ranking td.chg.flat{color:var(--dim);}
+  .ranking tr:nth-child(-n+3) td.rk{font-size:15px;}
+  /* 連載ナビ（前回記事リンク） */
+  .series-nav{font-size:13px;color:var(--muted);background:rgba(255,255,255,.02);border:1px solid var(--line-soft);border-radius:10px;padding:10px 14px;margin:16px 0;}
+  .series-nav a{color:var(--accent);font-weight:700;}
+  .series-nav a:hover{text-decoration:underline;}
   /* FAQ */
   .faq{display:flex;flex-direction:column;gap:12px;margin:16px 0;}
   .faq .qa{background:var(--card);border:1px solid var(--line-soft);border-radius:12px;padding:14px 18px;}
@@ -221,7 +237,8 @@ _CSS = """
   .sbtn.hb{background:#00A4DE;font-size:19px;}
   @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
     .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}
-    .spec{font-size:12.5px;}.spec th{width:40%;padding:8px 10px;}.spec td{padding:8px 10px;}}
+    .spec{font-size:12.5px;}.spec th{width:40%;padding:8px 10px;}.spec td{padding:8px 10px;}
+    .ranking{font-size:12.5px;min-width:400px;}.ranking th,.ranking td{padding:8px 9px;}}
 """
 
 _PAGE = """<!DOCTYPE html>
@@ -620,6 +637,61 @@ def _spec_table(rows: list) -> str:
     return '<table class="spec"><tbody>' + "".join(trs) + "</tbody></table>"
 
 
+def _ranking_table(ranking: dict) -> str:
+    """
+    「今週のランキング一覧」表。ranking: {"value_label": str, "rows": [{"rank","name","value","change"}, ...]}。
+    name・valueが両方非空の行だけ採用する。有効行が0件なら空文字。
+    change は先頭が"+"ならup(緑)、数字が続く"-"ならdown(赤)、それ以外(単なる"-"など)はflat扱い。
+    """
+    ranking = ranking or {}
+    rows = ranking.get("rows") or []
+    trs = []
+    for r in rows:
+        r = r or {}
+        name = str(r.get("name", "")).strip()
+        value = str(r.get("value", "")).strip()
+        if not name or not value:
+            continue
+        rank = r.get("rank", "")
+        change = str(r.get("change", "")).strip()
+        if change.startswith("+"):
+            chg_cls = "up"
+        elif change.startswith("-") and change != "-":
+            chg_cls = "down"
+        else:
+            chg_cls = "flat"
+        trs.append(
+            f"<tr><td class='rk'>{_esc(rank)}</td><td class='nm'>{_esc(name)}</td>"
+            f"<td>{_esc(value)}</td><td class='chg {chg_cls}'>{_esc(change)}</td></tr>"
+        )
+    if not trs:
+        return ""
+    value_label = str(ranking.get("value_label") or "").strip() or "値"
+    return (
+        "<h2 class='g'>今週のランキング一覧</h2>\n"
+        "<div class='rank-wrap'><table class='ranking'>\n"
+        f"<thead><tr><th>#</th><th>タイトル</th><th>{_esc(value_label)}</th><th>週間増減</th></tr></thead>\n"
+        f"<tbody>{''.join(trs)}</tbody>\n"
+        "</table></div>"
+    )
+
+
+def _series_nav(prev: dict) -> str:
+    """
+    連載の前回記事へのリンク導線。prev: {"slug": str, "title": str}。
+    slug・titleが両方非空の時のみ出力する。
+    """
+    prev = prev or {}
+    slug = str(prev.get("slug", "")).strip()
+    title = str(prev.get("title", "")).strip()
+    if not slug or not title:
+        return ""
+    return (
+        "<div class='series-nav'>📅 連載の前回: "
+        f'<a href="/articles/{_esc(slug)}">{_esc(title)}</a></div>'
+    )
+
+
 def _filter_faq(faq: list) -> list[tuple[str, str]]:
     """faqリストのうちq・aが両方非空の項目だけを(q, a)タプルで返す。"""
     out = []
@@ -694,6 +766,13 @@ def render_article(article: dict, related: list[dict] | None = None) -> str:
             anchor_ids.append(None)
 
     parts = []
+    # 連載ナビ(前回記事) → ランキング表 → メイングラフ → 各セクション、の順で本文先頭に積む
+    series_nav_html = _series_nav(article.get("prev_in_series") or {})
+    if series_nav_html:
+        parts.append(series_nav_html)
+    ranking_html = _ranking_table(article.get("ranking") or {})
+    if ranking_html:
+        parts.append(ranking_html)
     chart_html = _player_chart_svg(article.get("player_chart") or {})
     if chart_html:
         parts.append(chart_html)
@@ -702,10 +781,14 @@ def render_article(article: dict, related: list[dict] | None = None) -> str:
         if heading:
             id_attr = f" id='{anchor}'" if anchor else ""
             parts.append(f"<h2 class='g'{id_attr}>{_esc(heading)}</h2>")
+        sec_chart_html = _player_chart_svg(sec.get("player_chart") or {})
+        if sec_chart_html:
+            parts.append(sec_chart_html)
         buy = sec.get("buy") or {}
         # セクションのバナー画像は使い回しを避けた sec['image_url'] を優先（無ければbuyの画像）
+        # ただしセクショングラフがある場合はグラフを優先し、gimg(バナー画像)は出さない
         sec_img = sec.get("image_url") or buy.get("image_url", "")
-        if sec_img:
+        if sec_img and not sec_chart_html:
             img_alt = heading or title
             parts.append(f"<div class='gimg'><img src=\"{_esc(sec_img)}\" alt=\"{_esc(img_alt)}\" "
                          f"loading=\"lazy\"></div>")

@@ -257,6 +257,24 @@ def list_articles(db_path: str, limit: int = 12) -> list[dict]:
         return [dict(zip(cols, row)) for row in cur.fetchall()]
 
 
+def latest_article_by_topic_prefix(db_path: str, prefix: str, exclude_slug: str = "") -> dict | None:
+    """topic_key が prefix で始まる記事のうち、exclude_slug を除いた最新1件を
+    {"slug":..., "title":...} で返す（連載記事の「前回記事」リンク用）。無ければNone。"""
+    with get_connection(db_path) as conn:
+        cur = conn.execute(
+            """
+            SELECT slug, title FROM articles
+            WHERE topic_key LIKE ? AND slug != ?
+            ORDER BY created_at DESC LIMIT 1
+            """,
+            (prefix + "%", exclude_slug),
+        )
+        row = cur.fetchone()
+        if not row:
+            return None
+        return {"slug": row[0], "title": row[1]}
+
+
 def recent_article_topics(db_path: str, days: int = 21) -> list[dict]:
     """直近days日以内に公開したタイトル/トピックを返す（重複回避のプロンプト用）。"""
     cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
