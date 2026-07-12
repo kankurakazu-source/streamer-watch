@@ -31,6 +31,7 @@ except (AttributeError, ValueError):
     pass
 
 import requests
+from PIL import Image
 
 import config
 import storage
@@ -522,6 +523,35 @@ def generate_article(collected: dict, recent: list[dict], api_key: str,
     return json.loads(text)
 
 
+def _fallback_hero_card(article: dict, slug: str) -> str:
+    """
+    hero画像が無い記事（Steamにも楽天にも画像が無いタイトル）向けの最終フォールバック。
+    Xポスト用のテキストカード生成(image_card.render_card)を流用し、著作権リスクのない
+    オリジナルのタイトルカードをhero画像として作る。
+    成功時は "/assets/cards/{slug}.jpg" を返す。失敗時は例外を握りつぶして空文字を返す。
+    """
+    cards_dir = os.path.join(config.SITE_DIR, "assets", "cards")
+    tmp_png = os.path.join(cards_dir, f"{slug}.tmp.png")
+    out_jpg = os.path.join(cards_dir, f"{slug}.jpg")
+    try:
+        os.makedirs(cards_dir, exist_ok=True)
+        draft = {
+            "type": "速報" if article.get("is_breaking") else "考察",
+            "headline": article.get("title", ""),
+            "bullets": [article["tldr"]] if article.get("tldr") else [],
+        }
+        image_card.render_card(draft, tmp_png)
+        with Image.open(tmp_png) as im:
+            im.convert("RGB").save(out_jpg, "JPEG", quality=82, optimize=True)
+        return f"/assets/cards/{slug}.jpg"
+    except Exception as e:
+        print(f"[WARN] フォールバックhero画像の生成に失敗: {e}")
+        return ""
+    finally:
+        if os.path.exists(tmp_png):
+            os.remove(tmp_png)
+
+
 def publish(article: dict, hero_url: str, seq: int = 1) -> dict:
     """記事HTMLを書き出し、DBに登録し、トップページの一覧を更新。戻り値: メタ情報。
     seq: 同一実行で複数本公開する際にスラッグを分けるための連番(1,2,...)。"""
@@ -532,6 +562,13 @@ def publish(article: dict, hero_url: str, seq: int = 1) -> dict:
 
     # OGP用の正規URL（公開URLベースがあれば）。render_article がog:url/canonicalに使う。
     article["canonical_url"] = build_public_url(slug)
+
+    # hero画像が無い記事（Steamにも楽天にも画像が無いタイトル）は、テキストカードで代替する。
+    if not hero_url:
+        fb = _fallback_hero_card(article, slug)
+        if fb:
+            hero_url = fb
+            article["hero_image_url"] = fb
 
     # 記事HTML（末尾の「人気の記事」用に既存記事を渡す。current はまだ未登録なので自然に除外される）
     try:

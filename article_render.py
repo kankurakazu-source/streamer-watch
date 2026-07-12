@@ -632,7 +632,7 @@ def _filter_faq(faq: list) -> list[tuple[str, str]]:
 
 
 def _faq_html(faq: list) -> str:
-    """よくある質問セクション。有効項目が0件なら空文字。"""
+    """Q&Aセクション。有効項目が0件なら空文字。"""
     items = _filter_faq(faq)
     if not items:
         return ""
@@ -640,7 +640,7 @@ def _faq_html(faq: list) -> str:
         f"<div class='qa'><div class='q'>{_esc(q)}</div><div class='a'>{_esc(a)}</div></div>"
         for q, a in items
     )
-    return f"<h2 class='g'>よくある質問</h2>\n<div class='faq'>{qa}</div>"
+    return f"<h2 class='g'>Q&amp;A</h2>\n<div class='faq'>{qa}</div>"
 
 
 def _faq_jsonld(faq: list) -> str:
@@ -733,13 +733,16 @@ def render_article(article: dict, related: list[dict] | None = None) -> str:
 
     # OGP用メタ: 説明文はlead(無ければtldr)を160字程度に、画像はhero(無ければサイト共通OG画像)
     base_url = (config.SITE_BASE_URL or "").rstrip("/")
+    # heroがサイト内相対パス("/"始まり)の場合、og:image/JSON-LDには絶対URLが必要なため
+    # base_urlと結合する（<img src>側は相対のままでよい）。
+    hero_abs = f"{base_url}{hero_url}" if hero_url.startswith("/") and base_url else hero_url
     og_desc = _esc((article.get("lead") or article.get("tldr") or "").strip()[:160])
-    og_image = hero_url or (f"{base_url}/ogp.png" if base_url else "")
+    og_image = hero_abs or (f"{base_url}/ogp.png" if base_url else "")
     canonical = (article.get("canonical_url") or "").strip()
     canonical_tag = f'<link rel="canonical" href="{_esc(canonical)}">' if canonical else ""
     og_url_tag = f'<meta property="og:url" content="{_esc(canonical)}">' if canonical else ""
     category = article.get("category", "")
-    jsonld = (_article_jsonld(article, canonical, hero_url, now)
+    jsonld = (_article_jsonld(article, canonical, hero_abs, now)
               + _breadcrumb_jsonld(category, title, canonical)
               + _faq_jsonld(article.get("faq") or []))
 
