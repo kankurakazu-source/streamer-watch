@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if(location.hostname.endsWith('.pages.dev')){location.replace('https://gadgegame.com'+location.pathname+location.search+location.hash);}</script>
+<title>7-Zipに深刻な脆弱性、今すぐv26.02以降への更新を 手動アップデートが必須の理由 ｜ガジェゲ</title>
+<meta name="description" content="定番の圧縮解凍ソフト「7-Zip」に、深刻な脆弱性を修正するパッチが配信された。7-Zipは自動更新機能を持たないため、多くのPCゲーマーが使っているにもかかわらず放置されがちなソフトだ。ゲームのMod導入やアーカイブ展開で日常的に使うツールだけに、今すぐ手動更新を確認する価値がある。">
+<link rel="canonical" href="https://gadgegame.com/articles/20260722-0153-1">
+<!-- OGP / Twitter Card（Xでリンクを貼った時のカード表示。CTRに直結） -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="ガジェゲ（Gadget×Game）">
+<meta property="og:title" content="7-Zipに深刻な脆弱性、今すぐv26.02以降への更新を 手動アップデートが必須の理由">
+<meta property="og:description" content="定番の圧縮解凍ソフト「7-Zip」に、深刻な脆弱性を修正するパッチが配信された。7-Zipは自動更新機能を持たないため、多くのPCゲーマーが使っているにもかかわらず放置されがちなソフトだ。ゲームのMod導入やアーカイブ展開で日常的に使うツールだけに、今すぐ手動更新を確認する価値がある。">
+<meta property="og:url" content="https://gadgegame.com/articles/20260722-0153-1">
+<meta property="og:image" content="https://gadgegame.com/assets/cards/20260722-0153-1.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="7-Zipに深刻な脆弱性、今すぐv26.02以降への更新を 手動アップデートが必須の理由">
+<meta name="twitter:description" content="定番の圧縮解凍ソフト「7-Zip」に、深刻な脆弱性を修正するパッチが配信された。7-Zipは自動更新機能を持たないため、多くのPCゲーマーが使っているにもかかわらず放置されがちなソフトだ。ゲームのMod導入やアーカイブ展開で日常的に使うツールだけに、今すぐ手動更新を確認する価値がある。">
+<meta name="twitter:image" content="https://gadgegame.com/assets/cards/20260722-0153-1.jpg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "7-Zipに深刻な脆弱性、今すぐv26.02以降への更新を 手動アップデートが必須の理由", "description": "定番の圧縮解凍ソフト「7-Zip」に、深刻な脆弱性を修正するパッチが配信された。7-Zipは自動更新機能を持たないため、多くのPCゲーマーが使っているにもかかわらず放置されがちなソフトだ。ゲームのMod導入やアーカイブ展開で日常的に使うツールだけに、今すぐ手動更新を確認する価値がある。", "datePublished": "2026-07-22T01:53:44+09:00", "dateModified": "2026-07-22T01:53:44+09:00", "author": {"@type": "Organization", "name": "ガジェゲ"}, "publisher": {"@type": "Organization", "name": "ガジェゲ"}, "image": "https://gadgegame.com/assets/cards/20260722-0153-1.jpg", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gadgegame.com/articles/20260722-0153-1"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://gadgegame.com/"}, {"@type": "ListItem", "position": 2, "name": "デバイス", "item": "https://gadgegame.com/category/device"}, {"@type": "ListItem", "position": 3, "name": "7-Zipに深刻な脆弱性、今すぐv26.02以降への更新を 手動アップデートが必須の理由", "item": "https://gadgegame.com/articles/20260722-0153-1"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "7-Zipは自動で更新されるのか。", "acceptedAnswer": {"@type": "Answer", "text": "されない。7-Zipには自動更新機能が無いため、ユーザーが公式サイトから最新版を手動で入れ替える必要がある。"}}, {"@type": "Question", "name": "修正版はどのバージョンから適用されているのか。", "acceptedAnswer": {"@type": "Answer", "text": "報道によればv26.02以降で修正が適用されているとされる。手元のバージョンがそれより古い場合は更新が望ましい。"}}, {"@type": "Question", "name": "ゲーマーにとってなぜ重要なのか。", "acceptedAnswer": {"@type": "Answer", "text": "Mod配布や旧作インストーラーの展開など、出所が様々なアーカイブファイルを開く機会が多いため、脆弱性を突かれるリスクが他の用途より高いといえる。"}}]}</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="alternate icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<style>
+  :root{
+    --bg:#0a0e16; --bg2:#0c1220; --card:#121a29; --card-hi:#172135; --line:#243046; --line-soft:#1a2334;
+    --text:#eef2f8; --muted:#a7b7ca; --dim:#647689;
+    --accent:#39d8ff; --accent-2:#8a6bff; --sale:#ff6a3d; --green:#2fd27e; --violet:#a78bfa;
+    --amazon:#ff9900; --rakuten:#c5121a; --dmm:#f04e23; --steam:#1387b8;
+    --shadow:0 10px 30px rgba(0,0,0,.45);
+    --grad:linear-gradient(135deg,var(--accent),var(--accent-2));
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Noto Sans JP","Segoe UI",system-ui,-apple-system,"Meiryo",sans-serif;
+    line-height:1.9;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:"palt";}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 20px;}
+  header{position:sticky;top:0;z-index:20;background:rgba(10,14,22,.72);
+    backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--line-soft);}
+  .head{display:flex;align-items:center;justify-content:space-between;height:60px;}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;}
+  .logo{text-decoration:none;}
+  .logo-mark{width:28px;height:28px;border-radius:8px;display:block;flex:0 0 auto;box-shadow:0 0 16px rgba(57,216,255,.30);}
+  .logo-name{display:inline-flex;flex-direction:column;line-height:1.04;}
+  .logo-sub{font-size:9px;font-weight:700;letter-spacing:.13em;color:var(--accent);font-style:normal;text-transform:uppercase;margin-top:1px;}
+  nav{display:flex;align-items:center;gap:16px;font-size:14px;color:var(--muted);}
+  nav a:hover{color:var(--text);}
+  .x-link{display:inline-flex;align-items:center;gap:5px;color:var(--muted);transition:color .15s;}
+  .x-link:hover{color:var(--accent);}
+  .x-link svg{width:16px;height:16px;}
+  footer .social{margin:0 0 12px;}
+  footer .social .x-link{font-weight:700;color:var(--text);}
+  footer .social .x-link:hover{color:var(--accent);}
+  .article{max-width:720px;margin:0 auto;padding:30px 0 10px;}
+  .crumb{font-size:12px;color:var(--dim);margin-bottom:14px;}
+  .crumb a:hover{color:var(--accent);}
+  .cat{display:inline-block;font-size:12px;font-weight:800;padding:4px 12px;border-radius:100px;letter-spacing:.02em;
+    background:rgba(255,106,61,.15);color:var(--sale);border:1px solid rgba(255,106,61,.3);}
+  h1{font-size:30px;line-height:1.45;margin:14px 0 12px;font-weight:800;letter-spacing:.005em;}
+  .meta{font-size:13px;color:var(--dim);margin-bottom:20px;}
+  .hero{width:100%;height:320px;border-radius:16px;background:var(--bg2) center/cover;overflow:hidden;
+    box-shadow:var(--shadow);border:1px solid var(--line-soft);}
+  .hero img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .lead{font-size:17px;margin:24px 0;color:#dfe7f1;line-height:1.95;}
+  .tldr{background:linear-gradient(135deg,rgba(57,216,255,.08),rgba(138,107,255,.08));
+    border:1px solid rgba(57,216,255,.28);border-radius:14px;padding:16px 20px;margin:24px 0;}
+  .tldr .lbl{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);}
+  .tldr .body{font-size:15.5px;margin-top:6px;color:var(--text);}
+  /* 目次(TOC): tldrボックスと調和する控えめなカード */
+  .toc{background:rgba(255,255,255,.02);border:1px solid var(--line-soft);border-radius:14px;
+    padding:16px 20px;margin:24px 0;}
+  .toc .lbl{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+  .toc ol{margin:10px 0 0;padding-left:22px;}
+  .toc li{margin:7px 0;color:var(--muted);}
+  .toc li::marker{color:var(--accent);font-weight:800;}
+  .toc a{color:var(--text);}
+  .toc a:hover{color:var(--accent);}
+  h2.g{font-size:22px;margin:38px 0 8px;padding-top:20px;border-top:1px solid var(--line-soft);
+    font-weight:800;letter-spacing:.01em;}
+  .gimg{width:100%;height:210px;border-radius:14px;background:var(--bg2) center/cover;margin:14px 0;
+    overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line-soft);}
+  .gimg img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  p{margin:14px 0;color:#d7e0ec;}
+  .buybox{margin:20px 0;border:1px solid rgba(255,106,61,.28);border-radius:16px;padding:18px;
+    background:linear-gradient(135deg,rgba(255,106,61,.08),rgba(255,45,110,.05));box-shadow:var(--shadow);}
+  .buybox .bt{display:flex;gap:14px;align-items:center;}
+  .buybox .th{width:130px;height:62px;border-radius:10px;background:var(--bg2) center/cover;flex:0 0 auto;
+    overflow:hidden;border:1px solid var(--line-soft);}
+  .buybox .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .buybox .name{font-weight:800;font-size:15.5px;}
+  .buybox .off{margin-top:5px;font-size:12px;font-weight:800;color:#fff;
+    background:linear-gradient(135deg,#ff6a3d,#ff2d6e);padding:3px 10px;border-radius:100px;display:inline-block;}
+  .buybox .buys{display:flex;gap:10px;margin-top:16px;}
+  .buy{flex:1;text-align:center;font-size:14px;font-weight:800;padding:12px 4px;border-radius:11px;color:#fff;
+    transition:transform .12s,filter .15s,box-shadow .15s;}
+  .buy:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 8px 20px rgba(0,0,0,.4);}
+  .buy:active{transform:translateY(0);}
+  .buy.amazon{background:var(--amazon);color:#231a08;}
+  .buy.rakuten{background:var(--rakuten);}
+  .buy.dmm{background:var(--dmm);}
+  .buy.steam{background:var(--steam);}
+  .pnote{font-size:11px;color:var(--dim);margin-top:10px;line-height:1.7;}
+  /* 割引履歴（買い時データ） */
+  .dealhist{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:14px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.09);font-size:12px;color:var(--muted);}
+  .dealhist .k{color:var(--dim);margin-right:4px;}
+  .dh-badge{font-size:11px;font-weight:800;padding:2px 10px;border-radius:100px;}
+  .dh-badge.buy{background:rgba(47,210,126,.16);color:var(--green);border:1px solid rgba(47,210,126,.35);}
+  .dh-badge.sale{background:rgba(255,106,61,.16);color:var(--sale);border:1px solid rgba(255,106,61,.35);}
+  .dh-badge.watch{background:rgba(90,168,255,.16);color:#5aa8ff;border:1px solid rgba(90,168,255,.35);}
+  .dh-badge.wait{background:rgba(255,255,255,.06);color:var(--dim);border:1px solid var(--line);}
+  .dh-link{font-size:11.5px;font-weight:700;color:var(--accent);}
+  /* 同接推移グラフ */
+  .chart{margin:24px 0;margin-left:0;margin-right:0;}
+  .chart svg{display:block;width:100%;height:auto;background:var(--bg2);border:1px solid var(--line-soft);border-radius:14px;}
+  .chart figcaption{font-size:11.5px;color:var(--dim);margin-top:8px;text-align:center;}
+  /* セクションのスペック表 */
+  .spec{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px;background:var(--card);border:1px solid var(--line-soft);border-radius:12px;overflow:hidden;}
+  .spec th{width:34%;text-align:left;font-weight:700;color:var(--muted);background:rgba(255,255,255,.03);padding:10px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top;}
+  .spec td{padding:10px 14px;border-bottom:1px solid var(--line-soft);color:#d7e0ec;}
+  .spec tr:last-child th,.spec tr:last-child td{border-bottom:none;}
+  /* ランキング表 */
+  .rank-wrap{overflow-x:auto;margin:16px 0;}
+  .ranking{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card);border:1px solid var(--line-soft);border-radius:12px;overflow:hidden;min-width:420px;}
+  .ranking th{text-align:left;font-weight:700;color:var(--muted);background:rgba(255,255,255,.03);padding:9px 12px;border-bottom:1px solid var(--line-soft);font-size:12px;letter-spacing:.03em;}
+  .ranking td{padding:9px 12px;border-bottom:1px solid var(--line-soft);color:#d7e0ec;}
+  .ranking tr:last-child td{border-bottom:none;}
+  .ranking td.rk{font-weight:800;color:var(--accent);width:36px;}
+  .ranking td.nm{font-weight:700;}
+  .ranking td.chg.up{color:var(--green);font-weight:700;}
+  .ranking td.chg.down{color:var(--sale);font-weight:700;}
+  .ranking td.chg.flat{color:var(--dim);}
+  .ranking tr:nth-child(-n+3) td.rk{font-size:15px;}
+  /* 連載ナビ（前回記事リンク） */
+  .series-nav{font-size:13px;color:var(--muted);background:rgba(255,255,255,.02);border:1px solid var(--line-soft);border-radius:10px;padding:10px 14px;margin:16px 0;}
+  .series-nav a{color:var(--accent);font-weight:700;}
+  .series-nav a:hover{text-decoration:underline;}
+  /* FAQ */
+  .faq{display:flex;flex-direction:column;gap:12px;margin:16px 0;}
+  .faq .qa{background:var(--card);border:1px solid var(--line-soft);border-radius:12px;padding:14px 18px;}
+  .faq .q{font-weight:800;font-size:14.5px;color:var(--text);}
+  .faq .q::before{content:"Q. ";color:var(--accent);}
+  .faq .a{margin-top:6px;font-size:13.5px;color:var(--muted);line-height:1.85;}
+  .faq .a::before{content:"A. ";color:var(--sale);font-weight:800;}
+  .pr-note{font-size:11.5px;color:var(--dim);margin:0 0 20px;padding:8px 12px;
+    border:1px solid var(--line-soft);border-radius:8px;background:rgba(255,255,255,.02);line-height:1.7;}
+  .back{display:inline-flex;align-items:center;gap:6px;margin:30px 0 0;font-size:14px;font-weight:700;color:var(--accent);}
+  .back:hover{gap:10px;transition:gap .15s;}
+  footer{margin-top:46px;border-top:1px solid var(--line-soft);padding:26px 0 44px;color:var(--dim);font-size:12px;
+    background:linear-gradient(180deg,transparent,rgba(138,107,255,.04));}
+  footer .disc{max-width:720px;margin:0 auto 14px;background:var(--card);border:1px solid var(--line-soft);
+    border-radius:12px;padding:14px 16px;color:var(--muted);line-height:1.75;}
+  footer .flinks{max-width:720px;margin:0 auto 12px;font-size:11.5px;color:var(--dim);}
+  footer .flinks a{color:var(--dim);text-decoration:underline;text-underline-offset:2px;}
+  footer .flinks a:hover{color:var(--accent);}
+  /* 人気の記事（記事下の回遊導線） */
+  .related-block{max-width:1000px;margin:44px auto 0;}
+  .related-block .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 0 18px;}
+  .related-block .sec-head .k{font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
+  .related-block .sec-head h2{font-size:21px;margin:6px 0 0;font-weight:800;letter-spacing:.01em;display:flex;align-items:center;gap:11px;}
+  .related-block .sec-head h2 .ic{width:6px;height:22px;border-radius:3px;background:var(--grad);display:inline-block;}
+  .related-block .sec-head .note{font-size:12.5px;color:var(--dim);}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));}
+  .acard{position:relative;display:flex;gap:15px;background:var(--card);border:1px solid var(--line-soft);
+    border-radius:16px;padding:14px;overflow:hidden;transition:transform .22s,border-color .22s,box-shadow .22s,background .22s;}
+  .acard:hover{transform:translateY(-4px);background:var(--card-hi);border-color:rgba(57,216,255,.5);
+    box-shadow:var(--shadow),0 8px 34px rgba(57,216,255,.16);}
+  .acard .th{width:120px;height:82px;flex:0 0 auto;border-radius:11px;background:var(--bg2) center/cover no-repeat;overflow:hidden;transition:filter .22s;}
+  .acard .th img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;}
+  .acard:hover .th{filter:brightness(1.08) saturate(1.05);}
+  .acard .th.noimg{background:radial-gradient(120px 80px at 70% 20%,rgba(138,107,255,.35),transparent 60%),linear-gradient(135deg,#182236,#10182a);position:relative;}
+  .acard .th.noimg::after{content:"GADGET";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:10px;font-weight:800;letter-spacing:.22em;}
+  .acbody{min-width:0;display:flex;flex-direction:column;}
+  .acmeta{display:flex;align-items:center;gap:7px;margin-bottom:7px;flex-wrap:wrap;}
+  .acard .cat{display:inline-block;font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:100px;letter-spacing:.02em;
+    background:rgba(57,216,255,.14);color:var(--accent);border:1px solid rgba(57,216,255,.25);}
+  .acard .cat.o{background:rgba(255,106,61,.15);color:var(--sale);border-color:rgba(255,106,61,.3);}
+  .acard .cat.g{background:rgba(47,210,126,.15);color:var(--green);border-color:rgba(47,210,126,.3);}
+  .acard .cat.p{background:rgba(167,139,250,.16);color:var(--violet);border-color:rgba(167,139,250,.3);}
+  .acard .pill-break{font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 9px;border-radius:100px;color:#fff;
+    background:linear-gradient(135deg,#ff6a3d,#ff2d6e);box-shadow:0 0 14px rgba(255,45,110,.45);}
+  .acard .ttl{font-size:15px;font-weight:700;margin:0 0 6px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard:hover .ttl{color:#fff;}
+  .acard .ex{font-size:12px;color:var(--muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard .d{font-size:11px;color:var(--dim);margin-top:auto;padding-top:8px;}
+  .acard.ranked .th{width:110px;}
+  .rank{position:absolute;top:8px;left:8px;z-index:2;min-width:26px;height:26px;padding:0 6px;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:14px;color:#07101c;background:var(--grad);border-radius:8px;box-shadow:0 4px 14px rgba(57,216,255,.4);}
+  /* この記事を共有 */
+  .share-block{max-width:720px;margin:34px auto 0;padding-top:22px;border-top:1px solid var(--line-soft);text-align:center;}
+  .share-ttl{font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--muted);margin:0 0 16px;}
+  .share-row{display:flex;justify-content:center;gap:14px;}
+  .sbtn{width:50px;height:50px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:800;letter-spacing:.02em;box-shadow:0 4px 14px rgba(0,0,0,.35);
+    transition:transform .12s,filter .15s;}
+  .sbtn:hover{transform:translateY(-3px);filter:brightness(1.1);}
+  .sbtn.x{background:#000;border:1px solid #2a3448;}
+  .sbtn.fb{background:#1877F2;}
+  .sbtn.line{background:#06C755;font-size:13px;}
+  .sbtn.hb{background:#00A4DE;font-size:19px;}
+  @media(max-width:680px){h1{font-size:24px;}.hero{height:210px;}.buybox .buys{flex-wrap:wrap;}
+    .grid{grid-template-columns:1fr;gap:13px;}.acard .th{width:110px;height:74px;}
+    .spec{font-size:12.5px;}.spec th{width:40%;padding:8px 10px;}.spec td{padding:8px 10px;}
+    .ranking{font-size:12.5px;min-width:400px;}.ranking th,.ranking td{padding:8px 9px;}}
+</style>
+</head>
+<body>
+<header><div class="wrap head">
+  <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="28" height="28"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
+  <nav><a href="../index.html">トップ</a><a href="../archive.html">全記事</a><a href="../deals.html">🔥セール・買い時</a><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a></nav>
+</div></header>
+
+<main class="wrap">
+  <article class="article">
+    <div class="crumb"><a href="../index.html">ホーム</a> › デバイス</div>
+    <span class="cat">デバイス</span>
+    <h1>7-Zipに深刻な脆弱性、今すぐv26.02以降への更新を 手動アップデートが必須の理由</h1>
+    <div class="meta">2026/07/22 ・ 文: <a href="../about.html">ガジェゲ編集部</a></div>
+    <div class="pr-note">※本記事にはアフィリエイト広告（プロモーション）が含まれます。</div>
+    <div class='hero'><img src="/assets/cards/20260722-0153-1.jpg" alt="7-Zipに深刻な脆弱性、今すぐv26.02以降への更新を 手動アップデートが必須の理由のメインビジュアル" fetchpriority="high"></div>
+    <p class="lead">定番の圧縮解凍ソフト「7-Zip」に、深刻な脆弱性を修正するパッチが配信された。7-Zipは自動更新機能を持たないため、多くのPCゲーマーが使っているにもかかわらず放置されがちなソフトだ。ゲームのMod導入やアーカイブ展開で日常的に使うツールだけに、今すぐ手動更新を確認する価値がある。</p>
+    <div class='tldr'><div class='lbl'>結論</div><div class='body'>7-Zip利用者はバージョンがv26.02以降か確認し、古ければ公式サイトから手動で入れ替えるべきだ。</div></div>
+    <nav class='toc'><div class='lbl'>目次</div><ol><li><a href="#sec-1">7-Zipの脆弱性、何が問題なのか</a></li><li><a href="#sec-2">対処法はv26.02以降への手動更新のみ</a></li><li><a href="#sec-3">ゲーマーが7-Zipを使う場面と注意点</a></li></ol></nav>
+    <h2 class='g' id='sec-1'>7-Zipの脆弱性、何が問題なのか</h2>
+<p>PCGamerの報道によると、7-Zipに存在した深刻な脆弱性を修正するパッチが公開された。7-ZipはブラウザやOSのように自動更新される仕組みを持たないため、修正版が出ても手元のPCには反映されない。ゲームのMod配布やDLC素材のzip/rar展開など、ゲーマーが日常的に触れるツールである点も見過ごせない。</p>
+<h2 class='g' id='sec-2'>対処法はv26.02以降への手動更新のみ</h2>
+<p>報道では、修正が適用されたのはバージョン26.02以降とされている。自動更新の仕組みが無い以上、ユーザー自身が現在のバージョンを確認し、古ければ公式サイトから最新インストーラーを取得して入れ替える必要がある。放置していると、脆弱性を突いた悪意あるアーカイブファイルを開いた際に被害を受けるリスクが残る。</p>
+<table class="spec"><tbody><tr><th>対象ソフト</th><td>7-Zip</td></tr><tr><th>修正版バージョン</th><td>v26.02以降</td></tr><tr><th>更新方式</th><td>手動更新が必要（自動更新機能なし）</td></tr></tbody></table>
+<h2 class='g' id='sec-3'>ゲーマーが7-Zipを使う場面と注意点</h2>
+<p>7-ZipはゲームのカスタムMod配布、旧作のインストーラー展開、大容量アーカイブの解凍などで広く使われている定番ツールだ。フリーソフトゆえに更新の告知が目に入りにくく、脆弱性情報も自分から追いかけない限り気づきにくい。特に配布元が不明なアーカイブファイルを扱う機会が多いMod愛好者ほど、早めの更新が望ましい。</p>
+<h2 class='g'>まとめ</h2>
+<p>7-Zipは無料で長く使われてきた分、更新の意識が薄れがちなツールだ。今回のパッチは深刻度が高いとされるため、手動更新を後回しにせず、バージョン確認から始める必要がある。Modや圧縮ファイルを日常的に扱うゲーマーほど優先度は高いといえる。</p>
+<h2 class='g'>Q&amp;A</h2>
+<div class='faq'><div class='qa'><div class='q'>7-Zipは自動で更新されるのか。</div><div class='a'>されない。7-Zipには自動更新機能が無いため、ユーザーが公式サイトから最新版を手動で入れ替える必要がある。</div></div><div class='qa'><div class='q'>修正版はどのバージョンから適用されているのか。</div><div class='a'>報道によればv26.02以降で修正が適用されているとされる。手元のバージョンがそれより古い場合は更新が望ましい。</div></div><div class='qa'><div class='q'>ゲーマーにとってなぜ重要なのか。</div><div class='a'>Mod配布や旧作インストーラーの展開など、出所が様々なアーカイブファイルを開く機会が多いため、脆弱性を突かれるリスクが他の用途より高いといえる。</div></div></div>
+    <a class="back" href="../index.html">← トップに戻る</a>
+  </article>
+  <section class="share-block">
+    <div class="share-ttl">この記事を共有</div>
+    <div class="share-row">
+      <a class="sbtn x" href="https://x.com/intent/tweet?text=7-Zip%E3%81%AB%E6%B7%B1%E5%88%BB%E3%81%AA%E8%84%86%E5%BC%B1%E6%80%A7%E3%80%81%E4%BB%8A%E3%81%99%E3%81%90v26.02%E4%BB%A5%E9%99%8D%E3%81%B8%E3%81%AE%E6%9B%B4%E6%96%B0%E3%82%92%20%E6%89%8B%E5%8B%95%E3%82%A2%E3%83%83%E3%83%97%E3%83%87%E3%83%BC%E3%83%88%E3%81%8C%E5%BF%85%E9%A0%88%E3%81%AE%E7%90%86%E7%94%B1&url=https%3A%2F%2Fgadgegame.com%2Farticles%2F20260722-0153-1" target="_blank" rel="nofollow noopener" aria-label="Xで共有"><svg viewBox='0 0 24 24' width='20' height='20' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg></a>
+      <a class="sbtn fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgadgegame.com%2Farticles%2F20260722-0153-1" target="_blank" rel="nofollow noopener" aria-label="Facebookで共有"><svg viewBox='0 0 24 24' width='22' height='22' aria-hidden='true'><path fill='currentColor' d='M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.53-1.5H17V3.6c-.28-.04-1.23-.12-2.34-.12-2.32 0-3.9 1.42-3.9 4.02v2.24H8v3.1h2.76V21h2.74z'/></svg></a>
+      <a class="sbtn line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fgadgegame.com%2Farticles%2F20260722-0153-1" target="_blank" rel="nofollow noopener" aria-label="LINEで共有">LINE</a>
+      <a class="sbtn hb" href="https://b.hatena.ne.jp/add?mode=confirm&url=https%3A%2F%2Fgadgegame.com%2Farticles%2F20260722-0153-1&title=7-Zip%E3%81%AB%E6%B7%B1%E5%88%BB%E3%81%AA%E8%84%86%E5%BC%B1%E6%80%A7%E3%80%81%E4%BB%8A%E3%81%99%E3%81%90v26.02%E4%BB%A5%E9%99%8D%E3%81%B8%E3%81%AE%E6%9B%B4%E6%96%B0%E3%82%92%20%E6%89%8B%E5%8B%95%E3%82%A2%E3%83%83%E3%83%97%E3%83%87%E3%83%BC%E3%83%88%E3%81%8C%E5%BF%85%E9%A0%88%E3%81%AE%E7%90%86%E7%94%B1" target="_blank" rel="nofollow noopener" aria-label="はてなブックマークに追加">B!</a>
+    </div>
+  </section>
+  <section class="related-block">
+    <div class="sec-head">
+      <div><div class="k">POPULAR</div><h2><span class="ic"></span>人気の記事</h2></div>
+      <div class="note">よく読まれているトピックから</div>
+    </div>
+    <div class="grid">
+      <a class="acard ranked" data-cat="デバイス" href="/articles/20260715-2301-2.html">
+        <span class="rank">1</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/a-price/cabinet/pics/252/0824142240106.jpg?_ex=600x600" alt="Palit、5年前のRTX 3060を「新製品」として復活 Infinity 2 OCが示すAI時代のGPU不足の実態" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
+          <div class="ttl">Palit、5年前のRTX 3060を「新製品」として復活 Infinity 2 OCが示すAI時代のGPU不足の実態</div>
+          <div class="ex">Palitが2021年発売のRTX 3060を仕様そのままに「Infinity 2 OC」として新規発売した。5年前のミッドレンジGPUがなぜ今再登場するのか、その背景にはAI需要によるメモリ・GPU供給の逼迫がある。ゲーマー目線での実用性</div>
+          <div class="d">2026/07/15</div></div>
+      </a>
+      <a class="acard ranked" data-cat="新作" href="/articles/20260715-2301-1.html">
+        <span class="rank">2</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1880620/570e442fa15ff82abe23812bb15c834f4748f2e5/ss_570e442fa15ff82abe23812bb15c834f4748f2e5.1920x1080.jpg?t=1776245218" alt="スイッチ2版『ワンス・アポン・ア・塊魂』10月8日発売決定、有料DLC「ローリングライブハイライツ」も全機種同時配信へ" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
+          <div class="ttl">スイッチ2版『ワンス・アポン・ア・塊魂』10月8日発売決定、有料DLC「ローリングライブハイライツ」も全機種同時配信へ</div>
+          <div class="ex">バンダイナムコエンターテインメントは7月15日、Switch2版『ワンス・アポン・ア・塊魂』を10月8日に発売すると発表した。同日には有料DLC「ローリングライブハイライツ」も全機種向けに同時リリースされる。塊魂シリーズの最新作がついにSw</div>
+          <div class="d">2026/07/15</div></div>
+      </a>
+      <a class="acard ranked" data-cat="新作" href="/articles/20260715-1900-1.html">
+        <span class="rank">3</span><div class="th"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4163030/b9a54ab80f5b2a8b828fa940cd1599c34e6ce4c0/ss_b9a54ab80f5b2a8b828fa940cd1599c34e6ce4c0.1920x1080.jpg?t=1784042722" alt="かわいい猫がチェスの駒になる『Cat Chess』本日配信開始、対戦の待ち時間まで遊べる新作の中身を読む" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat">新作</span><span class="pill-break">速報</span></div>
+          <div class="ttl">かわいい猫がチェスの駒になる『Cat Chess』本日配信開始、対戦の待ち時間まで遊べる新作の中身を読む</div>
+          <div class="ex">CapriciaProductionsが手がける新作ボードゲーム『Cat Chess』が2026年7月15日にSteamで配信を開始した。駒がすべてモフモフの猫に置き換わったチェスで、相手のターン待ちの間も猫と触れ合える要素が加わっている点</div>
+          <div class="d">2026/07/15</div></div>
+      </a>
+      <a class="acard ranked" data-cat="デバイス" href="/articles/20260715-1601-2.html">
+        <span class="rank">4</span><div class="th"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/koolriver/cabinet/img/26070b/akg98-c2h2-g260709.jpg?_ex=600x600" alt="ロジクールGの新ゲーミングデバイス2機種が16日発売、G316 X 98とG304 X SUPERLIGHTを比較する" loading="lazy"></div>
+        <div class="acbody"><div class="acmeta"><span class="cat p">デバイス</span><span class="pill-break">速報</span></div>
+          <div class="ttl">ロジクールGの新ゲーミングデバイス2機種が16日発売、G316 X 98とG304 X SUPERLIGHTを比較する</div>
+          <div class="ex">ロジクールGブランドから、ドットマトリックスディスプレイ搭載キーボード「G316 X 98」と、40g軽量化を実現したマウス「G304 X SUPERLIGHT」が7月16日に発売される。両機種とも既存モデルからの明確な進化点があり、周辺機</div>
+          <div class="d">2026/07/15</div></div>
+      </a>
+    </div>
+  </section>
+  <footer>
+    <div class="disc">記事内のリンクにはアフィリエイト広告を含みます。価格・割引は公開情報を基にした掲載時点の参考値のため、最新の情報は各ストアでご確認ください。Amazonのアソシエイトとして、当メディアは適格販売により収入を得ています。</div>
+    <div class="social"><a class="x-link" href="https://x.com/game_infoman" target="_blank" rel="noopener" aria-label="公式X @game_infoman"><svg viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg> @game_infoman</a></div>
+    <div class="flinks"><a href="../about.html">運営者情報</a> ・ <a href="../privacy.html">プライバシーポリシー</a></div>
+    (c) 2026 ガジェゲ（Gadget×Game） ／ データで見るゲームトレンド
+  </footer>
+</main>
+</body>
+</html>
