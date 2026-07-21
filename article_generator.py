@@ -854,36 +854,30 @@ def _publish_and_notify(article: dict, collected: dict, seq: int,
         print("[INFO] メール未設定（.envにGMAIL_ADDRESS/GMAIL_APP_PASSWORDを入れると送信します）")
 
 
+# 縮小運転(2026-07-22〜)の特殊記事プラン: 15時枠は曜日ごとに種別を割り当てる。
+# 月=stream(週末の配信データ直後) 火=evergreen 水=sale 木=spec 金=evergreen 土=sale 日=weekly
+_SLOT_15 = {0: "stream", 1: "evergreen", 2: "sale", 3: "spec",
+            4: "evergreen", 5: "sale", 6: "weekly"}
+
+
 def _special_slot(now: datetime | None = None) -> str | None:
     """自動で特殊記事を混ぜる時間帯かどうかを判定し、種別を返す（無ければNone）。
-    週2回・該当実行の2本目の記事だけを特殊記事にする運用（main()側で判定）。
+    該当実行の2本目の記事だけを特殊記事にする運用（main()側で判定）。
 
-    各スロットの狙い:
-    - "evergreen"（火・金 14〜17時台。primary15:00/retry16:00をカバー）:
-        比較・ランキング・選び方・買い時ガイド型の資産記事で検索流入を積む（従来通り）。
-    - "spec"（月・木 18〜21時台。primary19:00/retry20:00をカバー）:
-        推奨スペック・必要動作環境の解説記事。「推奨スペック」等の検索語を狙う資産記事。
-    - "sale"（水・土 10〜13時台。primary11:00/retry12:00をカバー）:
-        当サイトのセール・買い時トラッカーの実績データを根拠にした買い時解説の資産記事。
-    - "weekly"（日 14〜17時台）:
-        毎週日曜の連載企画「Steam同接ランキング」週間定点レポート。
-    - "stream"（月 10〜13時台。primary11:00/retry12:00をカバー）:
-        週末の配信データが溜まった月曜午前に出す連載企画「配信で人気のゲームランキング」
-        週間定点レポート。日曜のSteam同接ランキングと対になる。
+    縮小運転（1日2回: primary15:00/23:00＋retry16:00/翌0:00）用の割り当て:
+    - 15時枠（14〜17時台。primary15:00/retry16:00をカバー）: _SLOT_15 の曜日別割り当て。
+        evergreen=比較・選び方ガイド / spec=推奨スペック解説 / sale=買い時解説 /
+        weekly=週間Steam同接ランキング(日曜連載) / stream=配信人気ランキング(月曜連載)
+    - 23時枠（22〜23時台。primary23:00のみ）: 月曜=spec（週2本目のスペック記事）。
+        ※翌0時のretryは日付をまたぎ判定が変わるため特殊記事にはならない（通常記事で代替）。
     """
     now = now or datetime.now()
     # Python の weekday(): 月=0, 火=1, 水=2, 木=3, 金=4, 土=5, 日=6
     weekday, hour = now.weekday(), now.hour
-    if weekday in (1, 4) and 14 <= hour <= 17:
-        return "evergreen"
-    if weekday in (0, 3) and 18 <= hour <= 21:
+    if 14 <= hour <= 17:
+        return _SLOT_15.get(weekday)
+    if weekday == 0 and 22 <= hour <= 23:
         return "spec"
-    if weekday in (2, 5) and 10 <= hour <= 13:
-        return "sale"
-    if weekday == 6 and 14 <= hour <= 17:
-        return "weekly"
-    if weekday == 0 and 10 <= hour <= 13:
-        return "stream"
     return None
 
 
