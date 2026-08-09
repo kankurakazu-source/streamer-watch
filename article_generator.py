@@ -856,28 +856,35 @@ def _publish_and_notify(article: dict, collected: dict, seq: int,
 
 # 縮小運転(2026-07-22〜)の特殊記事プラン: 15時枠は曜日ごとに種別を割り当てる。
 # 月=stream(週末の配信データ直後) 火=evergreen 水=sale 木=spec 金=evergreen 土=sale 日=weekly
-_SLOT_15 = {0: "stream", 1: "evergreen", 2: "sale", 3: "spec",
-            4: "evergreen", 5: "sale", 6: "weekly"}
+# 特殊記事の曜日別割り当て（週7本）。「その日の特殊記事」を1つ決める辞書。
+# evergreen=比較・選び方ガイド / spec=推奨スペック解説 / sale=買い時解説 /
+# weekly=週間Steam同接ランキング(日曜連載) / stream=配信人気ランキング(月曜連載)
+_SLOT_DAILY = {0: "stream", 1: "evergreen", 2: "sale", 3: "spec",
+               4: "evergreen", 5: "sale", 6: "weekly"}
 
 
 def _special_slot(now: datetime | None = None) -> str | None:
     """自動で特殊記事を混ぜる時間帯かどうかを判定し、種別を返す（無ければNone）。
     該当実行の2本目の記事だけを特殊記事にする運用（main()側で判定）。
 
-    縮小運転（1日2回: primary15:00/23:00＋retry16:00/翌0:00）用の割り当て:
-    - 15時枠（14〜17時台。primary15:00/retry16:00をカバー）: _SLOT_15 の曜日別割り当て。
-        evergreen=比較・選び方ガイド / spec=推奨スペック解説 / sale=買い時解説 /
-        weekly=週間Steam同接ランキング(日曜連載) / stream=配信人気ランキング(月曜連載)
-    - 23時枠（22〜23時台。primary23:00のみ）: 月曜=spec（週2本目のスペック記事）。
-        ※翌0時のretryは日付をまたぎ判定が変わるため特殊記事にはならない（通常記事で代替）。
+    割り当ては23時枠に集約する（2026-08-10〜）。理由: 15時はPCが起動しておらず
+    タスクが実行されないため、15時枠に置いていた特殊記事がほとんど生成されていなかった。
+    実績のある23時枠に寄せることで、週7本の特殊記事が確実に積まれるようにする。
+
+    - 23時枠（22時〜翌1時台）: _SLOT_DAILY の曜日別割り当て。
+        primary23:00 と、失敗時の retry翌0:00 の両方をカバーする。
+        0〜1時台は日付をまたいでいるので「前日ぶんの割り当て」として扱い、
+        primaryが落ちた日でもその日の特殊記事が生成されるようにする。
+    - 15時枠は通常記事のみ（PCが起動していれば速報が2本増える。特殊記事とは重複させない）。
     """
     now = now or datetime.now()
     # Python の weekday(): 月=0, 火=1, 水=2, 木=3, 金=4, 土=5, 日=6
     weekday, hour = now.weekday(), now.hour
-    if 14 <= hour <= 17:
-        return _SLOT_15.get(weekday)
-    if weekday == 0 and 22 <= hour <= 23:
-        return "spec"
+    if hour >= 22:
+        return _SLOT_DAILY.get(weekday)
+    if hour <= 1:
+        # 翌0:00のretry＝前日23:00枠の代替なので、前日の割り当てを引き継ぐ
+        return _SLOT_DAILY.get((weekday - 1) % 7)
     return None
 
 
@@ -952,14 +959,17 @@ def _build_special_note(kind: str | None, collected: dict, deals_data: list[dict
                     seen_appids.add(it["appid"])
                     candidates.append({"appid": it["appid"], "name": it.get("name", "")})
 
-            # 直近にスペック記事化済みのタイトルは除外する
+            # 直近にスペック記事化済みのタイトルは除外する。
+            # Steam側の表記ゆれ（例「Palworld / パルワールド」と「パルワールド」）で
+            # 重複を取りこぼさないよう、区切り文字で分割した各表記で照合する。
             def _already_spec_covered(name: str) -> bool:
-                key = (name or "")[:10]
-                if not key:
+                tokens = [t.strip()[:12] for t in re.split(r"[/／|:：]", name or "")]
+                tokens = [t for t in tokens if len(t) >= 4]
+                if not tokens:
                     return False
                 for r in recent or []:
                     text = f"{r.get('title', '')} {r.get('topic_key', '')}"
-                    if key in text and "スペック" in text:
+                    if "スペック" in text and any(t in text for t in tokens):
                         return True
                 return False
 
