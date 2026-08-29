@@ -912,6 +912,21 @@ def _recent_evergreen_topics(recent: list[dict]) -> list[str]:
     return out
 
 
+def _already_covered(name: str, recent: list[dict], marker: str) -> bool:
+    """name のゲームが直近に marker 種別（"スペック" / "買い時" 等）の記事で
+    扱われているか。Steam側の表記ゆれ（例「Palworld / パルワールド」と
+    「パルワールド」）で取りこぼさないよう、区切り文字で分割した各表記で照合する。"""
+    tokens = [t.strip()[:12] for t in re.split(r"[/／|:：]", name or "")]
+    tokens = [t for t in tokens if len(t) >= 4]
+    if not tokens:
+        return False
+    for r in recent or []:
+        text = f"{r.get('title', '')} {r.get('topic_key', '')}"
+        if marker in text and any(t in text for t in tokens):
+            return True
+    return False
+
+
 def _build_special_note(kind: str | None, collected: dict, deals_data: list[dict],
                         recent: list[dict]) -> str:
     """特殊記事スロット用の追加指示(NOTE)を組み立てる。
@@ -941,6 +956,15 @@ def _build_special_note(kind: str | None, collected: dict, deals_data: list[dict
             if not deals_data:
                 print("[WARN] 買い時記事用のdeals_dataが空のため通常記事にフォールバックします。")
                 return ""
+            # sale枠は水・土の週2回。deals_dataはwatchlist由来で顔ぶれが変わりにくく、
+            # 素通しすると同じゲームを繰り返す（実例: プラネット ズーが2026-08-15と08-22で重複）。
+            fresh = [d for d in deals_data
+                     if not _already_covered(d.get("name", ""), recent, "買い時")]
+            if not fresh:
+                print("[WARN] 買い時記事の候補が全て直近で公開済みのため通常記事にフォールバックします。")
+                return ""
+            if len(fresh) < len(deals_data):
+                print(f"[INFO] 買い時記事の重複回避: {len(deals_data) - len(fresh)}件を除外")
             picks = [
                 {
                     "appid": d.get("appid"),
@@ -951,7 +975,7 @@ def _build_special_note(kind: str | None, collected: dict, deals_data: list[dict
                     "tracked_days": d.get("tracked_days"),
                     "verdict": d.get("verdict"),
                 }
-                for d in deals_data
+                for d in fresh
             ]
             return SALE_NOTE.format(deals_json=json.dumps(picks, ensure_ascii=False))
 
@@ -996,23 +1020,10 @@ def _build_special_note(kind: str | None, collected: dict, deals_data: list[dict
                     seen_appids.add(it["appid"])
                     candidates.append({"appid": it["appid"], "name": it.get("name", "")})
 
-            # 直近にスペック記事化済みのタイトルは除外する。
-            # Steam側の表記ゆれ（例「Palworld / パルワールド」と「パルワールド」）で
-            # 重複を取りこぼさないよう、区切り文字で分割した各表記で照合する。
-            def _already_spec_covered(name: str) -> bool:
-                tokens = [t.strip()[:12] for t in re.split(r"[/／|:：]", name or "")]
-                tokens = [t for t in tokens if len(t) >= 4]
-                if not tokens:
-                    return False
-                for r in recent or []:
-                    text = f"{r.get('title', '')} {r.get('topic_key', '')}"
-                    if "スペック" in text and any(t in text for t in tokens):
-                        return True
-                return False
-
             picked = []
             for c in candidates:
-                if _already_spec_covered(c["name"]):
+                # 直近にスペック記事化済みのタイトルは除外する。
+                if _already_covered(c["name"], recent, "スペック"):
                     continue
                 try:
                     reqs = steam_collector.fetch_requirements(c["appid"])
