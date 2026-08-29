@@ -171,7 +171,7 @@ EVERGREEN_NOTE = """\
     データに無い数字・スペックを作ってはいけない（既存の制約と同じ）。
 - x_main: 「保存したくなるまとめ」系のフックにする（「保存版」「まとめて比較」等、
     後で読み返したくなる見出し）。速報感を出す煽り文句は避ける。
-"""
+{covered_block}"""
 
 # スペック解説記事（資産型）指示。EVERGREEN_NOTEと同じ経路（volatile側）で連結する。
 SPEC_NOTE = """\
@@ -888,6 +888,30 @@ def _special_slot(now: datetime | None = None) -> str | None:
     return None
 
 
+# エバーグリーン枠は週2回（火・金）割り当てるため、同ジャンルの比較ガイドが短期間で
+# 重複しやすい（実例: 2026-08-14と08-18で「ソウルライク比較」がほぼ同内容で重複）。
+# spec枠と違い候補リストを持たない枠なので、公開済みのガイドを明示して禁止する方式を取る。
+_EVERGREEN_MARKERS = ("比較", "おすすめ", "選び方", "ガイド", "まとめ", "入門", "初心者")
+# 買い時/週間連載/スペックは別スロットが担当するため、ここでは数えない。
+_EVERGREEN_OTHER_SLOTS = ("買い時", "週間", "スペック", "動作環境")
+
+
+def _recent_evergreen_topics(recent: list[dict]) -> list[str]:
+    """直近のエバーグリーン（比較・選び方ガイド）記事のトピックを新しい順に返す。"""
+    out: list[str] = []
+    for r in recent or []:
+        key = (r.get("topic_key") or "").strip()
+        text = f"{r.get('title', '')} {key}"
+        if any(m in text for m in _EVERGREEN_OTHER_SLOTS):
+            continue
+        if not any(m in text for m in _EVERGREEN_MARKERS):
+            continue
+        label = key or (r.get("title") or "")[:40]
+        if label and label not in out:
+            out.append(label)
+    return out
+
+
 def _build_special_note(kind: str | None, collected: dict, deals_data: list[dict],
                         recent: list[dict]) -> str:
     """特殊記事スロット用の追加指示(NOTE)を組み立てる。
@@ -898,7 +922,20 @@ def _build_special_note(kind: str | None, collected: dict, deals_data: list[dict
         return ""
     try:
         if kind == "evergreen":
-            return EVERGREEN_NOTE
+            covered = _recent_evergreen_topics(recent)
+            if covered:
+                block = (
+                    "\n【厳守: 直近21日に公開済みの比較・ガイド記事】\n"
+                    + "\n".join(f"- {t}" for t in covered)
+                    + "\n上記と同じジャンル・同じ切り口のガイドは書かないこと。検索順位を"
+                      "食い合う自己競合になる。必ず別のジャンルか、別の切り口"
+                      "（対象プラットフォーム / 価格帯 / プレイ人数 / 初心者向けか玄人向けか 等）"
+                      "を選び、タイトルが上記のいずれかと似通わないようにする。\n"
+                )
+                print(f"[INFO] エバーグリーン重複回避: 公開済み{len(covered)}件を除外指示")
+            else:
+                block = ""
+            return EVERGREEN_NOTE.format(covered_block=block)
 
         if kind == "sale":
             if not deals_data:
