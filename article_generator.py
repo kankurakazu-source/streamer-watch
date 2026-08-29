@@ -855,36 +855,48 @@ def _publish_and_notify(article: dict, collected: dict, seq: int,
 
 
 # 縮小運転(2026-07-22〜)の特殊記事プラン: 15時枠は曜日ごとに種別を割り当てる。
-# 月=stream(週末の配信データ直後) 火=evergreen 水=sale 木=spec 金=evergreen 土=sale 日=weekly
-# 特殊記事の曜日別割り当て（週7本）。「その日の特殊記事」を1つ決める辞書。
+# 特殊記事の曜日別割り当て。23時枠は1本目・2本目とも資産型にする（週14本）。
 # evergreen=比較・選び方ガイド / spec=推奨スペック解説 / sale=買い時解説 /
 # weekly=週間Steam同接ランキング(日曜連載) / stream=配信人気ランキング(月曜連載)
+#
+# 2026-08-29〜: Search Console分析の結果、速報記事の比率を落とした。
+# 上位ページ10件中9件が開設初週(7/6-7/11)の記事で、8月の記事は1本も露出しておらず、
+# 上位クエリも「水着イブキいつ」等の一過性ニュース（表示43/クリック0）ばかりだった。
+# 速報は大手ゲームメディアに勝てず購買クエリも取れないため、速報は15時枠（水・土のみ）に
+# 限定し、毎日の23時枠は検索資産の蓄積に充てる。
+#
+# 連載系(weekly/stream)は曜日固定なので2本目に置く。1本目は残り3種を分散させる。
+_SLOT_DAILY_1 = {0: "evergreen", 1: "spec", 2: "evergreen", 3: "sale",
+                 4: "spec", 5: "evergreen", 6: "spec"}
 _SLOT_DAILY = {0: "stream", 1: "evergreen", 2: "sale", 3: "spec",
                4: "evergreen", 5: "sale", 6: "weekly"}
 
 
-def _special_slot(now: datetime | None = None) -> str | None:
+def _special_slot(now: datetime | None = None, index: int = 1) -> str | None:
     """自動で特殊記事を混ぜる時間帯かどうかを判定し、種別を返す（無ければNone）。
-    該当実行の2本目の記事だけを特殊記事にする運用（main()側で判定）。
+    index はその実行の何本目か（0始まり）。23時枠では0本目・1本目の両方に
+    別々の資産記事を割り当てる。2本目以降（--count 3以上）は通常記事のまま。
 
     割り当ては23時枠に集約する（2026-08-10〜）。理由: 15時はPCが起動しておらず
     タスクが実行されないため、15時枠に置いていた特殊記事がほとんど生成されていなかった。
-    実績のある23時枠に寄せることで、週7本の特殊記事が確実に積まれるようにする。
 
-    - 23時枠（22時〜翌1時台）: _SLOT_DAILY の曜日別割り当て。
+    - 23時枠（22時〜翌1時台）: _SLOT_DAILY_1(1本目) / _SLOT_DAILY(2本目) の曜日別割り当て。
         primary23:00 と、失敗時の retry翌0:00 の両方をカバーする。
         0〜1時台は日付をまたいでいるので「前日ぶんの割り当て」として扱い、
         primaryが落ちた日でもその日の特殊記事が生成されるようにする。
-    - 15時枠は通常記事のみ（PCが起動していれば速報が2本増える。特殊記事とは重複させない）。
+    - 15時枠は通常記事（速報）のみ。2026-08-29〜、15時枠は水・土だけに限定した。
     """
+    if index not in (0, 1):
+        return None
     now = now or datetime.now()
+    table = _SLOT_DAILY_1 if index == 0 else _SLOT_DAILY
     # Python の weekday(): 月=0, 火=1, 水=2, 木=3, 金=4, 土=5, 日=6
     weekday, hour = now.weekday(), now.hour
     if hour >= 22:
-        return _SLOT_DAILY.get(weekday)
+        return table.get(weekday)
     if hour <= 1:
         # 翌0:00のretry＝前日23:00枠の代替なので、前日の割り当てを引き継ぐ
-        return _SLOT_DAILY.get((weekday - 1) % 7)
+        return table.get((weekday - 1) % 7)
     return None
 
 
@@ -1119,10 +1131,10 @@ def main():
                           "今回は必ず別カテゴリ・別トピックを選び、内容が重複しないようにすること。")
         # 特殊記事スロット判定:
         #   --special / --evergreen 指定時はこの実行の全記事を指定タイプにする（手動テスト・強制用）。
-        #   自動ルール: 曜日・時間帯ごとの特殊スロット（_special_slot参照）は、2本目の記事だけ
-        #   （1本目は通常ニュースのまま速報性を維持しつつ、2本目で検索資産を積む）。
+        #   自動ルール: 23時枠は1本目・2本目それぞれに別の資産記事を割り当てる（_special_slot参照）。
+        #   15時枠（水・土のみ）は None が返るため通常の速報記事になる。
         special = args.special or ("evergreen" if args.evergreen else None) or \
-            (_special_slot() if i == 1 else None)
+            _special_slot(index=i)
         extra_note = _build_special_note(special, collected, deals_data, recent)
         if special and not extra_note:
             special = None  # データ不足時は通常記事にフォールバック
