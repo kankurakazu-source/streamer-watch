@@ -272,29 +272,29 @@ _PAGE = """<!DOCTYPE html>
 <body>
 <header><div class="wrap head">
   <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="28" height="28"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
-  <nav><a href="../index.html">トップ</a><a href="../archive.html">全記事</a><a href="../deals.html">🔥セール・買い時</a>{x_nav}</nav>
+  <nav><a href="/">トップ</a><a href="/archive">全記事</a><a href="/deals">🔥セール・買い時</a>{x_nav}</nav>
 </div></header>
 
 <main class="wrap">
   <article class="article">
-    <div class="crumb"><a href="../index.html">ホーム</a> › {category}</div>
+    <div class="crumb"><a href="/">ホーム</a> › {category}</div>
     <span class="cat">{category}</span>
     <h1>{title}</h1>
-    <div class="meta">{date} ・ 文: <a href="../about.html">ガジェゲ編集部</a></div>
+    <div class="meta">{date} ・ 文: <a href="/about">ガジェゲ編集部</a></div>
     <div class="pr-note">※本記事にはアフィリエイト広告（プロモーション）が含まれます。</div>
     {hero}
     <p class="lead">{lead}</p>
     {tldr}
     {toc}
     {body}
-    <a class="back" href="../index.html">← トップに戻る</a>
+    <a class="back" href="/">← トップに戻る</a>
   </article>
 {share}
 {related}
   <footer>
     <div class="disc">記事内のリンクにはアフィリエイト広告を含みます。価格・割引は公開情報を基にした掲載時点の参考値のため、最新の情報は各ストアでご確認ください。Amazonのアソシエイトとして、当メディアは適格販売により収入を得ています。</div>
     <div class="social">{x_footer}</div>
-    <div class="flinks"><a href="../about.html">運営者情報</a> ・ <a href="../privacy.html">プライバシーポリシー</a></div>
+    <div class="flinks"><a href="/about">運営者情報</a> ・ <a href="/privacy">プライバシーポリシー</a></div>
     (c) {year} ガジェゲ（Gadget×Game） ／ データで見るゲームトレンド
   </footer>
 </main>
@@ -538,7 +538,7 @@ def _dealhist_html(deal: dict) -> str:
         spans.append(f'<span><span class="k">直近セール</span>{_esc(last)}</span>')
     cls = _DEAL_VERDICT_CLASS.get(verdict, "wait")
     spans.append(f'<span class="dh-badge {cls}">{_esc(verdict)}</span>')
-    spans.append('<a class="dh-link" href="/deals.html">買い時トラッカー →</a>')
+    spans.append('<a class="dh-link" href="/deals">買い時トラッカー →</a>')
     return '<div class="dealhist">' + "".join(spans) + "</div>"
 
 
@@ -883,7 +883,7 @@ def _article_card(a: dict, rank: int | None = None, base: str = "") -> str:
         d = datetime.fromisoformat(a["created_at"]).strftime("%Y/%m/%d")
     except Exception:
         d = ""
-    href = f"{base}{config.ARTICLES_SUBDIR}/{a['slug']}.html"
+    href = f"/{config.ARTICLES_SUBDIR}/{a['slug']}"
     rank_badge = f"<span class=\"rank\">{rank}</span>" if rank else ""
     breaking = ("<span class=\"pill-break\">速報</span>"
                 if a.get("is_breaking") else "")
@@ -1137,7 +1137,7 @@ _LISTING_PAGE = """<!DOCTYPE html>
 </head>
 <body>
 <header><div class="wrap head">
-  <a class="logo" href="{base}index.html"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="30" height="30"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
+  <a class="logo" href="/"><img class="logo-mark" src="/favicon.svg" alt="ガジェゲ" width="30" height="30"><span class="logo-name">ガジェゲ<i class="logo-sub">Gadget×Game</i></span></a>
   <nav>
     {nav}
   </nav>
@@ -1160,7 +1160,7 @@ _LISTING_PAGE = """<!DOCTYPE html>
   <footer>
     <div class="disc">記事内のリンクにはアフィリエイト広告を含みます。価格・割引は公開情報を基にした掲載時点の参考値のため、最新の情報は各ストアでご確認ください。Amazonのアソシエイトとして、当メディアは適格販売により収入を得ています。</div>
     <div class="social">{x_footer}</div>
-    <div class="flinks"><a href="{base}about.html">運営者情報</a> ・ <a href="{base}privacy.html">プライバシーポリシー</a></div>
+    <div class="flinks"><a href="/about">運営者情報</a> ・ <a href="/privacy">プライバシーポリシー</a></div>
     (c) {year} ガジェゲ（Gadget×Game） ／ データで見るゲームトレンド
   </footer>
 </main>
@@ -1170,16 +1170,17 @@ _LISTING_PAGE = """<!DOCTYPE html>
 
 
 def _listing_nav(base: str, active: str = "") -> str:
-    """アーカイブ/カテゴリページ共通のヘッダーnav。base='' (site直下) or '../' (category/配下)。"""
+    """アーカイブ/カテゴリページ共通のヘッダーnav。
+    リンクは拡張子なしのルート絶対パスなので base は使わない（呼び出し側互換のため引数は残す）。"""
     def cls(name: str) -> str:
         return ' class="on"' if name == active else ""
 
     items = [
-        f'<a href="{base}index.html#trending">いま読まれている</a>',
-        f'<a href="{base}index.html#games">ゲーム</a>',
-        f'<a href="{base}index.html#devices">デバイス</a>',
-        f'<a{cls("archive")} href="{base}archive.html">全記事</a>',
-        f'<a href="{base}deals.html">🔥セール・買い時</a>',
+        '<a href="/#trending">いま読まれている</a>',
+        '<a href="/#games">ゲーム</a>',
+        '<a href="/#devices">デバイス</a>',
+        f'<a{cls("archive")} href="/archive">全記事</a>',
+        '<a href="/deals">🔥セール・買い時</a>',
     ]
     x = x_link_html(show_handle=False)
     if x:
@@ -1188,7 +1189,13 @@ def _listing_nav(base: str, active: str = "") -> str:
 
 
 def _archive_filename(page: int) -> str:
+    """書き出し先のファイル名（実ファイルなので .html 付き）。"""
     return "archive.html" if page == 1 else f"archive-{page}.html"
+
+
+def _archive_href(page: int) -> str:
+    """アーカイブページへのリンク先URL（拡張子なしのルート絶対パス）。"""
+    return "/archive" if page == 1 else f"/archive-{page}"
 
 
 def _pagination_html(page: int, total_pages: int) -> str:
@@ -1197,7 +1204,7 @@ def _pagination_html(page: int, total_pages: int) -> str:
         return ""
     parts = []
     if page > 1:
-        parts.append(f'<a class="pg prev" href="{_archive_filename(page - 1)}">← 前へ</a>')
+        parts.append(f'<a class="pg prev" href="{_archive_href(page - 1)}">← 前へ</a>')
     else:
         parts.append('<span class="pg prev disabled">← 前へ</span>')
     nums = []
@@ -1205,10 +1212,10 @@ def _pagination_html(page: int, total_pages: int) -> str:
         if p == page:
             nums.append(f'<span class="pg-num on">{p}</span>')
         else:
-            nums.append(f'<a class="pg-num" href="{_archive_filename(p)}">{p}</a>')
+            nums.append(f'<a class="pg-num" href="{_archive_href(p)}">{p}</a>')
     parts.append('<span class="pg-nums">' + "".join(nums) + "</span>")
     if page < total_pages:
-        parts.append(f'<a class="pg next" href="{_archive_filename(page + 1)}">次へ →</a>')
+        parts.append(f'<a class="pg next" href="{_archive_href(page + 1)}">次へ →</a>')
     else:
         parts.append('<span class="pg next disabled">次へ →</span>')
     return '  <div class="pager">' + "".join(parts) + "</div>"
